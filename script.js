@@ -2329,24 +2329,6 @@ document.addEventListener('DOMContentLoaded', function () {
                       '</div>' +
                     '</div>' +
                   '</div>' +
-                      // Code actions (Copy & Enlarge)
-                      '<div id="slideCodeActions" class="' + (presenterActiveTab === 'code' ? 'flex' : 'hidden') + ' items-center gap-2">' +
-                        '<button type="button" id="slideCopyBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono border border-slate-700 transition-colors" title="Copy code snippet">' +
-                          '<svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
-                          '<span id="slideCopyText">Copy</span>' +
-                        '</button>' +
-                        '<button type="button" id="slideEnlargeBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow transition-colors" title="Projector mode / enlarge code">' +
-                          '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
-                          '<span>Enlarge</span>' +
-                        '</button>' +
-                      '</div>' +
-                      // Output active badge
-                      '<div id="slideOutputBadge" class="' + (presenterActiveTab === 'output' ? 'flex' : 'hidden') + ' items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono">' +
-                        '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>' +
-                        '<span>Live Interactive</span>' +
-                      '</div>' +
-                    '</div>' +
-                  '</div>' +
 
                   // Code Pre Block (Escaped code text)
                   '<div id="slideCodeView" class="' + (presenterActiveTab === 'code' ? 'flex flex-col flex-1' : 'hidden') + '">' +
