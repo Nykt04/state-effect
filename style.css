@@ -1,0 +1,71 @@
+/* ========================================================
+   Modern Developer Documentation Design System
+   Style Tokens & Clean UI Polishing
+   ======================================================== */
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  code, pre {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+}
+
+/* Deep obsidian slate surface for dark mode */
+.dark body {
+  background-color: #090d16;
+  color: #f1f5f9;
+}
+
+.dark header {
+  background-color: rgba(9, 13, 22, 0.85);
+  border-color: #1a2333;
+}
+
+.dark .concept-card,
+.dark aside > div,
+.dark #comparison-matrix,
+.dark #quiz-section {
+  background-color: #101726;
+  border-color: #1c2738;
+}
+
+/* Minimalist code scrollbars */
+.code-scroll::-webkit-scrollbar {
+  height: 5px;
+  width: 5px;
+}
+
+.code-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 9999px;
+}
+
+.code-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.45);
+}
+
+/* Re-render pulse flash */
+@keyframes pulseRing {
+  0% { transform: scale(0.97); opacity: 0.9; }
+  50% { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.render-flash {
+  animation: pulseRing 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Keyboard accessibility outline */
+:focus-visible {
+  outline: 2px solid #0284c7;
+  outline-offset: 2px;
+}
