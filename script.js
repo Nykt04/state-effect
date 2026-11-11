@@ -65,6 +65,62 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       // -----------------------------------------------------------
+      // Pinoy Big Brother (PBB) Assembling Intro Splash Controller
+      // -----------------------------------------------------------
+      var pbbSplash = document.getElementById('pbbSplash');
+      var replayPbbIntroBtn = document.getElementById('replayPbbIntroBtn');
+
+      var splashActive = true;
+      var splashTimer = null;
+
+      function resetAssembleAnimation() {
+        var stage = document.querySelector('.pbb-assembly-stage');
+        if (!stage) return;
+        var animElements = stage.querySelectorAll('.pbb-assemble-blue, .pbb-assemble-red, .pbb-assemble-sun, .pbb-assemble-flash');
+        animElements.forEach(function (el) {
+          el.style.animation = 'none';
+          void el.offsetWidth;
+          el.style.animation = '';
+        });
+      }
+
+      function dismissPbbSplash() {
+        if (!pbbSplash || !splashActive) return;
+        splashActive = false;
+        if (splashTimer) clearTimeout(splashTimer);
+        pbbSplash.classList.add('opacity-0', 'pointer-events-none');
+        setTimeout(function () {
+          pbbSplash.classList.add('hidden');
+        }, 700);
+      }
+
+      function startPbbSplashAnimation() {
+        if (!pbbSplash) return;
+        splashActive = true;
+        pbbSplash.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+        resetAssembleAnimation();
+
+        splashTimer = setTimeout(function () {
+          dismissPbbSplash();
+        }, 2500);
+      }
+
+      // Auto-start splash on load
+      startPbbSplashAnimation();
+
+      if (pbbSplash) {
+        pbbSplash.addEventListener('click', function () {
+          dismissPbbSplash();
+        });
+      }
+
+      if (replayPbbIntroBtn) {
+        replayPbbIntroBtn.addEventListener('click', function () {
+          startPbbSplashAnimation();
+        });
+      }
+
+      // -----------------------------------------------------------
       // Theme Toggle (Dark / Light) with LocalStorage Persistence
       // -----------------------------------------------------------
       var themeToggleBtn = document.getElementById('themeToggleBtn');
@@ -77,14 +133,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } catch (e) {}
 
-      themeToggleBtn.addEventListener('click', function () {
-        var htmlEl = document.documentElement;
-        htmlEl.classList.toggle('dark');
-        var isDark = htmlEl.classList.contains('dark');
-        try {
-          localStorage.setItem('react_guide_theme', isDark ? 'dark' : 'light');
-        } catch (e) {}
-      });
+      if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', function () {
+          var htmlEl = document.documentElement;
+          htmlEl.classList.toggle('dark');
+          var isDark = htmlEl.classList.contains('dark');
+          try {
+            localStorage.setItem('react_guide_theme', isDark ? 'dark' : 'light');
+          } catch (e) {}
+        });
+      }
 
       // -----------------------------------------------------------
       // Scrollspy: Highlight Active Nav Pill & Sidebar Link
@@ -145,13 +203,15 @@ document.addEventListener('DOMContentLoaded', function () {
       // -----------------------------------------------------------
       var mobileMenuBtn = document.getElementById('mobileMenuBtn');
       var mobileNavDrawer = document.getElementById('mobileNavDrawer');
-      mobileMenuBtn.addEventListener('click', function () {
-        mobileNavDrawer.classList.toggle('hidden');
-      });
+      if (mobileMenuBtn && mobileNavDrawer) {
+        mobileMenuBtn.addEventListener('click', function () {
+          mobileNavDrawer.classList.toggle('hidden');
+        });
+      }
       var mobileLinks = document.querySelectorAll('.mobile-nav-link');
       mobileLinks.forEach(function (link) {
         link.addEventListener('click', function () {
-          mobileNavDrawer.classList.add('hidden');
+          if (mobileNavDrawer) mobileNavDrawer.classList.add('hidden');
         });
       });
 
@@ -311,6 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         if (noSearchResults) {
           noSearchResults.classList.toggle('hidden', visibleCount > 0);
+          noSearchResults.hidden = visibleCount > 0;
         }
       }
 
@@ -326,7 +387,7 @@ document.addEventListener('DOMContentLoaded', function () {
       }
       if (clearSearchBtn) {
         clearSearchBtn.addEventListener('click', function () {
-          topicSearchInput.value = '';
+          if (topicSearchInput) topicSearchInput.value = '';
           applyFilter('');
         });
       }
@@ -977,59 +1038,202 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       ];
 
+      var currentQuizIndex = 0;
       var quizAnswers = {};
       var quizContainer = document.getElementById('quizContainer');
       var quizScoreDisplay = document.getElementById('quizScoreDisplay');
 
       function renderQuiz() {
+        if (!quizContainer) return;
         quizContainer.innerHTML = '';
+
+        var total = quizQuestions.length;
         var correctCount = 0;
-        quizQuestions.forEach(function (q, idx) {
-          var userChoice = quizAnswers[q.id];
-          var isAnswered = typeof userChoice === 'number';
-          if (isAnswered && userChoice === q.correct) {
-            correctCount += 1;
+        var answeredCount = 0;
+
+        quizQuestions.forEach(function (q) {
+          if (typeof quizAnswers[q.id] === 'number') {
+            answeredCount += 1;
+            if (quizAnswers[q.id] === q.correct) correctCount += 1;
           }
-
-          var card = document.createElement('div');
-          card.className = 'p-5 rounded-xl bg-slate-800/90 border border-slate-700/80 flex flex-col justify-between space-y-4';
-
-          var headerHtml = '<div class="space-y-1.5">' +
-            '<div class="text-[11px] font-mono text-sky-400">' + q.topic + '</div>' +
-            '<h3 class="text-sm font-bold text-white leading-snug">' + (idx + 1) + '. ' + q.question + '</h3>' +
-            '</div>';
-
-          var optionsHtml = '<div class="space-y-2">';
-          q.options.forEach(function (opt, optIdx) {
-            var btnCls = 'w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium border transition-all ';
-            if (!isAnswered) {
-              btnCls += 'bg-slate-900/70 hover:bg-slate-700/70 border-slate-700 text-slate-200';
-            } else if (optIdx === q.correct) {
-              btnCls += 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-semibold';
-            } else if (optIdx === userChoice) {
-              btnCls += 'bg-rose-500/20 border-rose-400 text-rose-200';
-            } else {
-              btnCls += 'bg-slate-900/40 border-slate-800 text-slate-400 opacity-70';
-            }
-            optionsHtml += '<button type="button" data-qid="' + q.id + '" data-opt="' + optIdx + '" class="quiz-opt-btn ' + btnCls + '">' + opt + '</button>';
-          });
-          optionsHtml += '</div>';
-
-          var feedbackHtml = '';
-          if (isAnswered) {
-            var isRight = userChoice === q.correct;
-            feedbackHtml = '<div class="p-3 rounded-lg text-xs ' + (isRight ? 'bg-emerald-950/80 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/80 border border-rose-700/60 text-rose-200') + '">' +
-              '<strong>' + (isRight ? '<span class="inline-flex items-center gap-1 text-emerald-400"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Correct!</span> ' : '<span class="inline-flex items-center gap-1 text-rose-400"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Not quite.</span> ') + '</strong>' + q.explanation +
-              '</div>';
-          }
-
-          card.innerHTML = headerHtml + optionsHtml + feedbackHtml;
-          quizContainer.appendChild(card);
         });
 
-        quizScoreDisplay.textContent = correctCount + ' / ' + quizQuestions.length;
+        if (quizScoreDisplay) {
+          quizScoreDisplay.textContent = correctCount + ' / ' + total;
+        }
 
-        quizContainer.querySelectorAll('.quiz-opt-btn').forEach(function (btn) {
+        // Summary Screen State when user finishes all questions
+        if (currentQuizIndex >= total) {
+          var pct = Math.round((correctCount / total) * 100);
+          var summaryCard = document.createElement('div');
+          summaryCard.className = 'p-6 sm:p-8 rounded-2xl bg-slate-800/90 border border-slate-700 shadow-xl text-center space-y-6 animate-in fade-in duration-200';
+
+          var badgeColor = pct >= 80 ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' :
+                           pct >= 50 ? 'text-amber-400 border-amber-500/30 bg-amber-500/10' :
+                           'text-rose-400 border-rose-500/30 bg-rose-500/10';
+
+          var msg = pct === 100 ? 'Flawless Victory! You have completely mastered React State and Side Effects.' :
+                    pct >= 80 ? 'Outstanding! You have a solid grasp of state management and effect lifecycles.' :
+                    pct >= 50 ? 'Good work! Review the topics in the handbook to sharpen your knowledge.' :
+                    'Keep practicing! Revisit Topic 1 & Topic 3 to solidify your mental model.';
+
+          summaryCard.innerHTML =
+            '<div class="space-y-2">' +
+              '<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-mono font-bold ' + badgeColor + '">' +
+                '<span>QUIZ COMPLETED</span>' +
+              '</div>' +
+              '<h3 class="text-2xl font-black text-white">Your Final Score</h3>' +
+              '<div class="text-4xl sm:text-5xl font-black font-mono text-sky-400 py-2">' +
+                correctCount + ' <span class="text-slate-500 text-2xl">/ ' + total + '</span>' +
+                '<span class="text-lg text-slate-400 font-semibold ml-2">(' + pct + '%)</span>' +
+              '</div>' +
+              '<p class="text-sm text-slate-300 max-w-md mx-auto">' + msg + '</p>' +
+            '</div>' +
+            '<div class="flex flex-wrap items-center justify-center gap-3 pt-2">' +
+              '<button type="button" id="reviewQuizBtn" class="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold transition-colors">' +
+                'Review Questions' +
+              '</button>' +
+              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white text-xs font-bold transition-all shadow-md">' +
+                'Retake Quiz' +
+              '</button>' +
+            '</div>';
+
+          quizContainer.appendChild(summaryCard);
+
+          var reviewBtn = document.getElementById('reviewQuizBtn');
+          if (reviewBtn) {
+            reviewBtn.addEventListener('click', function () {
+              currentQuizIndex = 0;
+              renderQuiz();
+            });
+          }
+
+          var retakeBtn = document.getElementById('retakeQuizBtn');
+          if (retakeBtn) {
+            retakeBtn.addEventListener('click', function () {
+              quizAnswers = {};
+              currentQuizIndex = 0;
+              renderQuiz();
+              showToast('Quiz reset! Good luck.');
+            });
+          }
+          return;
+        }
+
+        // Active Question Card State
+        var q = quizQuestions[currentQuizIndex];
+        var userChoice = quizAnswers[q.id];
+        var isAnswered = typeof userChoice === 'number';
+
+        var card = document.createElement('div');
+        card.className = 'p-6 sm:p-8 rounded-2xl bg-slate-800/90 border border-slate-700 shadow-xl space-y-6 animate-in fade-in duration-150';
+
+        // Step Dots Navigation Bar
+        var dotsHtml = '<div class="flex items-center gap-1.5 flex-wrap">';
+        quizQuestions.forEach(function (quest, idx) {
+          var isCur = idx === currentQuizIndex;
+          var ans = quizAnswers[quest.id];
+          var hasAns = typeof ans === 'number';
+          var isCor = hasAns && ans === quest.correct;
+
+          var dotClass = 'w-7 h-7 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition-all ';
+          if (isCur) {
+            dotClass += 'ring-2 ring-sky-400 bg-sky-500 text-white shadow-md shadow-sky-500/30';
+          } else if (hasAns && isCor) {
+            dotClass += 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30';
+          } else if (hasAns && !isCor) {
+            dotClass += 'bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30';
+          } else {
+            dotClass += 'bg-slate-900/60 text-slate-400 border border-slate-700 hover:bg-slate-700 hover:text-slate-200';
+          }
+
+          dotsHtml += '<button type="button" data-jump-q="' + idx + '" class="quiz-step-btn ' + dotClass + '" title="Jump to Question ' + (idx + 1) + '">' + (idx + 1) + '</button>';
+        });
+        dotsHtml += '</div>';
+
+        // Header: Topic + Indicator + Step Tabs
+        var headerHtml =
+          '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700/80 pb-4">' +
+            '<div class="space-y-0.5">' +
+              '<span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider">' + q.topic + '</span>' +
+              '<div class="text-xs text-slate-400 font-mono">Question ' + (currentQuizIndex + 1) + ' of ' + total + '</div>' +
+            '</div>' +
+            dotsHtml +
+          '</div>' +
+          '<div class="space-y-2">' +
+            '<h3 class="text-base sm:text-lg font-bold text-white leading-snug">' + q.question + '</h3>' +
+          '</div>';
+
+        // Options List
+        var optionsHtml = '<div class="space-y-2.5">';
+        q.options.forEach(function (opt, optIdx) {
+          var btnCls = 'w-full text-left px-4 py-3 rounded-xl text-xs sm:text-sm font-medium border transition-all flex items-start gap-3 ';
+          var optLetter = String.fromCharCode(65 + optIdx);
+
+          if (!isAnswered) {
+            btnCls += 'bg-slate-900/70 hover:bg-slate-700/70 hover:border-sky-500/50 border-slate-700 text-slate-200';
+          } else if (optIdx === q.correct) {
+            btnCls += 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-semibold ring-1 ring-emerald-400/40';
+          } else if (optIdx === userChoice) {
+            btnCls += 'bg-rose-500/20 border-rose-400 text-rose-200 ring-1 ring-rose-400/40';
+          } else {
+            btnCls += 'bg-slate-900/40 border-slate-800 text-slate-500 opacity-60';
+          }
+
+          var indicatorHtml =
+            '<span class="w-5 h-5 rounded-md font-mono text-xs font-bold flex items-center justify-center shrink-0 ' +
+              (!isAnswered ? 'bg-slate-800 text-slate-300' :
+               optIdx === q.correct ? 'bg-emerald-500 text-slate-950' :
+               optIdx === userChoice ? 'bg-rose-500 text-white' : 'bg-slate-800 text-slate-600') + '">' +
+              optLetter +
+            '</span>';
+
+          optionsHtml += '<button type="button" data-qid="' + q.id + '" data-opt="' + optIdx + '" class="quiz-opt-btn ' + btnCls + '">' +
+            indicatorHtml +
+            '<span class="flex-1">' + opt + '</span>' +
+          '</button>';
+        });
+        optionsHtml += '</div>';
+
+        // Feedback / Explanation Box
+        var feedbackHtml = '';
+        if (isAnswered) {
+          var isRight = userChoice === q.correct;
+          feedbackHtml =
+            '<div class="p-4 rounded-xl text-xs sm:text-sm leading-relaxed animate-in fade-in duration-150 ' +
+              (isRight ? 'bg-emerald-950/80 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/80 border border-rose-700/60 text-rose-200') + '">' +
+              '<div class="font-bold flex items-center gap-1.5 mb-1.5">' +
+                (isRight ?
+                  '<svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="text-emerald-400">Correct!</span>' :
+                  '<svg class="w-4 h-4 text-rose-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span class="text-rose-400">Incorrect</span>') +
+              '</div>' +
+              '<div class="text-slate-300">' + q.explanation + '</div>' +
+            '</div>';
+        }
+
+        // Bottom Navigation Controls
+        var isFirst = currentQuizIndex === 0;
+        var isLast = currentQuizIndex === total - 1;
+        var nextBtnText = isLast ? 'Finish Quiz →' : 'Next Question →';
+
+        var navHtml =
+          '<div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-700/80">' +
+            '<button type="button" id="prevQuizBtn" class="px-4 py-2 rounded-xl text-xs font-semibold border transition-colors ' +
+              (isFirst ? 'bg-slate-900/40 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200') + '" ' +
+              (isFirst ? 'disabled' : '') + '>' +
+              '← Previous' +
+            '</button>' +
+            '<button type="button" id="nextQuizBtn" class="px-4 py-2 rounded-xl text-xs font-bold transition-all ' +
+              (isAnswered ? 'bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white shadow-md' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700') + '">' +
+              nextBtnText +
+            '</button>' +
+          '</div>';
+
+        card.innerHTML = headerHtml + optionsHtml + feedbackHtml + navHtml;
+        quizContainer.appendChild(card);
+
+        // Bind Option Selection
+        card.querySelectorAll('.quiz-opt-btn').forEach(function (btn) {
           btn.addEventListener('click', function () {
             var qid = btn.getAttribute('data-qid');
             var opt = parseInt(btn.getAttribute('data-opt'), 10);
@@ -1037,13 +1241,44 @@ document.addEventListener('DOMContentLoaded', function () {
             renderQuiz();
           });
         });
+
+        // Bind Previous Button
+        var prevBtn = document.getElementById('prevQuizBtn');
+        if (prevBtn && !isFirst) {
+          prevBtn.addEventListener('click', function () {
+            currentQuizIndex -= 1;
+            renderQuiz();
+          });
+        }
+
+        // Bind Next / Finish Button
+        var nextBtn = document.getElementById('nextQuizBtn');
+        if (nextBtn) {
+          nextBtn.addEventListener('click', function () {
+            currentQuizIndex += 1;
+            renderQuiz();
+          });
+        }
+
+        // Bind Step Question Jump Buttons
+        card.querySelectorAll('.quiz-step-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var jumpIdx = parseInt(btn.getAttribute('data-jump-q'), 10);
+            currentQuizIndex = jumpIdx;
+            renderQuiz();
+          });
+        });
       }
 
-      document.getElementById('resetQuizBtn').addEventListener('click', function () {
-        quizAnswers = {};
-        renderQuiz();
-        showToast('Quiz reset!');
-      });
+      var resetQuizBtn = document.getElementById('resetQuizBtn');
+      if (resetQuizBtn) {
+        resetQuizBtn.addEventListener('click', function () {
+          quizAnswers = {};
+          currentQuizIndex = 0;
+          renderQuiz();
+          showToast('Quiz reset! Starting from Question 1.');
+        });
+      }
 
       // -----------------------------------------------------------
       // Lightweight Syntax Highlighter for JSX/JS Pre Blocks
@@ -1076,158 +1311,161 @@ document.addEventListener('DOMContentLoaded', function () {
       highlightAllCodeBlocks();
 
       // -----------------------------------------------------------
-      // Presenter Mode (Slides deck with Keyboard navigation)
+      // Kuya's Confession Room (Focused Handbook Section Mode)
       // -----------------------------------------------------------
       var currentSlide = 0;
-      var presentationSlides = [
+      var confessionSections = [
         {
-          num: '1 / 10',
-          badge: 'Overview • Mental Model',
-          title: 'React State & Side Effects',
-          subtitle: 'The Core Engine of Modern React Functional Components',
-          bullets: [
-            '<strong>State:</strong> Internal component memory that survives function re-invocations.',
-            '<strong>Re-rendering:</strong> React calls your component again to generate updated JSX and diff the DOM.',
-            '<strong>Side Effects:</strong> Operations escaping React (APIs, timers, manual DOM) synchronized via <code>useEffect</code>.'
-          ],
-          codeTitle: 'ReactComponentFlow.jsx',
-          code: '// 1. State changes via setter\nsetCount(prev => prev + 1);\n\n// 2. React re-renders component\n// Object.is compares old vs new state\n\n// 3. Screen paints & useEffect runs\nuseEffect(() => {\n  syncWithServer();\n}, [count]);',
-          anchor: '#top'
-        },
-        {
-          num: '2 / 10',
-          badge: 'Topic 1.1',
+          id: 'sec-1-1',
+          secNum: '1.1',
+          topicNum: 1,
+          topicBadge: 'Topic 1 • Introduction to State',
           title: 'Understanding State in React',
-          subtitle: 'Why Standard JavaScript Variables Fail in React UI',
-          bullets: [
-            'Standard variables (<code>let x = 0</code>) mutate silently in RAM, but React is never notified to re-render.',
-            'State acts as component <strong>memory</strong> that is preserved between component renders.',
-            'Calling state setter signals React to schedule a screen repaint.'
-          ],
+          subtitle: 'The Component Memory that Surpasses Normal JavaScript Variables',
+          anchor: '#sec-1-1',
+          definition: '<strong>State</strong> is a built-in React object that stores data or information about a component. It represents the parts of an application that can change over time based on user action, network responses, or timers.',
+          explanation: 'In standard JavaScript, mutating a variable does not notify React to redraw the screen. State acts as the <strong>memory of a component</strong>. When state updates via its setter, React schedules a re-render to redraw the screen and keep the UI in sync.',
           codeTitle: 'VariableVsState.js',
-          code: '// [Ineffective] Normal Variable: React never knows to redraw UI\nlet count = 0;\ncount = count + 1;\n\n// [Effective] React State: Memory preserved + schedules re-render\nconst [count, setCount] = useState(0);\nsetCount(count + 1);',
-          anchor: '#sec-1-1'
+          code: '// [Normal Variable]: Memory updates, but React never redraws the UI\nlet count = 0;\ncount = count + 1;\n\n// [React State]: Memory persists across renders + triggers immediate UI update\nconst [count, setCount] = useState(0);\nsetCount(count + 1);',
+          takeaways: [
+            '<strong>Silent Mutation:</strong> Standard variables (<code>let x = 0</code>) mutate silently in RAM without scheduling a UI repaint.',
+            '<strong>Component Memory:</strong> State persists across component re-renders while the component stays mounted.',
+            '<strong>Setter Signal:</strong> Calling a state setter function alerts React to queue an immediate UI update.'
+          ]
         },
         {
-          num: '3 / 10',
-          badge: 'Topic 1.2',
+          id: 'sec-1-2',
+          secNum: '1.2',
+          topicNum: 1,
+          topicBadge: 'Topic 1 • Introduction to State',
           title: 'Using the useState Hook',
-          subtitle: 'Syntax, Array Destructuring & Initial State',
-          bullets: [
-            'Must be declared at the <strong>top level</strong> of functional components (never in loops/conditions).',
-            'Returns a 2-element tuple: <code>[currentState, updaterFunction]</code>.',
-            'Initial argument is only evaluated on the very first mount.'
-          ],
+          subtitle: 'Array Destructuring, Syntax Anatomy & Initial State Rules',
+          anchor: '#sec-1-2',
+          definition: '<code class="font-semibold text-sky-400">useState</code> is a React Hook that allows you to add state variables and persistent memory to functional components.',
+          explanation: 'You call <code class="text-sky-400">useState</code> at the top level of your component. It takes one argument (the initial state) and returns a 2-element tuple: the <strong>current state value</strong> and a <strong>setter function</strong>. We unpack this with array destructuring: <code>const [name, setName] = useState(\'Guest\')</code>.',
           codeTitle: 'Greeting.jsx',
-          code: 'import { useState } from \'react\';\n\nfunction Greeting() {\n  // [stateValue, setterFunction]\n  const [name, setName] = useState(\'Guest\');\n\n  return <h1>Hello, {name}!</h1>;\n}',
-          anchor: '#sec-1-2'
+          code: 'import { useState } from \'react\';\n\nfunction Greeting() {\n  // name: current state value | setName: updater function\n  const [name, setName] = useState(\'Guest\');\n\n  return (\n    <div>\n      <p>Hello, {name}!</p>\n      <button onClick={() => setName(\'Kuya\')}>Change Name</button>\n    </div>\n  );\n}',
+          takeaways: [
+            '<strong>Top-Level Only:</strong> Never call <code>useState</code> inside loops, conditions, or nested functions.',
+            '<strong>Tuple Return:</strong> Returns <code>[state, setState]</code> — convention is <code>[value, setValue]</code>.',
+            '<strong>Initial Argument:</strong> Evaluated only on the initial mount; ignored on subsequent re-renders.'
+          ]
         },
         {
-          num: '4 / 10',
-          badge: 'Topic 1.3',
+          id: 'sec-1-3',
+          secNum: '1.3',
+          topicNum: 1,
+          topicBadge: 'Topic 1 • Introduction to State',
           title: 'Handling User Events',
-          subtitle: 'Synthetic Events & User Interactions',
-          bullets: [
-            'React uses camelCase event listener props: <code>onClick</code>, <code>onChange</code>, <code>onSubmit</code>.',
-            'Pass function references: <code>onClick={handleClick}</code> (do NOT call it with parentheses <code>handleClick()</code>).',
-            'Event handler calls setter → React queues update → UI repaints.'
-          ],
+          subtitle: 'Connecting User Gestures to State Updates with Synthetic Events',
+          anchor: '#sec-1-3',
+          definition: '<strong>Event handling</strong> in React involves capturing user interactions (like clicks, keypresses, or form submissions) and executing an event handler function to update state.',
+          explanation: 'React uses camelCase props like <code class="text-sky-400">onClick</code>, <code class="text-sky-400">onChange</code>, and <code class="text-sky-400">onSubmit</code>. Always pass a function reference (<code>onClick={handleClick}</code>) rather than calling the function immediately (<code>onClick={handleClick()}</code>). When clicked, the handler fires, calls the setter, and schedules a repaint.',
           codeTitle: 'Counter.jsx',
-          code: 'function Counter() {\n  const [count, setCount] = useState(0);\n\n  const handleIncrement = () => {\n    setCount(count + 1);\n  };\n\n  return <button onClick={handleIncrement}>Clicked {count}</button>;\n}',
-          anchor: '#sec-1-3'
+          code: 'function Counter() {\n  const [count, setCount] = useState(0);\n\n  // Event handler references the setter\n  const handleIncrement = () => {\n    setCount(count + 1);\n  };\n\n  return <button onClick={handleIncrement}>Clicked {count} times</button>;\n}',
+          takeaways: [
+            '<strong>Synthetic Events:</strong> React wraps native browser events in a cross-browser SyntheticEvent wrapper.',
+            '<strong>Pass Function Reference:</strong> Do not invoke handlers inline (avoid <code>onClick={fn()}</code>).',
+            '<strong>Action Pipeline:</strong> User action → Event listener fires → Setter invoked → React schedules re-render.'
+          ]
         },
         {
-          num: '5 / 10',
-          badge: 'Topic 2.1',
+          id: 'sec-2-1',
+          secNum: '2.1',
+          topicNum: 2,
+          topicBadge: 'Topic 2 • More on State',
           title: 'Updating State & Immutability',
-          subtitle: 'Never Mutate State Directly — Spread Objects & Use Updaters',
-          bullets: [
-            '<strong>Immutability:</strong> Always create new copies of objects/arrays (<code>{ ...prev, key: val }</code>).',
-            '<strong>Stale Closure Trap:</strong> 3 calls to <code>setScore(score + 1)</code> in the same tick only add +1!',
-            '<strong>Updater Function:</strong> Use <code>setScore(prev => prev + 1)</code> to safely queue rapid updates.'
-          ],
+          subtitle: 'Immutable Data Structures, Object Spreading & Functional Updaters',
+          anchor: '#sec-2-1',
+          definition: '<strong>State updating</strong> replaces old state with new state using the setter function. State in React is <strong>immutable</strong>; modifying it directly (e.g. <code>player.level = 2</code>) will break React\'s change detection.',
+          explanation: 'When state holds objects or arrays, you must copy the previous object with the spread operator (<code>{ ...prevPlayer, level: prevPlayer.level + 1 }</code>). Furthermore, when new state depends on previous state, always pass an <strong>updater function</strong> (<code>setScore(prev => prev + 1)</code>) to prevent stale closure traps during rapid updates.',
           codeTitle: 'ScoreBoard.jsx',
-          code: '// Updating an object immutably:\nsetPlayer(prev => ({ ...prev, level: prev.level + 1 }));\n\n// Safe sequential updates with updater function:\nsetScore(prev => prev + 1);\nsetScore(prev => prev + 1); // Guarantees +2 total!',
-          anchor: '#sec-2-1'
+          code: '// Updating an object immutably with spread:\nsetPlayer(prevPlayer => ({\n  ...prevPlayer,\n  level: prevPlayer.level + 1\n}));\n\n// Safe sequential updates with functional updater:\nsetScore(prevScore => prevScore + 1);\nsetScore(prevScore => prevScore + 1); // Correctly increments by +2!',
+          takeaways: [
+            '<strong>Never Mutate Directly:</strong> Direct mutations bypass React\'s change detection completely.',
+            '<strong>Spread Syntax:</strong> Use <code>...prev</code> to preserve existing properties when updating objects/arrays.',
+            '<strong>Functional Updater:</strong> Use <code>setState(prev => prev + 1)</code> whenever state calculation depends on previous state.'
+          ]
         },
         {
-          num: '6 / 10',
-          badge: 'Topic 2.2',
-          title: 'State & Re-rendering',
-          subtitle: 'How React Compares State and Diffs the DOM',
-          bullets: [
-            'React performs strict equality checks via <code>Object.is(oldState, newState)</code>.',
-            'If values are identical, React <strong>bails out</strong> and skips the re-render completely.',
-            'If values differ, React calls the component function top-to-bottom and patches only the changed DOM nodes.'
-          ],
+          id: 'sec-2-2',
+          secNum: '2.2',
+          topicNum: 2,
+          topicBadge: 'Topic 2 • More on State',
+          title: 'State & Re-rendering Mechanics',
+          subtitle: 'How React Detects State Changes Using Object.is Equality',
+          anchor: '#sec-2-2',
+          definition: 'A <strong>re-render</strong> is React\'s process of executing your component function again to compute new JSX and diff the virtual DOM against the real DOM.',
+          explanation: 'When a setter is called, React compares the new value to the previous value using <code class="text-sky-400">Object.is</code>. If they are identical (like mutating an object in-place and passing the same reference), React skips the re-render. If the reference or primitive differs, React recalculates the component and updates only changed DOM nodes.',
           codeTitle: 'RenderLogger.jsx',
-          code: 'function RenderLogger() {\n  const [toggle, setToggle] = useState(false);\n  console.log(\'Rendering toggle:\', toggle);\n\n  // Object.is(old, new) === false -> Re-render scheduled\n  return <button onClick={() => setToggle(!toggle)}>Toggle</button>;\n}',
-          anchor: '#sec-2-2'
+          code: 'function RenderLogger() {\n  const [user, setUser] = useState({ name: \'Bob\' });\n\n  // [Trap] Same object reference: Object.is is TRUE -> NO RE-RENDER!\n  const badUpdate = () => {\n    user.name = \'Charlie\';\n    setUser(user); \n  };\n\n  // [Correct] New object reference: Object.is is FALSE -> RE-RENDERS!\n  const goodUpdate = () => {\n    setUser({ ...user, name: \'Charlie\' });\n  };\n}',
+          takeaways: [
+            '<strong>Object.is Comparison:</strong> React uses strict reference equality to determine if an update occurred.',
+            '<strong>Bailout Optimization:</strong> If new state === old state by <code>Object.is</code>, React bails out without re-rendering.',
+            '<strong>Targeted DOM Diffing:</strong> React re-executes the function, but only updates the actual DOM nodes that changed.'
+          ]
         },
         {
-          num: '7 / 10',
-          badge: 'Topic 3.1',
-          title: 'Introduction to useEffect Hook',
-          subtitle: 'Synchronizing Components with External Systems',
-          bullets: [
-            'Pure components render JSX from props/state. Side effects live in <code>useEffect</code>.',
-            'Side effects include: API fetching, timers, manual DOM updates, WebSockets.',
-            'Executes <strong>after screen paint</strong>, preventing slow operations from freezing the UI.'
-          ],
+          id: 'sec-3-1',
+          secNum: '3.1',
+          topicNum: 3,
+          topicBadge: 'Topic 3 • Side Effects & useEffect',
+          title: 'Introduction to useEffect',
+          subtitle: 'Synchronizing Components with External Systems Beyond React',
+          anchor: '#sec-3-1',
+          definition: 'A <strong>side effect</strong> is any operation that interacts with the world outside the component: data fetching, document title modifications, timers, or subscriptions. <code class="text-sky-400">useEffect</code> is the Hook designed for this.',
+          explanation: 'React components should be pure functions that take props/state and return JSX. Side effects belong inside <code class="text-sky-400">useEffect</code>. The effect function runs <strong>after</strong> the component renders and the screen paints, ensuring that heavy external tasks never block initial UI rendering.',
           codeTitle: 'TitleUpdater.jsx',
-          code: 'import { useState, useEffect } from \'react\';\n\nfunction TitleUpdater() {\n  const [clicks, setClicks] = useState(0);\n\n  // Synchronize browser tab title after paint\n  useEffect(() => {\n    document.title = `Clicked ${clicks} times`;\n  });\n\n  return <button onClick={() => setClicks(clicks + 1)}>Click</button>;\n}',
-          anchor: '#sec-3-1'
+          code: 'import { useState, useEffect } from \'react\';\n\nfunction TitleUpdater() {\n  const [count, setCount] = useState(0);\n\n  // Side effect: reaches outside React to touch browser window\n  useEffect(() => {\n    document.title = `Clicked ${count} times`;\n  }, [count]);\n\n  return <button onClick={() => setCount(count + 1)}>Click {count}</button>;\n}',
+          takeaways: [
+            '<strong>Pure Rendering:</strong> Component rendering must remain pure; keep side effects inside <code>useEffect</code>.',
+            '<strong>Post-Paint Execution:</strong> Effects run after the browser paints the screen, preventing UI lag.',
+            '<strong>Synchronization:</strong> Think of <code>useEffect</code> as synchronizing state with external systems, not as a lifecycle hook.'
+          ]
         },
         {
-          num: '8 / 10',
-          badge: 'Topic 3.2',
+          id: 'sec-3-2',
+          secNum: '3.2',
+          topicNum: 3,
+          topicBadge: 'Topic 3 • Side Effects & useEffect',
           title: 'The Dependency Array',
           subtitle: 'Controlling Exactly When Your Effect Re-runs',
-          bullets: [
-            '<strong>No Array:</strong> Runs after initial mount + after EVERY single render (infinite loop risk!).',
-            '<strong>Empty <code>[]</code>:</strong> Runs ONCE on mount (ideal for one-time event listeners).',
-            '<strong>With <code>[deps]</code>:</strong> Runs on mount + only when listed dependencies change.'
-          ],
+          anchor: '#sec-3-2',
+          definition: 'The <strong>dependency array</strong> is the optional second argument passed to <code class="text-sky-400">useEffect</code>. It controls whether React re-runs or skips the effect on subsequent renders.',
+          explanation: 'Passing <strong>no array</strong> runs the effect after every single render. Passing an <strong>empty array <code>[]</code></strong> runs the effect only once when the component mounts. Passing <strong>dependencies <code>[userId]</code></strong> runs the effect on mount and whenever <code>userId</code> changes between renders.',
           codeTitle: 'UserProfile.jsx',
-          code: 'useEffect(() => {\n  // Only re-fetches when userId prop actually changes\n  fetch(`https://api.example.com/users/${userId}`)\n    .then(res => res.json())\n    .then(data => setUserData(data));\n}, [userId]); // Dependency array',
-          anchor: '#sec-3-2'
+          code: 'function UserProfile({ userId }) {\n  const [user, setUser] = useState(null);\n\n  // [userId] dependency: re-runs ONLY when userId changes\n  useEffect(() => {\n    fetchUserFromAPI(userId).then(data => setUser(data));\n  }, [userId]);\n\n  return <div>{user ? user.name : \'Loading...\'}</div>;\n}',
+          takeaways: [
+            '<strong>No Array:</strong> Runs after every single render (can trigger infinite loops if setting state!).',
+            '<strong>Empty Array <code>[]</code>:</strong> Runs exactly once after the initial component mount.',
+            '<strong>With Dependencies <code>[a, b]</code>:</strong> Re-runs only when <code>a</code> or <code>b</code> changes between renders.'
+          ]
         },
         {
-          num: '9 / 10',
-          badge: 'Topic 3.3',
-          title: 'Effects & Cleanup Function',
-          subtitle: 'Stopping Continuous Processes & Preventing Memory Leaks',
-          bullets: [
-            'Return a cleanup function from inside your effect: <code>return () => { clearInterval(id); }</code>.',
-            'Runs when the component <strong>unmounts</strong> from the DOM.',
-            'Also runs right before the effect re-runs with new dependencies to clean up the previous run.'
-          ],
+          id: 'sec-3-3',
+          secNum: '3.3',
+          topicNum: 3,
+          topicBadge: 'Topic 3 • Side Effects & useEffect',
+          title: 'Using Effects & Cleanup Functions',
+          subtitle: 'Preventing Memory Leaks, Ghost Timers & Stale Subscriptions',
+          anchor: '#sec-3-3',
+          definition: 'A <strong>cleanup function</strong> is a function returned by your <code class="text-sky-400">useEffect</code> callback. React executes it when the component unmounts or right before re-running the effect.',
+          explanation: 'Continuous operations like <code>setInterval</code>, WebSockets, or global event listeners keep running in memory even after a component is removed from the DOM unless stopped. Returning a cleanup function (<code>return () => clearInterval(id)</code>) guarantees that old subscriptions are destroyed before new ones start.',
           codeTitle: 'Timer.jsx',
-          code: 'useEffect(() => {\n  const id = setInterval(() => setSeconds(s => s + 1), 1000);\n\n  // Teardown / cleanup function prevents memory leaks!\n  return () => clearInterval(id);\n}, []);',
-          anchor: '#sec-3-3'
-        },
-        {
-          num: '10 / 10',
-          badge: 'Review & Quiz',
-          title: 'Cheat Sheet Matrix & Assessment',
-          subtitle: 'Summary of Best Practices & Live Class Quiz',
-          bullets: [
-            '<strong>useState:</strong> Local state memory; always update with setter or updater functions.',
-            '<strong>useEffect:</strong> External sync; always declare all dependencies used inside.',
-            '<strong>Cleanup:</strong> Clear timers, subscriptions, and listeners to prevent leaks.',
-            'Use the interactive quiz to test mastery with instant feedback.'
-          ],
-          codeTitle: 'SummaryMatrix.txt',
-          code: 'useState(init)     -> Component Memory\nsetVal(p => p + 1) -> Updater Queue (Prevents Stale Closure)\nuseEffect(fn)      -> Runs Every Render\nuseEffect(fn, [])  -> Runs Once on Mount\nuseEffect(fn, [d]) -> Runs When [d] Changes\nreturn () => clean -> Runs on Unmount / Re-run',
-          anchor: '#quiz-section'
+          code: 'function Timer() {\n  const [seconds, setSeconds] = useState(0);\n\n  useEffect(() => {\n    const id = setInterval(() => {\n      setSeconds(prev => prev + 1);\n    }, 1000);\n\n    // Cleanup function: runs on unmount or before effect re-runs\n    return () => {\n      clearInterval(id);\n    };\n  }, []);\n\n  return <div>Seconds elapsed: {seconds}</div>;\n}',
+          takeaways: [
+            '<strong>Return a Function:</strong> Return <code>() => cleanup()</code> from your effect to tear down continuous tasks.',
+            '<strong>Prevent Memory Leaks:</strong> Avoid orphan timers, abandoned event listeners, and memory leaks.',
+            '<strong>Re-run Lifecycle:</strong> On effect re-runs, the previous cleanup executes first before the new effect runs.'
+          ]
         }
       ];
 
       var presentModal = document.getElementById('presentModal');
       var slideViewport = document.getElementById('slideViewport');
       var slideIndicator = document.getElementById('slideIndicator');
-      var slideProgressBar = document.getElementById('slideProgressBar');
       var slideDotsContainer = document.getElementById('slideDotsContainer');
+      var confessionSectionPills = document.getElementById('confessionSectionPills');
       var prevSlideBtn = document.getElementById('prevSlideBtn');
       var nextSlideBtn = document.getElementById('nextSlideBtn');
       var closePresentBtn = document.getElementById('closePresentBtn');
@@ -1235,69 +1473,152 @@ document.addEventListener('DOMContentLoaded', function () {
       var mobilePresentBtn = document.getElementById('mobilePresentBtn');
       var heroPresentBtn = document.getElementById('heroPresentBtn');
 
+      function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
       function renderSlide(index) {
+        if (!slideViewport) return;
         if (index < 0) index = 0;
-        if (index >= presentationSlides.length) index = presentationSlides.length - 1;
+        if (index >= confessionSections.length) index = confessionSections.length - 1;
         currentSlide = index;
-        var s = presentationSlides[index];
+        var s = confessionSections[index];
 
         if (slideIndicator) {
-          slideIndicator.textContent = 'Slide ' + (index + 1) + ' of ' + presentationSlides.length;
-        }
-        if (slideProgressBar) {
-          slideProgressBar.style.width = (((index + 1) / presentationSlides.length) * 100) + '%';
+          slideIndicator.textContent = '';
         }
 
-        // Render dots
-        if (slideDotsContainer) {
-          slideDotsContainer.innerHTML = '';
-          presentationSlides.forEach(function (_, i) {
-            var dot = document.createElement('button');
-            dot.type = 'button';
-            dot.className = i === index
-              ? 'w-6 h-2 rounded-full bg-sky-400 transition-all'
-              : 'w-2 h-2 rounded-full bg-slate-700 hover:bg-slate-500 transition-all';
-            dot.addEventListener('click', function () { renderSlide(i); });
-            slideDotsContainer.appendChild(dot);
+        // Render Quick-Jump Pills in Header
+        if (confessionSectionPills) {
+          confessionSectionPills.innerHTML = '';
+          confessionSections.forEach(function (sec, i) {
+            var pill = document.createElement('button');
+            pill.type = 'button';
+            var isActive = i === index;
+            pill.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono font-bold whitespace-nowrap transition-all ' +
+              (isActive
+                ? 'bg-gradient-to-r from-blue-600 to-amber-600 text-white shadow-md shadow-blue-950/40 border border-amber-400/50'
+                : 'text-slate-400 hover:text-amber-300 hover:bg-slate-800');
+            pill.textContent = sec.secNum;
+            pill.title = 'Sub-section ' + sec.secNum + ': ' + sec.title;
+            pill.addEventListener('click', function () {
+              renderSlide(i);
+            });
+            confessionSectionPills.appendChild(pill);
           });
         }
 
+        // Render Bottom Counter
+        if (slideDotsContainer) {
+          slideDotsContainer.innerHTML = '<span class="px-2.5 py-0.5 rounded bg-amber-500/15 text-amber-300 font-bold border border-amber-500/30">Sub-section ' + s.secNum + '</span> <span class="text-slate-300 font-medium">' + s.title + '</span>';
+        }
+
         // Bullets HTML
-        var bulletsHtml = s.bullets.map(function (b) {
-          return '<li class="flex items-start gap-2.5 text-sm sm:text-base text-slate-300 leading-relaxed"><span class="w-2 h-2 rounded-full bg-sky-400 mt-2 shrink-0"></span><span>' + b + '</span></li>';
+        var bulletsHtml = s.takeaways.map(function (b) {
+          return '<li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300 leading-relaxed"><span class="w-2 h-2 rounded-full bg-amber-400 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></span><span>' + b + '</span></li>';
         }).join('');
 
-        // Slide card markup
+        // Focused Section Markup (2-Column Presentation: Left = Explanations & Rules, Right = LIVE CODE EXAMPLE)
         slideViewport.innerHTML =
-          '<div class="space-y-6 animate-fade">' +
-            '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-4">' +
-              '<div class="space-y-1">' +
-                '<span class="inline-block text-xs font-mono font-bold px-2.5 py-0.5 rounded-full bg-sky-500/10 text-sky-400 border border-sky-500/30">' + s.badge + '</span>' +
-                '<h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">' + s.title + '</h2>' +
-                '<p class="text-sm sm:text-base text-slate-400">' + s.subtitle + '</p>' +
-              '</div>' +
-              '<a href="' + s.anchor + '" id="jumpToHandbookBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 flex items-center gap-1.5 transition-colors">' +
-                'View in Handbook' +
-                '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>' +
-              '</a>' +
-            '</div>' +
-            '<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">' +
-              '<div class="lg:col-span-6 rounded-2xl bg-slate-900/90 border border-slate-800 p-6 flex flex-col justify-center space-y-4 shadow-xl">' +
-                '<div class="text-xs font-mono uppercase tracking-wider text-slate-400">Key Takeaways &amp; Concepts:</div>' +
-                '<ul class="space-y-3.5">' + bulletsHtml + '</ul>' +
-              '</div>' +
-              '<div class="lg:col-span-6 rounded-2xl bg-slate-900/90 border border-slate-800 overflow-hidden flex flex-col shadow-xl">' +
-                '<div class="px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">' +
-                  '<span>' + s.codeTitle + '</span>' +
+          '<div class="space-y-4 max-w-[1550px] w-full mx-auto animate-in fade-in zoom-in-95 duration-150">' +
+            // Section Header Bar with Prominent Sub-section Indicator
+            '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-amber-500/25 pb-3">' +
+              '<div class="flex items-center gap-3.5">' +
+                '<span class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-amber-600 text-white font-mono text-sm sm:text-base font-black tracking-wide shadow-md shadow-blue-950/40 border border-amber-400/30">SUB-SECTION ' + s.secNum + '</span>' +
+                '<div>' +
                   '<div class="flex items-center gap-2">' +
-                    '<button type="button" id="slideEnlargeBtn" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800 hover:bg-sky-600/30 text-slate-200 hover:text-white border border-slate-700 hover:border-sky-500/50 transition-colors" title="Enlarge code for full view">' +
-                      '<svg class="w-3.5 h-3.5 text-sky-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
-                      '<span>Enlarge</span>' +
-                    '</button>' +
-                    '<span class="text-sky-400 font-semibold text-xs">Live Reference</span>' +
+                    '<span class="text-xs font-mono font-bold uppercase tracking-wider text-amber-400">' + s.topicBadge + '</span>' +
+                    '<span class="text-slate-500">•</span>' +
+                    '<span class="text-xs font-mono text-slate-400">Sub-section ' + (index + 1) + ' of ' + confessionSections.length + '</span>' +
+                  '</div>' +
+                  '<h2 class="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight uppercase">' + s.title + '</h2>' +
+                '</div>' +
+              '</div>' +
+              '<div class="flex items-center gap-2">' +
+                '<a href="' + s.anchor + '" id="jumpToHandbookBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm font-semibold text-slate-200 border border-amber-500/30 hover:border-amber-500/60 flex items-center gap-2 transition-colors">' +
+                  '<span>View in House Handbook</span>' +
+                  '<svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>' +
+                '</a>' +
+              '</div>' +
+            '</div>' +
+
+            // Main 2-Column Content Grid: Left = Explanations & Rules, Right = CODE EXAMPLE!
+            '<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">' +
+              // Left Column (lg:col-span-5): Definition, Explanation, Takeaways
+              '<div class="lg:col-span-5 space-y-3.5 flex flex-col justify-between">' +
+                // Definition Card
+                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-amber-500/30 border-l-4 border-l-amber-500 space-y-2 shadow-lg">' +
+                  '<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">' +
+                    '<svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' +
+                    '<span>Sub-Section ' + s.secNum + ' Definition</span>' +
+                  '</div>' +
+                  '<p class="text-sm text-slate-200 leading-relaxed">' + s.definition + '</p>' +
+                '</div>' +
+
+                // Explanation Card
+                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-blue-500/30 border-l-4 border-l-blue-500 space-y-2 shadow-lg">' +
+                  '<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">' +
+                    '<svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>' +
+                    '<span>Explanation &amp; Inner Mechanics</span>' +
+                  '</div>' +
+                  '<p class="text-sm text-slate-300 leading-relaxed">' + s.explanation + '</p>' +
+                '</div>' +
+
+                // Kuya's Key Takeaways Card
+                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-amber-500/25 space-y-2.5 shadow-lg">' +
+                  '<div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">' +
+                    '<span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>' +
+                    '<span>Kuya\'s Confession Room Rules:</span>' +
+                  '</div>' +
+                  '<ul class="space-y-2">' + bulletsHtml + '</ul>' +
+                '</div>' +
+              '</div>' +
+
+              // Right Column (lg:col-span-7): PROMINENT CODE EXAMPLE!
+              '<div class="lg:col-span-7 flex flex-col">' +
+                '<div class="rounded-2xl bg-slate-950 border-2 border-amber-500/40 overflow-hidden shadow-2xl flex flex-col flex-1">' +
+                  // Code Header
+                  '<div class="px-5 py-3 bg-slate-900/95 border-b border-slate-800 flex items-center justify-between">' +
+                    '<div class="flex items-center gap-3">' +
+                      '<span class="w-2.5 h-2.5 rounded-full bg-red-600 rec-dot"></span>' +
+                      '<div class="flex items-center gap-2">' +
+                        '<span class="text-amber-400 font-mono text-xs font-bold uppercase tracking-wider">Sub-section ' + s.secNum + ' Code:</span>' +
+                        '<span class="text-slate-100 font-bold font-mono text-sm sm:text-base">' + s.codeTitle + '</span>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="flex items-center gap-2">' +
+                      '<button type="button" id="slideCopyBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono border border-slate-700 transition-colors" title="Copy code snippet">' +
+                        '<svg class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+                        '<span id="slideCopyText">Copy</span>' +
+                      '</button>' +
+                      '<button type="button" id="slideEnlargeBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow transition-colors" title="Projector mode / enlarge code">' +
+                        '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
+                        '<span>Enlarge</span>' +
+                      '</button>' +
+                    '</div>' +
+                  '</div>' +
+
+                  // Code Pre Block (Escaped code text)
+                  '<div class="relative flex-1 p-5 sm:p-6 bg-[#030712] overflow-auto code-scroll min-h-[300px]">' +
+                    '<pre class="text-sm sm:text-base font-mono text-slate-100 leading-relaxed select-text"><code>' + escapeHtml(s.code) + '</code></pre>' +
+                  '</div>' +
+
+                  // Code Footer
+                  '<div class="px-5 py-2.5 bg-slate-950 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">' +
+                    '<div class="flex items-center gap-2">' +
+                      '<span class="text-emerald-400 font-semibold">● React 18+ Live Syntax</span>' +
+                      '<span class="text-slate-600">|</span>' +
+                      '<span>Sub-section ' + s.secNum + '</span>' +
+                    '</div>' +
+                    '<span class="text-amber-400/80 font-medium">Click Enlarge for Projector View</span>' +
                   '</div>' +
                 '</div>' +
-                '<pre class="p-5 text-xs sm:text-sm font-mono text-slate-200 overflow-x-auto code-scroll flex-1 leading-relaxed bg-slate-950/60"><code>' + s.code + '</code></pre>' +
               '</div>' +
             '</div>' +
           '</div>';
@@ -1309,7 +1630,21 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         }
 
-        // Add event listener to exit modal when clicking "View in Handbook"
+        var slideCopyBtn = document.getElementById('slideCopyBtn');
+        var slideCopyText = document.getElementById('slideCopyText');
+        if (slideCopyBtn) {
+          slideCopyBtn.addEventListener('click', function () {
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(s.code).then(function () {
+                if (slideCopyText) slideCopyText.textContent = 'Copied!';
+                setTimeout(function () {
+                  if (slideCopyText) slideCopyText.textContent = 'Copy';
+                }, 2000);
+              });
+            }
+          });
+        }
+
         var jumpBtn = document.getElementById('jumpToHandbookBtn');
         if (jumpBtn) {
           jumpBtn.addEventListener('click', function () {
@@ -1318,8 +1653,34 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       }
 
-      function openPresentationMode() {
+      function detectCurrentHandbookSection() {
+        var secIds = ['sec-1-1', 'sec-1-2', 'sec-1-3', 'sec-2-1', 'sec-2-2', 'sec-3-1', 'sec-3-2', 'sec-3-3'];
+        var currentId = 'sec-1-1';
+        for (var i = 0; i < secIds.length; i++) {
+          var el = document.getElementById(secIds[i]);
+          if (el) {
+            var rect = el.getBoundingClientRect();
+            if (rect.top <= window.innerHeight * 0.45) {
+              currentId = secIds[i];
+            }
+          }
+        }
+        return currentId;
+      }
+
+      function openPresentationMode(targetSecId) {
         if (!presentModal) return;
+        var targetIndex = 0;
+        var lookupId = typeof targetSecId === 'string' ? targetSecId : detectCurrentHandbookSection();
+
+        for (var i = 0; i < confessionSections.length; i++) {
+          if (confessionSections[i].id === lookupId) {
+            targetIndex = i;
+            break;
+          }
+        }
+
+        currentSlide = targetIndex;
         presentModal.classList.remove('hidden');
         renderSlide(currentSlide);
         document.body.style.overflow = 'hidden';
@@ -1331,10 +1692,17 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.overflow = '';
       }
 
-      if (presentModeBtn) presentModeBtn.addEventListener('click', openPresentationMode);
-      if (mobilePresentBtn) mobilePresentBtn.addEventListener('click', openPresentationMode);
-      if (heroPresentBtn) heroPresentBtn.addEventListener('click', openPresentationMode);
+      if (presentModeBtn) presentModeBtn.addEventListener('click', function () { openPresentationMode(); });
+      if (mobilePresentBtn) mobilePresentBtn.addEventListener('click', function () { openPresentationMode(); });
+      if (heroPresentBtn) heroPresentBtn.addEventListener('click', function () { openPresentationMode(); });
       if (closePresentBtn) closePresentBtn.addEventListener('click', closePresentationMode);
+
+      document.querySelectorAll('.confess-sec-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var secId = btn.getAttribute('data-confess-sec');
+          openPresentationMode(secId);
+        });
+      });
 
       if (prevSlideBtn) {
         prevSlideBtn.addEventListener('click', function () {
@@ -1349,6 +1717,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Keyboard navigation
       document.addEventListener('keydown', function (e) {
+        if (splashActive) {
+          dismissPbbSplash();
+          return;
+        }
+
         if (enlargeCodeModal && !enlargeCodeModal.classList.contains('hidden')) {
           if (e.key === 'Escape') {
             closeEnlargedCode();

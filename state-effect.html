@@ -11,14 +11,67 @@
   <link rel="stylesheet" href="style.css" />
   <script src="script.js"></script>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased selection:bg-sky-500 selection:text-white transition-colors duration-200">
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased selection:bg-amber-500 selection:text-slate-950 transition-colors duration-200">
+
+  <!-- PBB Animated Loading / Splash Screen (Cinematic Logo Assembly) -->
+  <div id="pbbSplash" class="fixed inset-0 z-[100] bg-[#050914] flex flex-col items-center justify-center p-6 text-center select-none transition-opacity duration-700 cursor-pointer" title="Click anywhere or press any key to enter">
+    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/30 via-slate-950/80 to-[#03060f] pointer-events-none"></div>
+
+    <!-- Surveillance Camera HUD Markers -->
+    <div class="absolute top-6 left-6 flex items-center gap-2 font-mono text-[11px] text-red-500 font-bold tracking-widest uppercase">
+      <span class="w-2.5 h-2.5 rounded-full bg-red-600 rec-dot"></span>
+      <span>CAM 01 • STATE &amp; EFFECT LIVE</span>
+    </div>
+    <div class="absolute top-6 right-6 font-mono text-[11px] text-slate-500 tracking-wider hidden sm:block">
+      FEED: 1080P HD • 24/7 SURVEILLANCE
+    </div>
+
+    <!-- Center Assembling Logo Container -->
+    <div class="relative z-10 max-w-lg w-full flex flex-col items-center space-y-6">
+      <!-- 3-Piece Assembling Logo Stage -->
+      <div class="relative w-72 sm:w-88 md:w-96 aspect-[16/9] mx-auto pbb-assembly-stage">
+        <!-- Ambient Backlight Burst -->
+        <div class="absolute -inset-6 bg-gradient-to-r from-blue-600/40 via-amber-500/25 to-red-600/35 rounded-full blur-3xl opacity-85 pointer-events-none"></div>
+
+        <!-- Left Blue Wing (Swoops in from top-left) -->
+        <img src="pbb-layer-blue.png" alt="PBB Left Wing" class="pbb-assemble-blue absolute inset-0 w-full h-full object-contain pointer-events-none" />
+
+        <!-- Right Red Wing (Swoops in from bottom-right) -->
+        <img src="pbb-layer-red.png" alt="PBB Right Wing" class="pbb-assemble-red absolute inset-0 w-full h-full object-contain pointer-events-none" />
+
+        <!-- Center Golden Sun Disc (Scales and snaps into center) -->
+        <img src="pbb-layer-sun.png" alt="PBB Center Sun" class="pbb-assemble-sun absolute inset-0 w-full h-full object-contain pointer-events-none" />
+
+        <!-- Shockwave Flash Burst on Lock -->
+        <div class="pbb-assemble-flash absolute inset-0 rounded-full pointer-events-none"></div>
+      </div>
+
+      <!-- Typography -->
+      <div class="space-y-1.5 pbb-assembly-title">
+        <div class="text-[11px] font-mono font-bold tracking-[0.3em] uppercase text-amber-400">State and Effect</div>
+        <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white uppercase drop-shadow-[0_2px_20px_rgba(245,158,11,0.35)]">
+          Pinoy Big Brother
+        </h1>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-500/30 text-blue-400 font-mono text-xs font-semibold">
+          <span>REACT EDITION</span>
+        </div>
+      </div>
+
+      <!-- Minimalist Dismiss Hint -->
+      <div class="pt-2">
+        <span class="text-[11px] font-mono text-slate-500 hover:text-amber-400 transition-colors">
+          Click anywhere or press any key to enter
+        </span>
+      </div>
+    </div>
+  </div>
 
   <!-- Toast Notification -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 pointer-events-none flex flex-col gap-2"></div>
 
   <!-- Enlarged Code Inspector Modal -->
   <div id="enlargeCodeModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 transition-all" role="dialog" aria-modal="true" aria-labelledby="enlargeModalTitle">
-    <div class="relative w-full max-w-4xl max-h-[88vh] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+    <div class="relative w-full max-w-6xl max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
       <!-- Header -->
       <div class="flex items-center justify-between px-5 py-3.5 bg-slate-950 border-b border-slate-800 shrink-0">
         <div class="flex items-center gap-2.5">
@@ -55,45 +108,43 @@
     </div>
   </div>
 
-  <!-- Presenter Mode Fullscreen Overlay -->
-  <div id="presentModal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8 text-slate-100 transition-opacity">
+  <!-- Presenter Mode Fullscreen Overlay: Kuya's Confession Room -->
+  <div id="presentModal" class="hidden fixed inset-0 z-50 bg-[#050916]/95 backdrop-blur-2xl flex flex-col justify-between p-4 sm:p-8 text-slate-100 transition-opacity pbb-confession-glow border border-amber-500/20">
     <!-- Top Bar -->
-    <div class="max-w-6xl w-full mx-auto flex items-center justify-between border-b border-slate-800 pb-3 shrink-0">
-      <div class="flex items-center gap-3">
-        <span class="px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-400 font-mono text-xs font-semibold border border-sky-500/30">PRESENTATION MODE</span>
-        <span id="slideIndicator" class="text-xs text-slate-400 font-mono">Slide 1 of 10</span>
+    <div class="max-w-7xl w-full mx-auto flex items-center justify-between border-b border-amber-500/20 pb-3 shrink-0 gap-4">
+      <!-- Left: Logo -->
+      <div class="flex items-center gap-2 shrink-0">
+        <img src="pbb-logo.png" alt="Logo" class="h-6 sm:h-7 w-auto object-contain drop-shadow" />
       </div>
-      <!-- Center Progress Pill -->
-      <div class="hidden sm:flex items-center gap-2">
-        <div class="w-36 h-1.5 rounded-full bg-slate-800 overflow-hidden">
-          <div id="slideProgressBar" class="h-full bg-sky-500 transition-all duration-300" style="width: 10%;"></div>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="hidden md:inline text-[11px] text-slate-500 font-mono">Navigate: ← / → | Exit: Esc</span>
-        <button id="closePresentBtn" type="button" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors" title="Exit presentation (Esc)">
+
+      <!-- Center: Section Progress Tracker -->
+      <div id="confessionSectionPills" class="flex items-center gap-1.5 bg-slate-900/90 border border-amber-500/30 p-1 rounded-xl overflow-x-auto"></div>
+
+      <!-- Right: Control (Close Button) -->
+      <div class="flex items-center shrink-0">
+        <button id="closePresentBtn" type="button" class="p-2.5 rounded-xl bg-slate-900 hover:bg-rose-600/30 text-slate-300 hover:text-rose-300 border border-slate-800 hover:border-rose-500/50 transition-colors" title="Exit Confession Room (Esc)" aria-label="Close presentation">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
       </div>
     </div>
 
     <!-- Slide Content Viewport -->
-    <div id="slideViewport" class="flex-1 max-w-5xl w-full mx-auto my-auto overflow-y-auto py-6 flex flex-col justify-center">
+    <div id="slideViewport" class="flex-1 max-w-[1600px] w-full mx-auto overflow-y-auto py-4 px-2 sm:px-4 flex flex-col justify-start">
       <!-- Injected via Script -->
     </div>
 
     <!-- Bottom Controls Bar -->
-    <div class="max-w-6xl w-full mx-auto flex items-center justify-between border-t border-slate-800 pt-3 shrink-0">
-      <button id="prevSlideBtn" type="button" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold transition-all">
+    <div class="max-w-7xl w-full mx-auto flex items-center justify-between border-t border-amber-500/20 pt-3 shrink-0">
+      <button id="prevSlideBtn" type="button" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-200 transition-all">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-        Previous
+        Previous Section
       </button>
 
-      <!-- Slide Dots / Progress -->
-      <div id="slideDotsContainer" class="hidden sm:flex items-center gap-1.5"></div>
+      <!-- Section Indicator & Quick Step Dots -->
+      <div id="slideDotsContainer" class="hidden sm:flex items-center gap-1.5 font-mono text-xs text-amber-400"></div>
 
-      <button id="nextSlideBtn" type="button" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold shadow-md shadow-sky-950/20 transition-all">
-        Next
+      <button id="nextSlideBtn" type="button" class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white text-xs font-bold shadow-lg shadow-blue-950/40 transition-all">
+        Next Section
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
       </button>
     </div>
@@ -101,127 +152,48 @@
 
   <!-- Top Navigation Header -->
   <header class="sticky top-0 z-40 backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200 dark:border-slate-800 transition-colors">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+    <div class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 h-18 sm:h-20 flex items-center justify-between gap-4">
       <!-- Brand -->
       <div class="flex items-center gap-3 min-w-0">
-        <button id="mobileMenuBtn" type="button" class="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none" aria-label="Toggle navigation">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
-        </button>
-        <a href="#top" class="flex items-center gap-2.5 group truncate">
-          <div class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700/80 text-sky-400 flex items-center justify-center shadow-sm shrink-0">
-            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="2.2" fill="currentColor"/>
-              <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(30 12 12)"/>
-              <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(90 12 12)"/>
-              <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(150 12 12)"/>
-            </svg>
+        <a href="#top" class="flex items-center gap-3 group">
+          <div class="h-10 sm:h-12 flex items-center justify-center shrink-0">
+            <img src="pbb-logo.png" alt="State and Effect Logo" class="h-8 sm:h-10 w-auto object-contain drop-shadow transition-transform group-hover:scale-105" />
           </div>
           <div class="truncate">
-            <span class="font-bold text-base sm:text-lg tracking-tight text-slate-900 dark:text-white">React State &amp; Effect</span>
-            <span class="hidden sm:inline-block ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">Interactive Handbook</span>
+            <span class="font-black text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white">State and Effect</span>
           </div>
         </a>
-      </div>
-
-      <!-- Quick Topic Jump Pills (Desktop) -->
-      <nav class="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/70 dark:border-slate-700/60 text-xs font-medium">
-        <a href="#topic-1" data-nav-pill="topic-1" class="nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400">1. Intro to State</a>
-        <a href="#topic-2" data-nav-pill="topic-2" class="nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400">2. More on State</a>
-        <a href="#topic-3" data-nav-pill="topic-3" class="nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400">3. Side Effects</a>
-        <a href="#quiz-section" data-nav-pill="quiz-section" class="nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-400">Practice Quiz</a>
-      </nav>
-
-      <!-- Search & Theme Controls -->
-      <div class="flex items-center gap-2">
-        <div class="relative hidden sm:block">
-          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z"></path>
-          </svg>
-          <input id="topicSearchInput" type="text" placeholder="Filter concepts..." class="w-44 lg:w-56 pl-9 pr-7 py-1.5 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all" />
-          <button id="clearSearchBtn" type="button" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" aria-label="Clear search">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-
-        <!-- Progress Badge -->
-        <div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
-          <span class="text-slate-500 dark:text-slate-400">Read:</span>
-          <span id="readProgressCount" class="font-bold text-sky-600 dark:text-sky-400">0/8</span>
-        </div>
-
-        <!-- Presenter Mode Button -->
-        <button id="presentModeBtn" type="button" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-medium shadow-sm transition-all" title="Launch presentation slides (Hotkey: P)">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-          <span class="hidden sm:inline">Present</span>
-        </button>
-
-        <!-- Theme Toggle -->
-        <button id="themeToggleBtn" type="button" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-sky-500/50 transition-colors" aria-label="Toggle color theme">
-          <svg id="sunIcon" class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-          </svg>
-          <svg id="moonIcon" class="w-4 h-4 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <!-- Mobile Navigation Drawer -->
-    <div id="mobileNavDrawer" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-4 space-y-3">
-      <div class="relative sm:hidden">
-        <input id="mobileSearchInput" type="text" placeholder="Filter concepts..." class="w-full pl-3 pr-3 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200" />
-      </div>
-      <div class="sm:hidden">
-        <button id="mobilePresentBtn" type="button" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-medium shadow-sm">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-          Start Presentation Mode (Slides)
-        </button>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs">
-        <a href="#sec-1-1" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1.1 Understanding State in React</a>
-        <a href="#sec-1-2" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1.2 Using the useState Hook</a>
-        <a href="#sec-1-3" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1.3 Handling User Events</a>
-        <a href="#sec-2-1" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">2.1 Updating State</a>
-        <a href="#sec-2-2" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">2.2 How State Triggers Re-rendering</a>
-        <a href="#sec-3-1" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3.1 Intro to useEffect Hook</a>
-        <a href="#sec-3-2" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3.2 The Dependency Array</a>
-        <a href="#sec-3-3" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3.3 Effects &amp; Cleanup Function</a>
       </div>
     </div>
   </header>
 
   <!-- Hero Banner -->
   <section id="top" class="relative overflow-hidden border-b border-slate-200 dark:border-slate-800/80 bg-gradient-to-b from-white via-slate-50/60 to-slate-100/70 dark:from-slate-900 dark:via-[#0e1422] dark:to-[#0b0f19]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        <div class="lg:col-span-7 space-y-5">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-600 dark:text-sky-400 text-xs font-semibold">
-            <span class="w-2 h-2 rounded-full bg-sky-500 animate-pulse"></span>
-            Core React Architecture • State &amp; Side Effects
+    <div class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 pt-8 pb-6 sm:pt-10 sm:pb-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div class="lg:col-span-7 space-y-6">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 dark:text-amber-400 text-xs sm:text-sm font-bold">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-600 rec-dot"></span>
+            LIVE SURVEILLANCE • STATE &amp; EFFECT EDITION
           </div>
-          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-            Mastering <span class="text-sky-600 dark:text-sky-400">State</span> &amp; <span class="text-sky-600 dark:text-sky-400">Effect</span> in React
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-tight uppercase">
+            Mastering <span class="text-blue-600 dark:text-blue-400">State</span> &amp; <span class="text-amber-500 dark:text-amber-400">Effect</span>
           </h1>
-          <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-            Explore how React components remember data over time with <code class="px-1.5 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800 text-sky-600 dark:text-sky-400 text-sm">useState</code>, respond to user events, schedule smart UI re-renders, and synchronize with external systems using <code class="px-1.5 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800 text-indigo-600 dark:text-indigo-300 text-sm">useEffect</code>.
+          <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
+            Under Kuya's 24/7 surveillance, explore how React components remember housemate data with <code class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-mono text-base">useState</code>, handle nomination updates, schedule screen repaints, and synchronize weekly tasks using <code class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-mono text-base">useEffect</code>.
           </p>
-          <div class="flex flex-wrap items-center gap-3 pt-1">
-            <button id="heroPresentBtn" type="button" class="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-medium text-sm shadow-sm transition-all flex items-center gap-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-              Start Slide Deck (P)
+          <div class="flex flex-wrap items-center gap-3.5 pt-1">
+            <button id="heroPresentBtn" type="button" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white font-bold text-sm sm:text-base shadow-md shadow-blue-950/30 transition-all flex items-center gap-2.5">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+              Enter Confession Room (P)
             </button>
-            <a href="#topic-1" class="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-sm transition-all">
+            <a href="#topic-1" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-sm sm:text-base transition-all">
               Handbook View
             </a>
-            <a href="#comparison-matrix" class="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-sm transition-all">
+            <a href="#comparison-matrix" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-sm sm:text-base transition-all">
               Cheat Sheet
             </a>
-            <a href="#quiz-section" class="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-medium text-sm transition-all">
+            <a href="#quiz-section" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-medium text-sm sm:text-base transition-all">
               Take Quiz
             </a>
           </div>
@@ -229,37 +201,37 @@
 
         <!-- Interactive Mental Model Card -->
         <div class="lg:col-span-5">
-          <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-5 space-y-4">
+          <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-6 sm:p-7 space-y-5">
             <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div class="flex items-center gap-2">
                 <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
                 <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
                 <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                <span class="ml-1 text-xs font-mono text-slate-500 dark:text-slate-400">ReactComponentLifecycle.jsx</span>
+                <span class="ml-1 text-xs sm:text-sm font-mono text-slate-500 dark:text-slate-400">ReactComponentLifecycle.jsx</span>
               </div>
-              <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Interactive Lifecycle</span>
+              <span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Interactive Lifecycle</span>
             </div>
 
-            <p class="text-xs text-slate-500 dark:text-slate-400">
+            <p class="text-sm text-slate-500 dark:text-slate-400">
               Click each stage below to inspect how State, Re-rendering, and Effects work together:
             </p>
 
-            <div class="grid grid-cols-3 gap-2 text-center">
-              <button type="button" data-cycle-step="state" class="cycle-step-btn p-3 rounded-xl border-2 border-sky-500 bg-sky-500/10 text-left transition-all">
-                <div class="text-xs font-bold text-sky-600 dark:text-sky-400">1. State Change</div>
-                <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Event calls setter</div>
+            <div class="grid grid-cols-3 gap-2.5 text-center">
+              <button type="button" data-cycle-step="state" class="cycle-step-btn p-3.5 rounded-xl border-2 border-sky-500 bg-sky-500/10 text-left transition-all">
+                <div class="text-sm font-bold text-sky-600 dark:text-sky-400">1. State Change</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Event calls setter</div>
               </button>
-              <button type="button" data-cycle-step="render" class="cycle-step-btn p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 text-left transition-all">
-                <div class="text-xs font-bold text-slate-700 dark:text-slate-300">2. Re-render UI</div>
-                <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Object.is &amp; DOM diff</div>
+              <button type="button" data-cycle-step="render" class="cycle-step-btn p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 text-left transition-all">
+                <div class="text-sm font-bold text-slate-700 dark:text-slate-300">2. Re-render UI</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Object.is &amp; DOM diff</div>
               </button>
-              <button type="button" data-cycle-step="effect" class="cycle-step-btn p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 text-left transition-all">
-                <div class="text-xs font-bold text-slate-700 dark:text-slate-300">3. Side Effect</div>
-                <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">After screen paint</div>
+              <button type="button" data-cycle-step="effect" class="cycle-step-btn p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 text-left transition-all">
+                <div class="text-sm font-bold text-slate-700 dark:text-slate-300">3. Side Effect</div>
+                <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">After screen paint</div>
               </button>
             </div>
 
-            <div id="cycleStepDetail" class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+            <div id="cycleStepDetail" class="p-4 sm:p-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
               <strong class="text-sky-600 dark:text-sky-400 block mb-1">Stage 1: State Setter Triggered (`setCount(prev => prev + 1)`)</strong>
               A user interaction (like <code class="text-sky-600 dark:text-sky-400">onClick</code>), network response, or timer calls the state updater function from <code class="text-sky-600 dark:text-sky-400">useState</code>. React stores the updated value in component memory.
             </div>
@@ -268,74 +240,77 @@
       </div>
     </div>
   </section>
+      </div>
+    </div>
+  </section>
 
   <!-- Main Content Layout -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+  <div class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 pt-4 pb-12 sm:pt-6 sm:pb-16">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
 
       <!-- Left Sticky Sidebar Navigation -->
       <aside class="hidden lg:block lg:col-span-3 sticky top-24 space-y-6">
-        <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm space-y-4">
+        <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-5">
           <div class="flex items-center justify-between">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Curriculum Outline</h2>
-            <button id="markAllReadBtn" type="button" class="text-[11px] font-medium text-sky-600 dark:text-sky-400 hover:underline">Mark all read</button>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-amber-500/90 dark:text-amber-400">State &amp; Effect Curriculum</h2>
+            <button id="markAllReadBtn" type="button" class="text-xs font-semibold text-amber-500 dark:text-amber-400 hover:underline">Mark all read</button>
           </div>
 
           <!-- Topic 1 Nav -->
-          <div class="space-y-1">
-            <a href="#topic-1" class="block text-xs font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 1: Introduction to State</a>
-            <a href="#sec-1-1" data-spy="sec-1-1" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <div class="space-y-1.5">
+            <a href="#topic-1" class="block text-sm font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 1: Introduction to State</a>
+            <a href="#sec-1-1" data-spy="sec-1-1" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">1.1 Understanding State</span>
               <span data-check-badge="sec-1-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
             </a>
-            <a href="#sec-1-2" data-spy="sec-1-2" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <a href="#sec-1-2" data-spy="sec-1-2" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">1.2 Using useState Hook</span>
               <span data-check-badge="sec-1-2" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
             </a>
-            <a href="#sec-1-3" data-spy="sec-1-3" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <a href="#sec-1-3" data-spy="sec-1-3" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">1.3 Handling User Events</span>
               <span data-check-badge="sec-1-3" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
             </a>
           </div>
 
           <!-- Topic 2 Nav -->
-          <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
-            <a href="#topic-2" class="block text-xs font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 2: More on State</a>
-            <a href="#sec-2-1" data-spy="sec-2-1" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <div class="space-y-1.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
+            <a href="#topic-2" class="block text-sm font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 2: More on State</a>
+            <a href="#sec-2-1" data-spy="sec-2-1" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">2.1 Updating State</span>
               <span data-check-badge="sec-2-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
             </a>
-            <a href="#sec-2-2" data-spy="sec-2-2" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <a href="#sec-2-2" data-spy="sec-2-2" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">2.2 State &amp; Re-rendering</span>
               <span data-check-badge="sec-2-2" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
             </a>
           </div>
 
           <!-- Topic 3 Nav -->
-          <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
-            <a href="#topic-3" class="block text-xs font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 3: Side Effects</a>
-            <a href="#sec-3-1" data-spy="sec-3-1" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <div class="space-y-1.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
+            <a href="#topic-3" class="block text-sm font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 3: Side Effects</a>
+            <a href="#sec-3-1" data-spy="sec-3-1" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">3.1 Intro to useEffect</span>
               <span data-check-badge="sec-3-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
             </a>
-            <a href="#sec-3-2" data-spy="sec-3-2" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <a href="#sec-3-2" data-spy="sec-3-2" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">3.2 Dependency Array</span>
               <span data-check-badge="sec-3-2" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
             </a>
-            <a href="#sec-3-3" data-spy="sec-3-3" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+            <a href="#sec-3-3" data-spy="sec-3-3" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">3.3 Cleanup Function</span>
               <span data-check-badge="sec-3-3" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
             </a>
           </div>
 
           <!-- Extras -->
-          <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
-            <a href="#comparison-matrix" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-              <svg class="w-3.5 h-3.5 text-amber-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          <div class="space-y-1.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
+            <a href="#comparison-matrix" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <svg class="w-4 h-4 text-amber-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               <span>Summary Cheat Sheet</span>
             </a>
-            <a href="#quiz-section" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-              <svg class="w-3.5 h-3.5 text-sky-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <a href="#quiz-section" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <svg class="w-4 h-4 text-sky-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
               <span>Interactive Quiz</span>
             </a>
           </div>
@@ -346,7 +321,7 @@
       <main class="lg:col-span-9 space-y-14">
 
         <!-- Search Filter Empty Banner -->
-        <div id="noSearchResults" class="hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 text-center space-y-3">
+        <div id="noSearchResults" hidden class="hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 text-center space-y-3">
           <div class="w-12 h-12 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
           </div>
@@ -380,9 +355,15 @@
                   <span class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400">Section 1.1</span>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Understanding State in React</h3>
                 </div>
-                <button type="button" data-mark-read="sec-1-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-confess-sec="sec-1-1" class="confess-sec-btn px-2.5 py-1.5 rounded-xl border border-amber-500/30 hover:border-amber-500/70 text-xs font-semibold text-amber-500 dark:text-amber-400 hover:bg-amber-500/10 transition-colors flex items-center gap-1.5" title="Focus in Kuya's Confession Room (Hotkey: P)">
+                    <img src="pbb-logo.png" class="h-3.5 w-auto" alt="" />
+                    <span>Confess</span>
+                  </button>
+                  <button type="button" data-mark-read="sec-1-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
                   Mark Read
                 </button>
+                </div>
               </div>
 
               <!-- Definition & Explanation Grid -->
@@ -487,7 +468,7 @@
                     <button type="button" data-copy-target="code-1-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
                   </div>
                 </div>
-                <pre id="code-1-1" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll"><code>// [Ineffective] Normal Variable: React never knows to redraw UI
+                <pre id="code-1-1" class="p-4 sm:p-5 text-sm sm:text-base leading-relaxed text-slate-200 overflow-x-auto code-scroll"><code>// [Ineffective] Normal Variable: React never knows to redraw UI
 let count = 0;
 count = count + 1; // Mutates in RAM, but screen UI remains stale!
 
@@ -516,9 +497,15 @@ function Counter() {
                   <span class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400">Section 1.2</span>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Using the <code class="text-sky-600 dark:text-sky-400">useState</code> Hook</h3>
                 </div>
-                <button type="button" data-mark-read="sec-1-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-confess-sec="sec-1-2" class="confess-sec-btn px-2.5 py-1.5 rounded-xl border border-amber-500/30 hover:border-amber-500/70 text-xs font-semibold text-amber-500 dark:text-amber-400 hover:bg-amber-500/10 transition-colors flex items-center gap-1.5" title="Focus in Kuya's Confession Room (Hotkey: P)">
+                    <img src="pbb-logo.png" class="h-3.5 w-auto" alt="" />
+                    <span>Confess</span>
+                  </button>
+                  <button type="button" data-mark-read="sec-1-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
                   Mark Read
                 </button>
+                </div>
               </div>
 
               <!-- Definition & Explanation -->
@@ -571,7 +558,7 @@ function Counter() {
                       <button type="button" data-copy-target="code-1-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
                     </div>
                   </div>
-                  <pre id="code-1-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
+                  <pre id="code-1-2" class="p-4 sm:p-5 text-sm sm:text-base leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
 
 function Greeting() {
   // name is the state value, setName is the updater function
@@ -624,9 +611,15 @@ function Greeting() {
                   <span class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400">Section 1.3</span>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Handling User Events</h3>
                 </div>
-                <button type="button" data-mark-read="sec-1-3" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-confess-sec="sec-1-3" class="confess-sec-btn px-2.5 py-1.5 rounded-xl border border-amber-500/30 hover:border-amber-500/70 text-xs font-semibold text-amber-500 dark:text-amber-400 hover:bg-amber-500/10 transition-colors flex items-center gap-1.5" title="Focus in Kuya's Confession Room (Hotkey: P)">
+                    <img src="pbb-logo.png" class="h-3.5 w-auto" alt="" />
+                    <span>Confess</span>
+                  </button>
+                  <button type="button" data-mark-read="sec-1-3" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
                   Mark Read
                 </button>
+                </div>
               </div>
 
               <!-- Definition & Explanation -->
@@ -659,7 +652,7 @@ function Greeting() {
                       <button type="button" data-copy-target="code-1-3" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
                     </div>
                   </div>
-                  <pre id="code-1-3" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
+                  <pre id="code-1-3" class="p-4 sm:p-5 text-sm sm:text-base leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
 
 function Counter() {
   const [count, setCount] = useState(0);
@@ -740,9 +733,15 @@ function Counter() {
                   <span class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400">Section 2.1</span>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Updating State</h3>
                 </div>
-                <button type="button" data-mark-read="sec-2-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-blue-500 transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-confess-sec="sec-2-1" class="confess-sec-btn px-2.5 py-1.5 rounded-xl border border-amber-500/30 hover:border-amber-500/70 text-xs font-semibold text-amber-500 dark:text-amber-400 hover:bg-amber-500/10 transition-colors flex items-center gap-1.5" title="Focus in Kuya's Confession Room (Hotkey: P)">
+                    <img src="pbb-logo.png" class="h-3.5 w-auto" alt="" />
+                    <span>Confess</span>
+                  </button>
+                  <button type="button" data-mark-read="sec-2-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-blue-500 transition-colors">
                   Mark Read
                 </button>
+                </div>
               </div>
 
               <!-- Definition & Explanation -->
@@ -775,7 +774,7 @@ function Counter() {
                       <button type="button" data-copy-target="code-2-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
                     </div>
                   </div>
-                  <pre id="code-2-1" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
+                  <pre id="code-2-1" class="p-4 sm:p-5 text-sm sm:text-base leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
 
 function ScoreBoard() {
   const [score, setScore] = useState(0);
@@ -887,9 +886,15 @@ player: { "name": "Alice", "level": 1 }</pre>
                   <span class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400">Section 2.2</span>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Understanding How State Changes Trigger Re-rendering</h3>
                 </div>
-                <button type="button" data-mark-read="sec-2-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-blue-500 transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-confess-sec="sec-2-2" class="confess-sec-btn px-2.5 py-1.5 rounded-xl border border-amber-500/30 hover:border-amber-500/70 text-xs font-semibold text-amber-500 dark:text-amber-400 hover:bg-amber-500/10 transition-colors flex items-center gap-1.5" title="Focus in Kuya's Confession Room (Hotkey: P)">
+                    <img src="pbb-logo.png" class="h-3.5 w-auto" alt="" />
+                    <span>Confess</span>
+                  </button>
+                  <button type="button" data-mark-read="sec-2-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-blue-500 transition-colors">
                   Mark Read
                 </button>
+                </div>
               </div>
 
               <!-- Definition & Explanation -->
@@ -922,7 +927,7 @@ player: { "name": "Alice", "level": 1 }</pre>
                       <button type="button" data-copy-target="code-2-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
                     </div>
                   </div>
-                  <pre id="code-2-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
+                  <pre id="code-2-2" class="p-4 sm:p-5 text-sm sm:text-base leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
 
 function RenderLogger() {
   const [toggle, setToggle] = useState(false);
@@ -1003,9 +1008,15 @@ function RenderLogger() {
                   <span class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400">Section 3.1</span>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Introduction to the <code class="text-sky-600 dark:text-sky-400">useEffect</code> Hook</h3>
                 </div>
-                <button type="button" data-mark-read="sec-3-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-confess-sec="sec-3-1" class="confess-sec-btn px-2.5 py-1.5 rounded-xl border border-amber-500/30 hover:border-amber-500/70 text-xs font-semibold text-amber-500 dark:text-amber-400 hover:bg-amber-500/10 transition-colors flex items-center gap-1.5" title="Focus in Kuya's Confession Room (Hotkey: P)">
+                    <img src="pbb-logo.png" class="h-3.5 w-auto" alt="" />
+                    <span>Confess</span>
+                  </button>
+                  <button type="button" data-mark-read="sec-3-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
                   Mark Read
                 </button>
+                </div>
               </div>
 
               <!-- Definition & Explanation -->
@@ -1038,7 +1049,7 @@ function RenderLogger() {
                       <button type="button" data-copy-target="code-3-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
                     </div>
                   </div>
-                  <pre id="code-3-1" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
+                  <pre id="code-3-1" class="p-4 sm:p-5 text-sm sm:text-base leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
 
 function TitleUpdater() {
   const [clicks, setClicks] = useState(0);
@@ -1098,9 +1109,15 @@ function TitleUpdater() {
                   <span class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400">Section 3.2</span>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Understanding the Dependency Array</h3>
                 </div>
-                <button type="button" data-mark-read="sec-3-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-confess-sec="sec-3-2" class="confess-sec-btn px-2.5 py-1.5 rounded-xl border border-amber-500/30 hover:border-amber-500/70 text-xs font-semibold text-amber-500 dark:text-amber-400 hover:bg-amber-500/10 transition-colors flex items-center gap-1.5" title="Focus in Kuya's Confession Room (Hotkey: P)">
+                    <img src="pbb-logo.png" class="h-3.5 w-auto" alt="" />
+                    <span>Confess</span>
+                  </button>
+                  <button type="button" data-mark-read="sec-3-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
                   Mark Read
                 </button>
+                </div>
               </div>
 
               <!-- Definition & 3 Modes -->
@@ -1158,7 +1175,7 @@ function TitleUpdater() {
                       <button type="button" data-copy-target="code-3-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
                     </div>
                   </div>
-                  <pre id="code-3-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
+                  <pre id="code-3-2" class="p-4 sm:p-5 text-sm sm:text-base leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
 
 function UserProfile({ userId }) {
   const [userData, setUserData] = useState(null);
@@ -1235,9 +1252,15 @@ function UserProfile({ userId }) {
                   <span class="text-xs font-mono font-semibold text-sky-600 dark:text-sky-400">Section 3.3</span>
                   <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Using Effects and Cleanup Function</h3>
                 </div>
-                <button type="button" data-mark-read="sec-3-3" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
+                <div class="flex items-center gap-2 shrink-0">
+                  <button type="button" data-confess-sec="sec-3-3" class="confess-sec-btn px-2.5 py-1.5 rounded-xl border border-amber-500/30 hover:border-amber-500/70 text-xs font-semibold text-amber-500 dark:text-amber-400 hover:bg-amber-500/10 transition-colors flex items-center gap-1.5" title="Focus in Kuya's Confession Room (Hotkey: P)">
+                    <img src="pbb-logo.png" class="h-3.5 w-auto" alt="" />
+                    <span>Confess</span>
+                  </button>
+                  <button type="button" data-mark-read="sec-3-3" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors">
                   Mark Read
                 </button>
+                </div>
               </div>
 
               <!-- Definition & Explanation -->
@@ -1270,7 +1293,7 @@ function UserProfile({ userId }) {
                       <button type="button" data-copy-target="code-3-3" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
                     </div>
                   </div>
-                  <pre id="code-3-3" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
+                  <pre id="code-3-3" class="p-4 sm:p-5 text-sm sm:text-base leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
 
 function Timer() {
   const [seconds, setSeconds] = useState(0);
@@ -1404,7 +1427,7 @@ function Timer() {
             </div>
           </div>
 
-          <div id="quizContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+          <div id="quizContainer" class="max-w-4xl mx-auto w-full"></div>
         </section>
 
       </main>
@@ -1413,7 +1436,7 @@ function Timer() {
 
   <!-- Footer -->
   <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-8 mt-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+    <div class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500 dark:text-slate-400">
       <div>React State &amp; Effect Interactive Guide • Built for clear, hands-on component mastery.</div>
       <a href="#top" class="font-semibold text-sky-600 dark:text-sky-400 hover:underline">↑ Back to top</a>
     </div>
