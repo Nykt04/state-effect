@@ -98,6 +98,13 @@ document.addEventListener('DOMContentLoaded', function () {
           entries.forEach(function (entry) {
             if (entry.isIntersecting) {
               var id = entry.target.id;
+
+              // Auto-mark topic as completed in contents when reached/passed
+              if (id && id.startsWith('sec-') && !readSections[id] && (!unmarkedByUser || !unmarkedByUser[id])) {
+                readSections[id] = true;
+                updateReadUI();
+              }
+
               // Left sidebar link styling
               spyLinks.forEach(function (link) {
                 var target = link.getAttribute('data-spy');
@@ -185,22 +192,35 @@ document.addEventListener('DOMContentLoaded', function () {
       });
 
       // -----------------------------------------------------------
-      // Read Progress Tracker
+      // Read Progress Tracker & Auto-Mark on Scroll
       // -----------------------------------------------------------
       var readSections = {};
       var totalSections = 8;
       var readProgressCount = document.getElementById('readProgressCount');
+      var unmarkedByUser = {};
+
+      try {
+        var savedProgress = localStorage.getItem('react_guide_read_sections');
+        if (savedProgress) {
+          readSections = JSON.parse(savedProgress) || {};
+        }
+      } catch (e) {}
 
       function updateReadUI() {
         var count = Object.keys(readSections).filter(function (k) { return readSections[k]; }).length;
         if (readProgressCount) {
           readProgressCount.textContent = count + '/' + totalSections;
         }
+
+        try {
+          localStorage.setItem('react_guide_read_sections', JSON.stringify(readSections));
+        } catch (e) {}
+
         document.querySelectorAll('.mark-read-btn').forEach(function (btn) {
           var secId = btn.getAttribute('data-mark-read');
           var isDone = !!readSections[secId];
           if (isDone) {
-            btn.textContent = '✓ Completed';
+            btn.innerHTML = '<span class="inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Completed</span></span>';
             btn.className = 'mark-read-btn shrink-0 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-600 dark:text-emerald-400 transition-colors';
           } else {
             btn.textContent = 'Mark Read';
@@ -210,8 +230,8 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('[data-check-badge]').forEach(function (badge) {
           var secId = badge.getAttribute('data-check-badge');
           if (readSections[secId]) {
-            badge.textContent = '✓';
-            badge.className = 'w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold';
+            badge.innerHTML = '<svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+            badge.className = 'w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold shadow-sm';
           } else {
             badge.textContent = '';
             badge.className = 'w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]';
@@ -219,10 +239,38 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
 
+      // Auto-mark when a section enters or passes the reading waterline
+      function checkAutoMarkOnScroll() {
+        var triggerWaterline = window.innerHeight * 0.45;
+        var changed = false;
+        document.querySelectorAll('.concept-card').forEach(function (card) {
+          var id = card.id;
+          if (!id || readSections[id] || (unmarkedByUser && unmarkedByUser[id])) return;
+          var rect = card.getBoundingClientRect();
+          if (rect.top <= triggerWaterline) {
+            readSections[id] = true;
+            changed = true;
+          }
+        });
+        if (changed) {
+          updateReadUI();
+        }
+      }
+
+      window.addEventListener('scroll', checkAutoMarkOnScroll, { passive: true });
+      updateReadUI();
+      checkAutoMarkOnScroll();
+
       document.querySelectorAll('.mark-read-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
           var secId = btn.getAttribute('data-mark-read');
-          readSections[secId] = !readSections[secId];
+          if (readSections[secId]) {
+            readSections[secId] = false;
+            unmarkedByUser[secId] = true;
+          } else {
+            readSections[secId] = true;
+            delete unmarkedByUser[secId];
+          }
           updateReadUI();
         });
       });
@@ -233,6 +281,7 @@ document.addEventListener('DOMContentLoaded', function () {
           ['sec-1-1', 'sec-1-2', 'sec-1-3', 'sec-2-1', 'sec-2-2', 'sec-3-1', 'sec-3-2', 'sec-3-3'].forEach(function (id) {
             readSections[id] = true;
           });
+          unmarkedByUser = {};
           updateReadUI();
           showToast('All 8 sections marked as read!');
         });
@@ -326,6 +375,109 @@ document.addEventListener('DOMContentLoaded', function () {
           setTimeout(function () { btn.textContent = 'Copy Code'; }, 1800);
         } catch (err) {}
         document.body.removeChild(ta);
+      }
+
+      // -----------------------------------------------------------
+      // Enlarged Code Modal Lightbox & Font Scaler
+      // -----------------------------------------------------------
+      var enlargeCodeModal = document.getElementById('enlargeCodeModal');
+      var enlargeModalTitle = document.getElementById('enlargeModalTitle');
+      var enlargeModalCode = document.getElementById('enlargeModalCode');
+      var enlargeModalCopyBtn = document.getElementById('enlargeModalCopyBtn');
+      var closeEnlargeModalBtn = document.getElementById('closeEnlargeModalBtn');
+      var enlargeFontDownBtn = document.getElementById('enlargeFontDownBtn');
+      var enlargeFontUpBtn = document.getElementById('enlargeFontUpBtn');
+      var enlargeFontLabel = document.getElementById('enlargeFontLabel');
+
+      var fontSizes = ['14px', '16px', '18px', '21px', '24px'];
+      var currentFontIdx = 2; // Default 18px
+
+      function setEnlargeFontSize(idx) {
+        if (idx < 0) idx = 0;
+        if (idx >= fontSizes.length) idx = fontSizes.length - 1;
+        currentFontIdx = idx;
+        if (enlargeModalCode) {
+          enlargeModalCode.style.fontSize = fontSizes[currentFontIdx];
+        }
+        if (enlargeFontLabel) {
+          enlargeFontLabel.textContent = fontSizes[currentFontIdx];
+        }
+      }
+
+      function openEnlargedCode(title, codeText) {
+        if (!enlargeCodeModal) return;
+        if (enlargeModalTitle) enlargeModalTitle.textContent = title || 'Code Preview';
+        if (enlargeModalCode) {
+          var codeEl = enlargeModalCode.querySelector('code');
+          if (codeEl) {
+            codeEl.textContent = codeText;
+          } else {
+            enlargeModalCode.textContent = codeText;
+          }
+        }
+        setEnlargeFontSize(currentFontIdx);
+        enlargeCodeModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeEnlargedCode() {
+        if (!enlargeCodeModal) return;
+        enlargeCodeModal.classList.add('hidden');
+        var presentModal = document.getElementById('presentModal');
+        if (!presentModal || presentModal.classList.contains('hidden')) {
+          document.body.style.overflow = '';
+        }
+      }
+
+      document.querySelectorAll('.enlarge-code-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var targetId = btn.getAttribute('data-enlarge-target');
+          var title = btn.getAttribute('data-code-title') || 'Code Snippet';
+          var preEl = document.getElementById(targetId);
+          if (!preEl) return;
+          openEnlargedCode(title, preEl.textContent);
+        });
+      });
+
+      if (closeEnlargeModalBtn) {
+        closeEnlargeModalBtn.addEventListener('click', closeEnlargedCode);
+      }
+
+      if (enlargeCodeModal) {
+        enlargeCodeModal.addEventListener('click', function (e) {
+          if (e.target === enlargeCodeModal) {
+            closeEnlargedCode();
+          }
+        });
+      }
+
+      if (enlargeFontDownBtn) {
+        enlargeFontDownBtn.addEventListener('click', function () {
+          setEnlargeFontSize(currentFontIdx - 1);
+        });
+      }
+      if (enlargeFontUpBtn) {
+        enlargeFontUpBtn.addEventListener('click', function () {
+          setEnlargeFontSize(currentFontIdx + 1);
+        });
+      }
+
+      if (enlargeModalCopyBtn) {
+        enlargeModalCopyBtn.addEventListener('click', function () {
+          if (!enlargeModalCode) return;
+          var text = enlargeModalCode.textContent;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              enlargeModalCopyBtn.textContent = 'Copied!';
+              showToast('Enlarged code copied to clipboard');
+              setTimeout(function () { enlargeModalCopyBtn.textContent = 'Copy'; }, 1800);
+            }).catch(function () {
+              fallbackCopy(text, enlargeModalCopyBtn);
+            });
+          } else {
+            fallbackCopy(text, enlargeModalCopyBtn);
+          }
+        });
       }
 
       // -----------------------------------------------------------
@@ -470,7 +622,7 @@ document.addEventListener('DOMContentLoaded', function () {
           sbScore = snapshot + 1;
           renderScoreBoard();
           if (staleClosureExplain) {
-            staleClosureExplain.innerHTML = '<span class="text-rose-500 font-bold">⚠️ Stale Snapshot Trap!</span> Called <code>setScore(' + snapshot + ' + 1)</code> 3 times in a row. Because all three used the old snapshot (<code>' + snapshot + '</code>), score only went from <strong>' + snapshot + '</strong> to <strong>' + sbScore + '</strong>!';
+            staleClosureExplain.innerHTML = '<span class="inline-flex items-center gap-1 text-rose-500 font-bold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Stale Snapshot Trap!</span> Called <code>setScore(' + snapshot + ' + 1)</code> 3 times in a row. Because all three used the old snapshot (<code>' + snapshot + '</code>), score only went from <strong>' + snapshot + '</strong> to <strong>' + sbScore + '</strong>!';
           }
           showToast('Direct setter used stale snapshot: only +1 added!');
         });
@@ -484,7 +636,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sbScore = sbScore + 3;
         renderScoreBoard();
         if (staleClosureExplain) {
-          staleClosureExplain.innerHTML = '<span class="text-emerald-500 font-bold">✅ Updater Function Win!</span> Called <code>setScore(prev =&gt; prev + 1)</code> 3 times. React queued the state transitions sequentially (<strong>' + start + ' → ' + (start+1) + ' → ' + (start+2) + ' → ' + sbScore + '</strong>)!';
+          staleClosureExplain.innerHTML = '<span class="inline-flex items-center gap-1 text-emerald-500 font-bold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Updater Function Win!</span> Called <code>setScore(prev =&gt; prev + 1)</code> 3 times. React queued the state transitions sequentially (<strong>' + start + ' → ' + (start+1) + ' → ' + (start+2) + ' → ' + sbScore + '</strong>)!';
         }
         showToast('Updater functions queued sequentially: +3 full!');
       });
@@ -499,7 +651,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sbPlayer = { name: 'Alice', level: 1 };
         renderScoreBoard();
         if (staleClosureExplain) {
-          staleClosureExplain.textContent = '💡 Click both buttons to see the difference between stale snapshot closures and pending updater functions.';
+          staleClosureExplain.innerHTML = '<svg class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Click both buttons to see the difference between stale snapshot closures and pending updater functions.</span>';
         }
       });
 
@@ -624,7 +776,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           if (currentDepMode === 'mount') {
             // Mode [] ignores prop changes!
-            depArrayLog.innerHTML = '<span class="text-rose-400 font-bold">⚠️ Stale Prop Bug!</span> Mode is <code>[]</code>. `userId` changed to <strong>' + nextId + '</strong>, but <code>useEffect</code> never re-ran. Stale user data remains on screen!';
+            depArrayLog.innerHTML = '<span class="inline-flex items-center gap-1 text-rose-400 font-bold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Stale Prop Bug!</span> Mode is <code>[]</code>. `userId` changed to <strong>' + nextId + '</strong>, but <code>useEffect</code> never re-ran. Stale user data remains on screen!';
             showToast('Mode [] ignored userId change (stale user displayed)!');
             return;
           }
@@ -633,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (currentDepMode === 'none') {
               apiCalls += 1;
               apiFetchCounter.textContent = String(apiCalls);
-              depArrayLog.innerHTML = '<span class="text-rose-400 font-bold">⚠️ Inefficient:</span> Mode has <strong>No Array</strong>. Even though `userId` stayed <strong>' + nextId + '</strong>, fetch fired again!';
+              depArrayLog.innerHTML = '<span class="inline-flex items-center gap-1 text-rose-400 font-bold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Inefficient:</span> Mode has <strong>No Array</strong>. Even though `userId` stayed <strong>' + nextId + '</strong>, fetch fired again!';
             } else {
               depArrayLog.innerHTML = 'Re-render: <code class="text-amber-400">userId</code> is still <strong>' + nextId + '</strong> → Dependency <code class="text-sky-400">[userId]</code> unchanged → <strong>Skipped fetch!</strong>';
             }
@@ -663,7 +815,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentDepMode === 'none') {
           apiCalls += 1;
           apiFetchCounter.textContent = String(apiCalls);
-          depArrayLog.innerHTML = '<span class="text-rose-400 font-bold">⚠️ Redundant API Call!</span> Because there is <strong>No Dependency Array</strong>, this unrelated state update triggered another redundant network fetch!';
+          depArrayLog.innerHTML = '<span class="inline-flex items-center gap-1 text-rose-400 font-bold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Redundant API Call!</span> Because there is <strong>No Dependency Array</strong>, this unrelated state update triggered another redundant network fetch!';
           showToast('No Array: Unrelated re-render caused redundant fetch!');
         } else {
           depArrayLog.innerHTML = 'Component re-rendered, but dependencies did not change → <strong class="text-emerald-400">useEffect skipped fetch!</strong>';
@@ -867,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', function () {
           if (isAnswered) {
             var isRight = userChoice === q.correct;
             feedbackHtml = '<div class="p-3 rounded-lg text-xs ' + (isRight ? 'bg-emerald-950/80 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/80 border border-rose-700/60 text-rose-200') + '">' +
-              '<strong>' + (isRight ? '✓ Correct! ' : '✕ Not quite. ') + '</strong>' + q.explanation +
+              '<strong>' + (isRight ? '<span class="inline-flex items-center gap-1 text-emerald-400"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Correct!</span> ' : '<span class="inline-flex items-center gap-1 text-rose-400"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>Not quite.</span> ') + '</strong>' + q.explanation +
               '</div>';
           }
 
@@ -953,7 +1105,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'Calling state setter signals React to schedule a screen repaint.'
           ],
           codeTitle: 'VariableVsState.js',
-          code: '// ❌ Normal Variable: React never knows to redraw UI\nlet count = 0;\ncount = count + 1;\n\n// ✅ React State: Memory preserved + schedules re-render\nconst [count, setCount] = useState(0);\nsetCount(count + 1);',
+          code: '// [Ineffective] Normal Variable: React never knows to redraw UI\nlet count = 0;\ncount = count + 1;\n\n// [Effective] React State: Memory preserved + schedules re-render\nconst [count, setCount] = useState(0);\nsetCount(count + 1);',
           anchor: '#sec-1-1'
         },
         {
@@ -1137,12 +1289,25 @@ document.addEventListener('DOMContentLoaded', function () {
               '<div class="lg:col-span-6 rounded-2xl bg-slate-900/90 border border-slate-800 overflow-hidden flex flex-col shadow-xl">' +
                 '<div class="px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-xs font-mono text-slate-400">' +
                   '<span>' + s.codeTitle + '</span>' +
-                  '<span class="text-sky-400 font-semibold">Live Reference</span>' +
+                  '<div class="flex items-center gap-2">' +
+                    '<button type="button" id="slideEnlargeBtn" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-800 hover:bg-sky-600/30 text-slate-200 hover:text-white border border-slate-700 hover:border-sky-500/50 transition-colors" title="Enlarge code for full view">' +
+                      '<svg class="w-3.5 h-3.5 text-sky-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
+                      '<span>Enlarge</span>' +
+                    '</button>' +
+                    '<span class="text-sky-400 font-semibold text-xs">Live Reference</span>' +
+                  '</div>' +
                 '</div>' +
                 '<pre class="p-5 text-xs sm:text-sm font-mono text-slate-200 overflow-x-auto code-scroll flex-1 leading-relaxed bg-slate-950/60"><code>' + s.code + '</code></pre>' +
               '</div>' +
             '</div>' +
           '</div>';
+
+        var slideEnlargeBtn = document.getElementById('slideEnlargeBtn');
+        if (slideEnlargeBtn) {
+          slideEnlargeBtn.addEventListener('click', function () {
+            openEnlargedCode(s.codeTitle, s.code);
+          });
+        }
 
         // Add event listener to exit modal when clicking "View in Handbook"
         var jumpBtn = document.getElementById('jumpToHandbookBtn');
@@ -1184,6 +1349,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Keyboard navigation
       document.addEventListener('keydown', function (e) {
+        if (enlargeCodeModal && !enlargeCodeModal.classList.contains('hidden')) {
+          if (e.key === 'Escape') {
+            closeEnlargedCode();
+            return;
+          }
+        }
+
         if (e.key === 'p' || e.key === 'P') {
           // If not typing in input
           var tag = (e.target && e.target.tagName) || '';

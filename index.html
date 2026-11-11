@@ -16,6 +16,45 @@
   <!-- Toast Notification -->
   <div id="toastContainer" class="fixed bottom-5 right-5 z-50 pointer-events-none flex flex-col gap-2"></div>
 
+  <!-- Enlarged Code Inspector Modal -->
+  <div id="enlargeCodeModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 transition-all" role="dialog" aria-modal="true" aria-labelledby="enlargeModalTitle">
+    <div class="relative w-full max-w-4xl max-h-[88vh] bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-5 py-3.5 bg-slate-950 border-b border-slate-800 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <div>
+            <span id="enlargeModalTitle" class="text-sm font-bold font-mono text-slate-100">CodeSnippet.jsx</span>
+            <span class="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-sky-500/10 text-sky-400 font-mono font-medium">Enlarged View</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Font Size Controls -->
+          <div class="flex items-center rounded-lg bg-slate-800 border border-slate-700 p-0.5 text-xs font-mono">
+            <button id="enlargeFontDownBtn" type="button" class="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" title="Decrease font size">A-</button>
+            <span id="enlargeFontLabel" class="px-2 text-slate-300 text-[11px] font-semibold">18px</span>
+            <button id="enlargeFontUpBtn" type="button" class="px-2 py-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" title="Increase font size">A+</button>
+          </div>
+          <!-- Copy Button -->
+          <button id="enlargeModalCopyBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono transition-colors">Copy</button>
+          <!-- Close Button -->
+          <button id="closeEnlargeModalBtn" type="button" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-rose-500 hover:text-white text-slate-400 flex items-center justify-center transition-colors" title="Close (Esc)">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      </div>
+      <!-- Code Body -->
+      <pre id="enlargeModalCode" class="p-6 text-base sm:text-lg font-mono text-slate-100 leading-relaxed overflow-auto code-scroll flex-1 bg-slate-950/70 select-text"><code></code></pre>
+      <!-- Footer Hints -->
+      <div class="px-5 py-2.5 bg-slate-950 border-t border-slate-800 text-[11px] text-slate-500 flex items-center justify-between">
+        <span>Classroom projector view • Use A+/A- to scale font size</span>
+        <span class="font-mono">Press Esc to exit</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Presenter Mode Fullscreen Overlay -->
   <div id="presentModal" class="hidden fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8 text-slate-100 transition-opacity">
     <!-- Top Bar -->
@@ -291,8 +330,14 @@
 
           <!-- Extras -->
           <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
-            <a href="#comparison-matrix" class="block px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">⚡ Summary Cheat Sheet</a>
-            <a href="#quiz-section" class="block px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">🎯 Interactive Quiz</a>
+            <a href="#comparison-matrix" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <svg class="w-3.5 h-3.5 text-amber-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              <span>Summary Cheat Sheet</span>
+            </a>
+            <a href="#quiz-section" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <svg class="w-3.5 h-3.5 text-sky-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+              <span>Interactive Quiz</span>
+            </a>
           </div>
         </div>
       </aside>
@@ -302,10 +347,12 @@
 
         <!-- Search Filter Empty Banner -->
         <div id="noSearchResults" class="hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 text-center space-y-3">
-          <div class="text-2xl">🔍</div>
+          <div class="w-12 h-12 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 dark:text-slate-500">
+            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </div>
           <h3 class="text-base font-bold text-slate-800 dark:text-slate-200">No matching subtopics found</h3>
           <p class="text-xs text-slate-500 dark:text-slate-400">Try searching for keywords like <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">useState</code>, <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">Object.is</code>, <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">dependency</code>, or <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">cleanup</code>.</p>
-          <button id="resetSearchEmptyBtn" type="button" class="px-4 py-2 rounded-xl bg-sky-500 text-white text-xs font-semibold">Show All Topics</button>
+          <button id="resetSearchEmptyBtn" type="button" class="px-4 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-xs font-semibold transition-colors">Show All Topics</button>
         </div>
 
         <!-- ========================================================== -->
@@ -375,7 +422,10 @@
                   <!-- Normal Variable Card -->
                   <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/50 space-y-3">
                     <div class="flex items-center justify-between">
-                      <span class="text-xs font-bold text-rose-600 dark:text-rose-400">❌ Normal JS Variable (`let count = 0`)</span>
+                      <span class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-600 dark:text-rose-400">
+                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                        <span>Normal JS Variable (`let count = 0`)</span>
+                      </span>
                       <span class="text-[11px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">No Re-render</span>
                     </div>
                     <div class="grid grid-cols-2 gap-2 text-center py-2">
@@ -399,7 +449,10 @@
                   <!-- React State Card -->
                   <div id="reactStateCard11" class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900/50 space-y-3">
                     <div class="flex items-center justify-between">
-                      <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">✅ React State (`useState(0)`)</span>
+                      <span class="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        <span>React State (`useState(0)`)</span>
+                      </span>
                       <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Auto Re-renders</span>
                     </div>
                     <div class="grid grid-cols-2 gap-2 text-center py-2">
@@ -420,6 +473,37 @@
                     </p>
                   </div>
                 </div>
+              </div>
+
+              <!-- Code Example: Plain Variable vs React State -->
+              <div class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
+                <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                  <span class="text-xs font-mono text-slate-400">VariableVsState.js</span>
+                  <div class="flex items-center gap-2">
+                    <button type="button" data-enlarge-target="code-1-1" data-code-title="VariableVsState.js" class="enlarge-code-btn inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-sky-600/20 text-slate-200 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 transition-all group" title="Enlarge code view">
+                      <svg class="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                      <span>Enlarge</span>
+                    </button>
+                    <button type="button" data-copy-target="code-1-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                  </div>
+                </div>
+                <pre id="code-1-1" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll"><code>// [Ineffective] Normal Variable: React never knows to redraw UI
+let count = 0;
+count = count + 1; // Mutates in RAM, but screen UI remains stale!
+
+// [Effective] React State: Preserves value between renders + triggers UI update
+import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  // Calling setter preserves memory AND schedules a UI re-render
+  const handleIncrement = () =&gt; {
+    setCount(count + 1);
+  };
+
+  return &lt;button onClick={handleIncrement}&gt;Count: {count}&lt;/button&gt;;
+}</code></pre>
               </div>
             </div>
           </article>
@@ -479,7 +563,13 @@
                 <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
                   <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <span class="text-xs font-mono text-slate-400">Greeting.jsx</span>
-                    <button type="button" data-copy-target="code-1-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    <div class="flex items-center gap-2">
+                      <button type="button" data-enlarge-target="code-1-2" data-code-title="Greeting.jsx" class="enlarge-code-btn inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-sky-600/20 text-slate-200 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 transition-all group" title="Enlarge code view">
+                        <svg class="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                        <span>Enlarge</span>
+                      </button>
+                      <button type="button" data-copy-target="code-1-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    </div>
                   </div>
                   <pre id="code-1-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
 
@@ -561,7 +651,13 @@ function Greeting() {
                 <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
                   <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <span class="text-xs font-mono text-slate-400">Counter.jsx</span>
-                    <button type="button" data-copy-target="code-1-3" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    <div class="flex items-center gap-2">
+                      <button type="button" data-enlarge-target="code-1-3" data-code-title="Counter.jsx" class="enlarge-code-btn inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-sky-600/20 text-slate-200 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 transition-all group" title="Enlarge code view">
+                        <svg class="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                        <span>Enlarge</span>
+                      </button>
+                      <button type="button" data-copy-target="code-1-3" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    </div>
                   </div>
                   <pre id="code-1-3" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
 
@@ -671,7 +767,13 @@ function Counter() {
                 <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
                   <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <span class="text-xs font-mono text-slate-400">ScoreBoard.jsx</span>
-                    <button type="button" data-copy-target="code-2-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    <div class="flex items-center gap-2">
+                      <button type="button" data-enlarge-target="code-2-1" data-code-title="ScoreBoard.jsx" class="enlarge-code-btn inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-sky-600/20 text-slate-200 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 transition-all group" title="Enlarge code view">
+                        <svg class="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                        <span>Enlarge</span>
+                      </button>
+                      <button type="button" data-copy-target="code-2-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    </div>
                   </div>
                   <pre id="code-2-1" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
 
@@ -736,7 +838,10 @@ function ScoreBoard() {
                           <div class="grid grid-cols-2 gap-2">
                             <button id="sbDirectStaleBtn" type="button" class="p-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-500/30 text-left transition-all group">
                               <div class="text-xs font-bold flex items-center justify-between">
-                                <span>❌ Direct Setter</span>
+                                <span class="inline-flex items-center gap-1.5">
+                                  <svg class="w-3.5 h-3.5 text-rose-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+                                  <span>Direct Setter</span>
+                                </span>
                                 <span class="text-[10px] px-1.5 py-0.2 rounded bg-rose-500/20 text-rose-600 dark:text-rose-400 font-mono">+1 only</span>
                               </div>
                               <code class="block text-[10px] font-mono text-rose-600 dark:text-rose-400 mt-1">setScore(score + 1) ×3</code>
@@ -745,15 +850,19 @@ function ScoreBoard() {
 
                             <button id="sbBurstPointBtn" type="button" class="p-2.5 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-left transition-all group">
                               <div class="text-xs font-bold flex items-center justify-between">
-                                <span>✅ Updater Fn</span>
+                                <span class="inline-flex items-center gap-1.5">
+                                  <svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                                  <span>Updater Fn</span>
+                                </span>
                                 <span class="text-[10px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono">+3 full</span>
                               </div>
                               <code class="block text-[10px] font-mono text-emerald-600 dark:text-emerald-400 mt-1">setScore(p =&gt; p + 1) ×3</code>
                               <div class="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-tight">Guarantees newest state!</div>
                             </button>
                           </div>
-                          <div id="staleClosureExplain" class="text-[11px] p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                            💡 Click both buttons to see the difference between stale snapshot closures and pending updater functions.
+                          <div id="staleClosureExplain" class="text-[11px] p-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-start gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                            <span>Click both buttons to see the difference between stale snapshot closures and pending updater functions.</span>
                           </div>
                         </div>
                       </div>
@@ -805,7 +914,13 @@ player: { "name": "Alice", "level": 1 }</pre>
                 <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
                   <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <span class="text-xs font-mono text-slate-400">RenderLogger.jsx</span>
-                    <button type="button" data-copy-target="code-2-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    <div class="flex items-center gap-2">
+                      <button type="button" data-enlarge-target="code-2-2" data-code-title="RenderLogger.jsx" class="enlarge-code-btn inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-sky-600/20 text-slate-200 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 transition-all group" title="Enlarge code view">
+                        <svg class="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                        <span>Enlarge</span>
+                      </button>
+                      <button type="button" data-copy-target="code-2-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    </div>
                   </div>
                   <pre id="code-2-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
 
@@ -915,7 +1030,13 @@ function RenderLogger() {
                 <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
                   <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <span class="text-xs font-mono text-slate-400">TitleUpdater.jsx</span>
-                    <button type="button" data-copy-target="code-3-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    <div class="flex items-center gap-2">
+                      <button type="button" data-enlarge-target="code-3-1" data-code-title="TitleUpdater.jsx" class="enlarge-code-btn inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-sky-600/20 text-slate-200 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 transition-all group" title="Enlarge code view">
+                        <svg class="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                        <span>Enlarge</span>
+                      </button>
+                      <button type="button" data-copy-target="code-3-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    </div>
                   </div>
                   <pre id="code-3-1" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
 
@@ -1029,7 +1150,13 @@ function TitleUpdater() {
                 <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
                   <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <span class="text-xs font-mono text-slate-400">UserProfile.jsx</span>
-                    <button type="button" data-copy-target="code-3-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    <div class="flex items-center gap-2">
+                      <button type="button" data-enlarge-target="code-3-2" data-code-title="UserProfile.jsx" class="enlarge-code-btn inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-sky-600/20 text-slate-200 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 transition-all group" title="Enlarge code view">
+                        <svg class="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                        <span>Enlarge</span>
+                      </button>
+                      <button type="button" data-copy-target="code-3-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    </div>
                   </div>
                   <pre id="code-3-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
 
@@ -1135,7 +1262,13 @@ function UserProfile({ userId }) {
                 <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
                   <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
                     <span class="text-xs font-mono text-slate-400">Timer.jsx</span>
-                    <button type="button" data-copy-target="code-3-3" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    <div class="flex items-center gap-2">
+                      <button type="button" data-enlarge-target="code-3-3" data-code-title="Timer.jsx" class="enlarge-code-btn inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-sky-600/20 text-slate-200 hover:text-sky-300 border border-slate-700 hover:border-sky-500/50 transition-all group" title="Enlarge code view">
+                        <svg class="w-4 h-4 text-sky-400 group-hover:scale-110 transition-transform shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                        <span>Enlarge</span>
+                      </button>
+                      <button type="button" data-copy-target="code-3-3" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                    </div>
                   </div>
                   <pre id="code-3-3" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
 
