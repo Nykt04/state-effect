@@ -221,17 +221,17 @@ document.addEventListener('DOMContentLoaded', function () {
       var cycleDetails = {
         state: {
           title: 'Stage 1: State Setter Triggered (`setCount(prev => prev + 1)`)',
-          color: 'text-sky-600 dark:text-sky-400',
+          color: 'text-blue-500 dark:text-blue-400',
           body: 'A user interaction (like `onClick`), network response, or timer calls the state updater function from `useState`. React stores the updated value in component memory.'
         },
         render: {
           title: 'Stage 2: Object.is Check & Component Re-render',
-          color: 'text-sky-600 dark:text-sky-400',
+          color: 'text-red-500 dark:text-red-400',
           body: 'React compares the new value to the old value using `Object.is`. If different, React calls your component function top-to-bottom, calculates the new JSX, and updates only the changed DOM nodes.'
         },
         effect: {
           title: 'Stage 3: useEffect Synchronizes After Paint',
-          color: 'text-sky-600 dark:text-sky-400',
+          color: 'text-yellow-500 dark:text-yellow-400',
           body: 'After the component finishes rendering and the screen updates, React checks the `useEffect` dependency array. If dependencies changed, it runs cleanup (if any) and executes your effect.'
         }
       };
@@ -244,9 +244,14 @@ document.addEventListener('DOMContentLoaded', function () {
           var info = cycleDetails[step];
           if (!info) return;
           cycleBtns.forEach(function (b) {
-            b.className = 'cycle-step-btn p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-left transition-all';
+            b.className = 'cycle-step-btn p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 text-left transition-all';
           });
-          btn.className = 'cycle-step-btn p-3 rounded-xl border-2 border-sky-500 bg-sky-500/10 text-left transition-all';
+          var activeBorder = step === 'state'
+            ? 'border-2 border-blue-500 bg-blue-500/10'
+            : (step === 'render'
+              ? 'border-2 border-red-500 bg-red-500/10'
+              : 'border-2 border-yellow-400 bg-yellow-400/10');
+          btn.className = 'cycle-step-btn p-3.5 rounded-xl ' + activeBorder + ' text-left transition-all';
           cycleStepDetail.innerHTML = '<strong class="' + info.color + ' block mb-1">' + info.title + '</strong>' + info.body;
         });
       });
@@ -1083,9 +1088,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 '<span>QUIZ COMPLETED</span>' +
               '</div>' +
               '<h3 class="text-2xl font-black text-white">Your Final Score</h3>' +
-              '<div class="text-4xl sm:text-5xl font-black font-mono text-sky-400 py-2">' +
+              '<div class="text-4xl sm:text-5xl font-black font-mono text-yellow-400 py-2">' +
                 correctCount + ' <span class="text-slate-500 text-2xl">/ ' + total + '</span>' +
-                '<span class="text-lg text-slate-400 font-semibold ml-2">(' + pct + '%)</span>' +
+                '<span class="text-lg text-slate-300 font-semibold ml-2">(' + pct + '%)</span>' +
               '</div>' +
               '<p class="text-sm text-slate-300 max-w-md mx-auto">' + msg + '</p>' +
             '</div>' +
@@ -1093,7 +1098,7 @@ document.addEventListener('DOMContentLoaded', function () {
               '<button type="button" id="reviewQuizBtn" class="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold transition-colors">' +
                 'Review Questions' +
               '</button>' +
-              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white text-xs font-bold transition-all shadow-md">' +
+              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white text-xs font-bold transition-all shadow-md border border-yellow-400/40">' +
                 'Retake Quiz' +
               '</button>' +
             '</div>';
@@ -1138,7 +1143,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
           var dotClass = 'w-7 h-7 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition-all ';
           if (isCur) {
-            dotClass += 'ring-2 ring-sky-400 bg-sky-500 text-white shadow-md shadow-sky-500/30';
+            dotClass += 'ring-2 ring-yellow-400 bg-blue-600 text-white shadow-md shadow-blue-500/30';
           } else if (hasAns && isCor) {
             dotClass += 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30';
           } else if (hasAns && !isCor) {
@@ -1155,7 +1160,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var headerHtml =
           '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700/80 pb-4">' +
             '<div class="space-y-0.5">' +
-              '<span class="text-xs font-mono text-sky-400 font-bold uppercase tracking-wider">' + q.topic + '</span>' +
+              '<span class="text-xs font-mono text-yellow-400 font-bold uppercase tracking-wider">' + q.topic + '</span>' +
               '<div class="text-xs text-slate-400 font-mono">Question ' + (currentQuizIndex + 1) + ' of ' + total + '</div>' +
             '</div>' +
             dotsHtml +
@@ -1171,7 +1176,7 @@ document.addEventListener('DOMContentLoaded', function () {
           var optLetter = String.fromCharCode(65 + optIdx);
 
           if (!isAnswered) {
-            btnCls += 'bg-slate-900/70 hover:bg-slate-700/70 hover:border-sky-500/50 border-slate-700 text-slate-200';
+            btnCls += 'bg-slate-900/70 hover:bg-slate-700/70 hover:border-yellow-400/50 border-slate-700 text-slate-200';
           } else if (optIdx === q.correct) {
             btnCls += 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-semibold ring-1 ring-emerald-400/40';
           } else if (optIdx === userChoice) {
@@ -1224,7 +1229,7 @@ document.addEventListener('DOMContentLoaded', function () {
               '← Previous' +
             '</button>' +
             '<button type="button" id="nextQuizBtn" class="px-4 py-2 rounded-xl text-xs font-bold transition-all ' +
-              (isAnswered ? 'bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white shadow-md' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700') + '">' +
+              (isAnswered ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white shadow-md border border-yellow-400/40' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700') + '">' +
               nextBtnText +
             '</button>' +
           '</div>';
@@ -2167,10 +2172,16 @@ document.addEventListener('DOMContentLoaded', function () {
             var pill = document.createElement('button');
             pill.type = 'button';
             var isActive = i === index;
-            pill.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono font-bold whitespace-nowrap transition-all ' +
+            var topicBorder = sec.topicNum === 1
+              ? 'text-blue-400 hover:text-blue-200 hover:bg-blue-950/40 border-blue-500/30'
+              : (sec.topicNum === 2
+                ? 'text-red-400 hover:text-red-200 hover:bg-red-950/40 border-red-500/30'
+                : 'text-yellow-400 hover:text-yellow-200 hover:bg-yellow-950/40 border-yellow-500/30');
+
+            pill.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono font-bold whitespace-nowrap transition-all border ' +
               (isActive
-                ? 'bg-gradient-to-r from-blue-600 to-amber-600 text-white shadow-md shadow-blue-950/40 border border-amber-400/50'
-                : 'text-slate-400 hover:text-amber-300 hover:bg-slate-800');
+                ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-lg shadow-blue-950/50 border-yellow-400 scale-105'
+                : topicBorder + ' bg-slate-900/60');
             pill.textContent = sec.secNum;
             pill.title = 'Sub-section ' + sec.secNum + ': ' + sec.title;
             pill.addEventListener('click', function () {
@@ -2182,24 +2193,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Render Bottom Counter
         if (slideDotsContainer) {
-          slideDotsContainer.innerHTML = '<span class="px-2.5 py-0.5 rounded bg-amber-500/15 text-amber-300 font-bold border border-amber-500/30">Sub-section ' + s.secNum + '</span> <span class="text-slate-300 font-medium">' + s.title + '</span>';
+          slideDotsContainer.innerHTML = '<span class="px-2.5 py-0.5 rounded bg-yellow-400/15 text-yellow-300 font-bold border border-yellow-400/30">Sub-section ' + s.secNum + '</span> <span class="text-white font-medium">' + s.title + '</span>';
         }
 
         // Bullets HTML
         var bulletsHtml = s.takeaways.map(function (b) {
-          return '<li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300 leading-relaxed"><span class="w-2 h-2 rounded-full bg-amber-400 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(245,158,11,0.6)]"></span><span>' + b + '</span></li>';
+          return '<li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200 leading-relaxed"><span class="w-2 h-2 rounded-full bg-yellow-400 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span><span>' + b + '</span></li>';
         }).join('');
+
+        var topicBadgeGradient = s.topicNum === 1
+          ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white border-blue-400/40'
+          : (s.topicNum === 2
+            ? 'bg-gradient-to-r from-red-600 to-red-500 text-white border-red-400/40'
+            : 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black border-yellow-300/40');
 
         // Focused Section Markup (2-Column Presentation: Left = Explanations & Rules, Right = LIVE CODE & OUTPUT TOGGLE)
         slideViewport.innerHTML =
           '<div class="space-y-4 max-w-[1550px] w-full mx-auto animate-in fade-in zoom-in-95 duration-150">' +
             // Section Header Bar with Prominent Sub-section Indicator
-            '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-amber-500/25 pb-3">' +
+            '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">' +
               '<div class="flex items-center gap-3.5">' +
-                '<span class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-amber-600 text-white font-mono text-sm sm:text-base font-black tracking-wide shadow-md shadow-blue-950/40 border border-amber-400/30">SUB-SECTION ' + s.secNum + '</span>' +
+                '<span class="px-3.5 py-1.5 rounded-xl ' + topicBadgeGradient + ' font-mono text-sm sm:text-base font-black tracking-wide shadow-md shadow-blue-950/40 border">SUB-SECTION ' + s.secNum + '</span>' +
                 '<div>' +
                   '<div class="flex items-center gap-2">' +
-                    '<span class="text-xs font-mono font-bold uppercase tracking-wider text-amber-400">' + s.topicBadge + '</span>' +
+                    '<span class="text-xs font-mono font-bold uppercase tracking-wider text-yellow-400">' + s.topicBadge + '</span>' +
                     '<span class="text-slate-500">•</span>' +
                     '<span class="text-xs font-mono text-slate-400">Sub-section ' + (index + 1) + ' of ' + confessionSections.length + '</span>' +
                   '</div>' +
@@ -2207,39 +2224,39 @@ document.addEventListener('DOMContentLoaded', function () {
                 '</div>' +
               '</div>' +
               '<div class="flex items-center gap-2">' +
-                '<a href="' + s.anchor + '" id="jumpToHandbookBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm font-semibold text-slate-200 border border-amber-500/30 hover:border-amber-500/60 flex items-center gap-2 transition-colors">' +
+                '<a href="' + s.anchor + '" id="jumpToHandbookBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm font-semibold text-slate-200 border border-slate-700 hover:border-yellow-400/60 flex items-center gap-2 transition-colors">' +
                   '<span>View in House Handbook</span>' +
-                  '<svg class="w-4 h-4 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>' +
+                  '<svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>' +
                 '</a>' +
               '</div>' +
             '</div>' +
 
             // Main 2-Column Content Grid: Left = Explanations & Rules, Right = CODE & OUTPUT TOGGLE!
             '<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">' +
-              // Left Column (lg:col-span-5): Definition, Explanation, Takeaways
+              // Left Column (lg:col-span-5): Definition (Blue), Explanation (Red), Rules (Yellow)
               '<div class="lg:col-span-5 space-y-3.5 flex flex-col justify-between">' +
-                // Definition Card
-                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-amber-500/30 border-l-4 border-l-amber-500 space-y-2 shadow-lg">' +
-                  '<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">' +
-                    '<svg class="w-4 h-4 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' +
-                    '<span>Sub-Section ' + s.secNum + ' Definition</span>' +
-                  '</div>' +
-                  '<p class="text-sm text-slate-200 leading-relaxed">' + s.definition + '</p>' +
-                '</div>' +
-
-                // Explanation Card
+                // Definition Card (Blue)
                 '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-blue-500/30 border-l-4 border-l-blue-500 space-y-2 shadow-lg">' +
                   '<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">' +
-                    '<svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>' +
-                    '<span>Explanation &amp; Inner Mechanics</span>' +
+                    '<svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' +
+                    '<span>Sub-Section ' + s.secNum + ' Definition</span>' +
                   '</div>' +
-                  '<p class="text-sm text-slate-300 leading-relaxed">' + s.explanation + '</p>' +
+                  '<p class="text-sm text-slate-100 leading-relaxed">' + s.definition + '</p>' +
                 '</div>' +
 
-                // Kuya's Key Takeaways Card
-                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-amber-500/25 space-y-2.5 shadow-lg">' +
-                  '<div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-400 font-bold">' +
-                    '<span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>' +
+                // Explanation Card (Red)
+                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-red-500/30 border-l-4 border-l-red-500 space-y-2 shadow-lg">' +
+                  '<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-400">' +
+                    '<svg class="w-4 h-4 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>' +
+                    '<span>Explanation &amp; Inner Mechanics</span>' +
+                  '</div>' +
+                  '<p class="text-sm text-slate-200 leading-relaxed">' + s.explanation + '</p>' +
+                '</div>' +
+
+                // Kuya's Key Takeaways Card (Yellow)
+                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-yellow-500/30 border-l-4 border-l-yellow-400 space-y-2.5 shadow-lg">' +
+                  '<div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-yellow-400 font-bold">' +
+                    '<span class="w-2 h-2 rounded-full bg-yellow-400 animate-ping"></span>' +
                     '<span>Kuya\'s Confession Room Rules:</span>' +
                   '</div>' +
                   '<ul class="space-y-2">' + bulletsHtml + '</ul>' +
@@ -2248,14 +2265,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
               // Right Column (lg:col-span-7): PROMINENT CODE & OUTPUT CARD!
               '<div class="lg:col-span-7 flex flex-col">' +
-                '<div class="rounded-2xl bg-slate-950 border-2 border-amber-500/40 overflow-hidden shadow-2xl flex flex-col flex-1">' +
+                '<div class="rounded-2xl bg-slate-950 border-2 border-slate-800 hover:border-yellow-400/40 transition-colors overflow-hidden shadow-2xl flex flex-col flex-1">' +
                   // Header Bar with [ Code ] [ Output ] Segmented Toggle
                   '<div class="px-5 py-3 bg-slate-900/95 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2.5">' +
                     '<div class="flex items-center gap-3">' +
                       '<span class="w-2.5 h-2.5 rounded-full bg-red-600 rec-dot"></span>' +
                       '<div class="flex items-center gap-2">' +
-                        '<span class="text-amber-400 font-mono text-xs font-bold uppercase tracking-wider">Sub-section ' + s.secNum + ':</span>' +
-                        '<span class="text-slate-100 font-bold font-mono text-sm sm:text-base">' + s.codeTitle + '</span>' +
+                        '<span class="text-yellow-400 font-mono text-xs font-bold uppercase tracking-wider">Sub-section ' + s.secNum + ':</span>' +
+                        '<span class="text-white font-bold font-mono text-sm sm:text-base">' + s.codeTitle + '</span>' +
                       '</div>' +
                     '</div>' +
                     '<div class="flex items-center gap-2.5">' +
@@ -2263,19 +2280,37 @@ document.addEventListener('DOMContentLoaded', function () {
                       '<div class="inline-flex items-center p-0.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono">' +
                         '<button type="button" id="slideTabCodeBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ' +
                           (presenterActiveTab === 'code'
-                            ? 'bg-gradient-to-r from-blue-600 to-amber-600 text-white shadow-sm border border-amber-400/30'
-                            : 'text-slate-400 hover:text-slate-200') + '">' +
+                            ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-sm border border-yellow-400/40'
+                            : 'text-slate-400 hover:text-white') + '">' +
                           '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>' +
                           '<span>Code</span>' +
                         '</button>' +
                         '<button type="button" id="slideTabOutputBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ' +
                           (presenterActiveTab === 'output'
-                            ? 'bg-gradient-to-r from-blue-600 to-amber-600 text-white shadow-sm border border-amber-400/30'
-                            : 'text-slate-400 hover:text-slate-200') + '">' +
-                          '<svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>' +
+                            ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-sm border border-yellow-400/40'
+                            : 'text-slate-400 hover:text-white') + '">' +
+                          '<svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>' +
                           '<span>Output</span>' +
                         '</button>' +
                       '</div>' +
+                      // Code actions (Copy & Enlarge)
+                      '<div id="slideCodeActions" class="' + (presenterActiveTab === 'code' ? 'flex' : 'hidden') + ' items-center gap-2">' +
+                        '<button type="button" id="slideCopyBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono border border-slate-700 transition-colors" title="Copy code snippet">' +
+                          '<svg class="w-3.5 h-3.5 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+                          '<span id="slideCopyText">Copy</span>' +
+                        '</button>' +
+                        '<button type="button" id="slideEnlargeBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow transition-colors" title="Projector mode / enlarge code">' +
+                          '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
+                          '<span>Enlarge</span>' +
+                        '</button>' +
+                      '</div>' +
+                      // Output active badge
+                      '<div id="slideOutputBadge" class="' + (presenterActiveTab === 'output' ? 'flex' : 'hidden') + ' items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono">' +
+                        '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>' +
+                        '<span>Live Interactive</span>' +
+                      '</div>' +
+                    '</div>' +
+                  '</div>' +
                       // Code actions (Copy & Enlarge)
                       '<div id="slideCodeActions" class="' + (presenterActiveTab === 'code' ? 'flex' : 'hidden') + ' items-center gap-2">' +
                         '<button type="button" id="slideCopyBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono border border-slate-700 transition-colors" title="Copy code snippet">' +
@@ -2375,10 +2410,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (slideCodeActions) slideCodeActions.className = 'flex items-center gap-2';
             if (slideOutputBadge) slideOutputBadge.className = 'hidden';
             if (slideTabCodeBtn) {
-              slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 to-amber-600 text-white shadow-sm border border-amber-400/30';
+              slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-sm border border-yellow-400/40';
             }
             if (slideTabOutputBtn) {
-              slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all text-slate-400 hover:text-slate-200';
+              slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all text-slate-400 hover:text-white';
             }
           } else {
             if (slideCodeView) slideCodeView.className = 'hidden';
@@ -2386,10 +2421,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (slideCodeActions) slideCodeActions.className = 'hidden';
             if (slideOutputBadge) slideOutputBadge.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono';
             if (slideTabCodeBtn) {
-              slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all text-slate-400 hover:text-slate-200';
+              slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all text-slate-400 hover:text-white';
             }
             if (slideTabOutputBtn) {
-              slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 to-amber-600 text-white shadow-sm border border-amber-400/30';
+              slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-sm border border-yellow-400/40';
             }
             bindSectionOutputListeners(s.id);
           }

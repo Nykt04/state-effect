@@ -150,19 +150,45 @@
     </div>
   </div>
 
-  <!-- Top Navigation Header -->
-  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200 dark:border-slate-800 transition-colors">
+  <!-- Top Navigation Header with PBB Official Tricolor Ribbon -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/90 dark:bg-[#060913]/90 border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="h-1 w-full bg-gradient-to-r from-blue-600 via-yellow-400 to-red-600"></div>
     <div class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 h-18 sm:h-20 flex items-center justify-between gap-4">
       <!-- Brand -->
-      <div class="flex items-center gap-3 min-w-0">
+      <div class="flex items-center gap-3.5 min-w-0">
         <a href="#top" class="flex items-center gap-3 group">
           <div class="h-10 sm:h-12 flex items-center justify-center shrink-0">
             <img src="pbb-logo.png" alt="State and Effect Logo" class="h-8 sm:h-10 w-auto object-contain drop-shadow transition-transform group-hover:scale-105" />
           </div>
-          <div class="truncate">
+          <div class="truncate flex items-center gap-3">
             <span class="font-black text-2xl sm:text-3xl tracking-tight text-slate-900 dark:text-white">State and Effect</span>
+            <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-[11px] font-mono font-bold">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.8)]"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.8)]"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.8)]"></span>
+              <span class="text-slate-700 dark:text-white font-black ml-0.5">REACT 18</span>
+            </div>
           </div>
         </a>
+      </div>
+
+      <!-- Right Header Actions: Topic Quick Jumps & Confession Room -->
+      <div class="flex items-center gap-2 sm:gap-4 shrink-0">
+        <nav class="hidden lg:flex items-center gap-4 text-xs font-mono font-bold">
+          <a href="#topic-1" class="text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-blue-600"></span> 1. State
+          </a>
+          <a href="#topic-2" class="text-red-600 dark:text-red-400 hover:underline flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-red-600"></span> 2. Re-rendering
+          </a>
+          <a href="#topic-3" class="text-yellow-600 dark:text-yellow-400 hover:underline flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-yellow-400"></span> 3. Effects
+          </a>
+        </nav>
+        <button id="presentModeBtn" type="button" class="px-3.5 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white text-xs sm:text-sm font-black shadow-md shadow-blue-950/40 border border-yellow-400/40 flex items-center gap-2 transition-all">
+          <img src="pbb-logo.png" alt="" class="h-4 w-auto drop-shadow" />
+          <span>Confession Room</span>
+        </button>
       </div>
     </div>
   </header>
@@ -172,44 +198,44 @@
     <div class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 pt-8 pb-6 sm:pt-10 sm:pb-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         <div class="lg:col-span-7 space-y-6">
-          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-500 dark:text-amber-400 text-xs sm:text-sm font-bold">
+          <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-yellow-400/30 text-xs sm:text-sm font-bold shadow-sm">
             <span class="w-2.5 h-2.5 rounded-full bg-red-600 rec-dot"></span>
-            LIVE SURVEILLANCE • STATE &amp; EFFECT EDITION
+            <span class="text-white font-mono uppercase tracking-wide">SURVEILLANCE •</span> <span class="text-blue-400">STATE</span> <span class="text-white">&amp;</span> <span class="text-yellow-400">EFFECT</span>
           </div>
           <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-slate-900 dark:text-white leading-tight uppercase">
-            Mastering <span class="text-blue-600 dark:text-blue-400">State</span> &amp; <span class="text-amber-500 dark:text-amber-400">Effect</span>
+            Mastering <span class="text-blue-600 dark:text-blue-400">State</span>, <span class="text-red-600 dark:text-red-400">Re-rendering</span> &amp; <span class="text-yellow-500 dark:text-yellow-400">Effects</span>
           </h1>
           <p class="text-lg sm:text-xl text-slate-600 dark:text-slate-300 leading-relaxed max-w-3xl">
-            Under Kuya's 24/7 surveillance, explore how React components remember housemate data with <code class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-mono text-base">useState</code>, handle nomination updates, schedule screen repaints, and synchronize weekly tasks using <code class="px-2 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800 text-amber-600 dark:text-amber-400 font-mono text-base">useEffect</code>.
+            Under Kuya's 24/7 surveillance, explore how React components remember housemate data with <code class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono text-base border border-blue-500/20">useState</code>, handle nomination updates, schedule screen repaints, and synchronize weekly tasks using <code class="px-2 py-0.5 rounded bg-yellow-400/10 text-yellow-600 dark:text-yellow-400 font-mono text-base border border-yellow-400/20">useEffect</code>.
           </p>
           <div class="flex flex-wrap items-center gap-3.5 pt-1">
-            <button id="heroPresentBtn" type="button" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white font-bold text-sm sm:text-base shadow-md shadow-blue-950/30 transition-all flex items-center gap-2.5">
+            <button id="heroPresentBtn" type="button" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-950/40 border border-yellow-400/40 transition-all flex items-center gap-2.5">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
               Enter Confession Room (P)
             </button>
-            <a href="#topic-1" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-sm sm:text-base transition-all">
-              Handbook View
+            <a href="#topic-1" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-blue-600 dark:text-blue-400 border border-blue-500/30 font-bold text-sm sm:text-base transition-all">
+              Topic 1: State
             </a>
-            <a href="#comparison-matrix" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-sm sm:text-base transition-all">
-              Cheat Sheet
+            <a href="#topic-2" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-red-600 dark:text-red-400 border border-red-500/30 font-bold text-sm sm:text-base transition-all">
+              Topic 2: Re-rendering
             </a>
-            <a href="#quiz-section" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-medium text-sm sm:text-base transition-all">
-              Take Quiz
+            <a href="#topic-3" class="px-5 py-3 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-yellow-600 dark:text-yellow-400 border border-yellow-500/30 font-bold text-sm sm:text-base transition-all">
+              Topic 3: Effects
             </a>
           </div>
         </div>
 
-        <!-- Interactive Mental Model Card -->
+        <!-- Interactive Mental Model Card with Official Logo Colors -->
         <div class="lg:col-span-5">
           <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-6 sm:p-7 space-y-5">
             <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
               <div class="flex items-center gap-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
-                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-red-600"></span>
                 <span class="ml-1 text-xs sm:text-sm font-mono text-slate-500 dark:text-slate-400">ReactComponentLifecycle.jsx</span>
               </div>
-              <span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Interactive Lifecycle</span>
+              <span class="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400">Interactive Lifecycle</span>
             </div>
 
             <p class="text-sm text-slate-500 dark:text-slate-400">
@@ -217,29 +243,26 @@
             </p>
 
             <div class="grid grid-cols-3 gap-2.5 text-center">
-              <button type="button" data-cycle-step="state" class="cycle-step-btn p-3.5 rounded-xl border-2 border-sky-500 bg-sky-500/10 text-left transition-all">
-                <div class="text-sm font-bold text-sky-600 dark:text-sky-400">1. State Change</div>
+              <button type="button" data-cycle-step="state" class="cycle-step-btn p-3.5 rounded-xl border-2 border-blue-500 bg-blue-500/10 text-left transition-all">
+                <div class="text-sm font-bold text-blue-600 dark:text-blue-400">1. State Change</div>
                 <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Event calls setter</div>
               </button>
-              <button type="button" data-cycle-step="render" class="cycle-step-btn p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 text-left transition-all">
+              <button type="button" data-cycle-step="render" class="cycle-step-btn p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-red-500 text-left transition-all">
                 <div class="text-sm font-bold text-slate-700 dark:text-slate-300">2. Re-render UI</div>
                 <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Object.is &amp; DOM diff</div>
               </button>
-              <button type="button" data-cycle-step="effect" class="cycle-step-btn p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-slate-400 text-left transition-all">
+              <button type="button" data-cycle-step="effect" class="cycle-step-btn p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-yellow-400 text-left transition-all">
                 <div class="text-sm font-bold text-slate-700 dark:text-slate-300">3. Side Effect</div>
                 <div class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">After screen paint</div>
               </button>
             </div>
 
             <div id="cycleStepDetail" class="p-4 sm:p-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-              <strong class="text-sky-600 dark:text-sky-400 block mb-1">Stage 1: State Setter Triggered (`setCount(prev => prev + 1)`)</strong>
-              A user interaction (like <code class="text-sky-600 dark:text-sky-400">onClick</code>), network response, or timer calls the state updater function from <code class="text-sky-600 dark:text-sky-400">useState</code>. React stores the updated value in component memory.
+              <strong class="text-blue-600 dark:text-blue-400 block mb-1">Stage 1: State Setter Triggered (`setCount(prev => prev + 1)`)</strong>
+              A user interaction (like <code class="text-blue-600 dark:text-blue-400">onClick</code>), network response, or timer calls the state updater function from <code class="text-blue-600 dark:text-blue-400">useState</code>. React stores the updated value in component memory.
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
       </div>
     </div>
   </section>
@@ -252,13 +275,16 @@
       <aside class="hidden lg:block lg:col-span-3 sticky top-24 space-y-6">
         <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-5 shadow-sm space-y-5">
           <div class="flex items-center justify-between">
-            <h2 class="text-sm font-bold uppercase tracking-wider text-amber-500/90 dark:text-amber-400">State &amp; Effect Curriculum</h2>
-            <button id="markAllReadBtn" type="button" class="text-xs font-semibold text-amber-500 dark:text-amber-400 hover:underline">Mark all read</button>
+            <h2 class="text-sm font-bold uppercase tracking-wider text-yellow-500 dark:text-yellow-400">State &amp; Effect Curriculum</h2>
+            <button id="markAllReadBtn" type="button" class="text-xs font-semibold text-yellow-500 dark:text-yellow-400 hover:underline">Mark all read</button>
           </div>
 
-          <!-- Topic 1 Nav -->
+          <!-- Topic 1 Nav (Blue) -->
           <div class="space-y-1.5">
-            <a href="#topic-1" class="block text-sm font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 1: Introduction to State</a>
+            <a href="#topic-1" class="flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-400 px-2 py-1">
+              <span class="w-2 h-2 rounded-full bg-blue-600"></span>
+              <span>Topic 1: Introduction to State</span>
+            </a>
             <a href="#sec-1-1" data-spy="sec-1-1" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">1.1 Understanding State</span>
               <span data-check-badge="sec-1-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
@@ -273,9 +299,12 @@
             </a>
           </div>
 
-          <!-- Topic 2 Nav -->
+          <!-- Topic 2 Nav (Red) -->
           <div class="space-y-1.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
-            <a href="#topic-2" class="block text-sm font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 2: More on State</a>
+            <a href="#topic-2" class="flex items-center gap-2 text-sm font-bold text-red-600 dark:text-red-400 px-2 py-1">
+              <span class="w-2 h-2 rounded-full bg-red-600"></span>
+              <span>Topic 2: More on State</span>
+            </a>
             <a href="#sec-2-1" data-spy="sec-2-1" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">2.1 Updating State</span>
               <span data-check-badge="sec-2-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
@@ -286,9 +315,12 @@
             </a>
           </div>
 
-          <!-- Topic 3 Nav -->
+          <!-- Topic 3 Nav (Yellow) -->
           <div class="space-y-1.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
-            <a href="#topic-3" class="block text-sm font-bold text-sky-600 dark:text-sky-400 px-2 py-1">Topic 3: Side Effects</a>
+            <a href="#topic-3" class="flex items-center gap-2 text-sm font-bold text-yellow-600 dark:text-yellow-400 px-2 py-1">
+              <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+              <span>Topic 3: Side Effects</span>
+            </a>
             <a href="#sec-3-1" data-spy="sec-3-1" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
               <span class="truncate">3.1 Intro to useEffect</span>
               <span data-check-badge="sec-3-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
@@ -305,12 +337,12 @@
 
           <!-- Extras -->
           <div class="space-y-1.5 pt-2.5 border-t border-slate-100 dark:border-slate-800">
-            <a href="#comparison-matrix" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-              <svg class="w-4 h-4 text-amber-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            <a href="#comparison-matrix" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-yellow-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <svg class="w-4 h-4 text-yellow-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
               <span>Summary Cheat Sheet</span>
             </a>
-            <a href="#quiz-section" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-              <svg class="w-4 h-4 text-sky-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+            <a href="#quiz-section" class="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <svg class="w-4 h-4 text-blue-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
               <span>Interactive Quiz</span>
             </a>
           </div>
@@ -336,13 +368,13 @@
         <section id="topic-1" class="topic-group space-y-8 scroll-mt-20">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div class="space-y-1">
-              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                Topic 1
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                <span class="w-2.5 h-2.5 rounded-full bg-blue-600 shadow-[0_0_8px_rgba(37,99,235,0.8)]"></span>
+                Topic 1 • Component Memory
               </span>
               <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Introduction to State</h2>
             </div>
-            <span class="self-start sm:self-auto text-xs font-medium px-3 py-1 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
+            <span class="self-start sm:self-auto text-xs font-semibold px-3 py-1 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
               3 Core Concepts • Interactive Demos
             </span>
           </div>
@@ -714,13 +746,13 @@ function Counter() {
         <section id="topic-2" class="topic-group space-y-8 scroll-mt-20">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div class="space-y-1">
-              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                Topic 2
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-red-600 dark:text-red-400">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-600 shadow-[0_0_8px_rgba(220,38,38,0.8)]"></span>
+                Topic 2 • Reconciliation &amp; Changes
               </span>
               <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">More on State</h2>
             </div>
-            <span class="self-start sm:self-auto text-xs font-medium px-3 py-1 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
+            <span class="self-start sm:self-auto text-xs font-semibold px-3 py-1 rounded-full bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
               Immutability • Updater Functions • Re-rendering
             </span>
           </div>
@@ -989,13 +1021,13 @@ function RenderLogger() {
         <section id="topic-3" class="topic-group space-y-8 scroll-mt-20">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
             <div class="space-y-1">
-              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">
-                <span class="w-2 h-2 rounded-full bg-sky-500"></span>
-                Topic 3
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-yellow-500 dark:text-yellow-400">
+                <span class="w-2.5 h-2.5 rounded-full bg-yellow-400 shadow-[0_0_8px_rgba(250,204,21,0.8)]"></span>
+                Topic 3 • External Synchronization
               </span>
               <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">How to Deal With Side Effects</h2>
             </div>
-            <span class="self-start sm:self-auto text-xs font-medium px-3 py-1 rounded-full bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
+            <span class="self-start sm:self-auto text-xs font-semibold px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-500/20">
               useEffect • Dependency Array • Cleanup
             </span>
           </div>
@@ -1358,7 +1390,7 @@ function Timer() {
         <!-- ========================================================== -->
         <section id="comparison-matrix" class="scroll-mt-20 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
           <div class="space-y-1">
-            <span class="text-xs font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400">Quick Reference</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-yellow-500 dark:text-yellow-400">Quick Reference</span>
             <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">State vs. Effect Cheat Sheet</h2>
           </div>
 
@@ -1374,31 +1406,31 @@ function Timer() {
               </thead>
               <tbody class="divide-y divide-slate-200/70 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                 <tr>
-                  <td class="py-3.5 pr-4 font-mono font-semibold text-sky-600 dark:text-sky-400">useState(initial)</td>
+                  <td class="py-3.5 pr-4 font-mono font-bold text-blue-600 dark:text-blue-400">useState(initial)</td>
                   <td class="py-3.5 px-4">Stores component memory that changes over time</td>
                   <td class="py-3.5 px-4">Initialized on mount; setter schedules a re-render</td>
                   <td class="py-3.5 pl-4">Never mutate state directly; always call the setter function</td>
                 </tr>
                 <tr>
-                  <td class="py-3.5 pr-4 font-mono font-semibold text-sky-600 dark:text-sky-400">setState(prev =&gt; next)</td>
+                  <td class="py-3.5 pr-4 font-mono font-bold text-red-600 dark:text-red-400">setState(prev =&gt; next)</td>
                   <td class="py-3.5 px-4">Updates state based on previous state value</td>
                   <td class="py-3.5 px-4">Queued by React; compares old vs. new with <code>Object.is</code></td>
                   <td class="py-3.5 pl-4">Use updater functions for counters &amp; spread (<code>{...obj}</code>) for objects</td>
                 </tr>
                 <tr>
-                  <td class="py-3.5 pr-4 font-mono font-semibold text-sky-600 dark:text-sky-400">useEffect(fn)</td>
+                  <td class="py-3.5 pr-4 font-mono font-bold text-yellow-500 dark:text-yellow-400">useEffect(fn)</td>
                   <td class="py-3.5 px-4">Synchronizes component with external systems</td>
                   <td class="py-3.5 px-4">After every render (when no dependency array is passed)</td>
                   <td class="py-3.5 pl-4">Runs after screen paint so UI rendering is never blocked</td>
                 </tr>
                 <tr>
-                  <td class="py-3.5 pr-4 font-mono font-semibold text-indigo-600 dark:text-indigo-400">useEffect(fn, [])</td>
+                  <td class="py-3.5 pr-4 font-mono font-bold text-yellow-500 dark:text-yellow-400">useEffect(fn, [])</td>
                   <td class="py-3.5 px-4">One-time setup on mount (e.g., timers, listeners)</td>
                   <td class="py-3.5 px-4">Only once after the initial component mount</td>
                   <td class="py-3.5 pl-4">Return a cleanup function <code>() =&gt; clearInterval(id)</code> to prevent leaks</td>
                 </tr>
                 <tr>
-                  <td class="py-3.5 pr-4 font-mono font-semibold text-emerald-600 dark:text-emerald-400">useEffect(fn, [dep])</td>
+                  <td class="py-3.5 pr-4 font-mono font-bold text-yellow-500 dark:text-yellow-400">useEffect(fn, [dep])</td>
                   <td class="py-3.5 px-4">Re-sync when specific props or state change</td>
                   <td class="py-3.5 px-4">On mount + whenever <code>dep</code> changes between renders</td>
                   <td class="py-3.5 pl-4">Include every reactive state/prop read inside the effect</td>
@@ -1412,14 +1444,15 @@ function Timer() {
         <!-- INTERACTIVE KNOWLEDGE CHECK QUIZ                           -->
         <!-- ========================================================== -->
         <section id="quiz-section" class="scroll-mt-20 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-xl p-6 sm:p-8 space-y-6">
+          <div class="h-1.5 w-full bg-gradient-to-r from-blue-600 via-yellow-400 to-red-600 rounded-full mb-3"></div>
           <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
             <div>
-              <span class="text-xs font-bold uppercase tracking-wider text-sky-400">Interactive Knowledge Check</span>
+              <span class="text-xs font-bold uppercase tracking-wider text-yellow-400">Interactive Knowledge Check</span>
               <h2 class="text-2xl font-extrabold mt-0.5">Test Your React State &amp; Effect Mastery</h2>
             </div>
             <div class="flex items-center gap-3">
               <span class="text-xs font-mono px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700">
-                Score: <strong id="quizScoreDisplay" class="text-sky-400">0 / 6</strong>
+                Score: <strong id="quizScoreDisplay" class="text-yellow-400">0 / 6</strong>
               </span>
               <button id="resetQuizBtn" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition-colors">
                 Reset Quiz

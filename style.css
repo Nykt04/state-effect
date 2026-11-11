@@ -222,13 +222,22 @@ html {
   animation: pbbTitleFadeIn 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Kuya's Confession Room Ambient Spotlight */
+/* Kuya's Confession Room Ambient Spotlight (Blue, Red, Yellow & White Glow) */
 .pbb-confession-glow {
-  box-shadow: 0 0 50px -10px rgba(29, 78, 216, 0.35), 0 0 25px -5px rgba(245, 158, 11, 0.2);
+  box-shadow: 0 0 60px -10px rgba(37, 99, 235, 0.4), 0 0 40px -10px rgba(220, 38, 38, 0.25), 0 0 30px -5px rgba(250, 204, 21, 0.25);
 }
 
-/* Keyboard accessibility outline */
+/* Official Logo Colors: Blue, Red, Yellow & White Accents */
+.pbb-tricolor-gradient {
+  background: linear-gradient(90deg, #2563eb 0%, #2563eb 32%, #facc15 48%, #facc15 52%, #dc2626 68%, #dc2626 100%);
+}
+
+.pbb-tricolor-glow {
+  filter: drop-shadow(0 0 12px rgba(37, 99, 235, 0.5)) drop-shadow(0 0 10px rgba(250, 204, 21, 0.4)) drop-shadow(0 0 12px rgba(220, 38, 38, 0.4));
+}
+
+/* Keyboard accessibility outline in PBB Sun Gold */
 :focus-visible {
-  outline: 2px solid #0284c7;
+  outline: 2px solid #facc15;
   outline-offset: 2px;
 }
