@@ -241,3 +241,59 @@ html {
   outline: 2px solid #facc15;
   outline-offset: 2px;
 }
+
+/* ========================================================
+   Mobile Ergonomics & Responsive Touch Optimization
+   ======================================================== */
+
+/* Eliminate 300ms mobile tap delay and remove tap highlight grey block */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
+/* iOS & Webkit Smooth Momentum Scrolling */
+.code-scroll,
+.overflow-x-auto,
+.overflow-y-auto,
+#slideViewport {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Safe Area Insets for Modern Mobile Displays (iPhone Notch / Island) */
+.pb-safe {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px));
+}
+
+.pt-safe {
+  padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+}
+
+/* Utility to hide ugly scrollbars on mobile pills while keeping touch scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Responsive Touch Target Sizing & Active Tap Feedback */
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  a:active {
+    transform: scale(0.97);
+    transition: transform 0.08s ease-out;
+  }
+
+  .mark-read-btn,
+  .confess-sec-btn,
+  .enlarge-code-btn,
+  .copy-code-btn {
+    min-height: 40px;
+  }
+}
+

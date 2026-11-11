@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
       // Theme Toggle (Dark / Light) with LocalStorage Persistence
       // -----------------------------------------------------------
       var themeToggleBtn = document.getElementById('themeToggleBtn');
+      var mobileThemeToggleBtn = document.getElementById('mobileThemeToggleBtn');
       try {
         var savedTheme = localStorage.getItem('react_guide_theme');
         if (savedTheme === 'light') {
@@ -133,15 +134,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
       } catch (e) {}
 
+      function toggleTheme() {
+        var htmlEl = document.documentElement;
+        htmlEl.classList.toggle('dark');
+        var isDark = htmlEl.classList.contains('dark');
+        try {
+          localStorage.setItem('react_guide_theme', isDark ? 'dark' : 'light');
+        } catch (e) {}
+      }
+
       if (themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', function () {
-          var htmlEl = document.documentElement;
-          htmlEl.classList.toggle('dark');
-          var isDark = htmlEl.classList.contains('dark');
-          try {
-            localStorage.setItem('react_guide_theme', isDark ? 'dark' : 'light');
-          } catch (e) {}
-        });
+        themeToggleBtn.addEventListener('click', toggleTheme);
+      }
+      if (mobileThemeToggleBtn) {
+        mobileThemeToggleBtn.addEventListener('click', toggleTheme);
       }
 
       // -----------------------------------------------------------
@@ -203,15 +209,51 @@ document.addEventListener('DOMContentLoaded', function () {
       // -----------------------------------------------------------
       var mobileMenuBtn = document.getElementById('mobileMenuBtn');
       var mobileNavDrawer = document.getElementById('mobileNavDrawer');
+      var closeMobileNavBtn = document.getElementById('closeMobileNavBtn');
+
+      function openMobileDrawer() {
+        if (!mobileNavDrawer) return;
+        mobileNavDrawer.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeMobileDrawer() {
+        if (!mobileNavDrawer) return;
+        mobileNavDrawer.classList.add('hidden');
+        var presentModal = document.getElementById('presentModal');
+        var enlargeModal = document.getElementById('enlargeCodeModal');
+        if ((!presentModal || presentModal.classList.contains('hidden')) &&
+            (!enlargeModal || enlargeModal.classList.contains('hidden'))) {
+          document.body.style.overflow = '';
+        }
+      }
+
       if (mobileMenuBtn && mobileNavDrawer) {
         mobileMenuBtn.addEventListener('click', function () {
-          mobileNavDrawer.classList.toggle('hidden');
+          if (mobileNavDrawer.classList.contains('hidden')) {
+            openMobileDrawer();
+          } else {
+            closeMobileDrawer();
+          }
         });
       }
+
+      if (closeMobileNavBtn) {
+        closeMobileNavBtn.addEventListener('click', closeMobileDrawer);
+      }
+
+      if (mobileNavDrawer) {
+        mobileNavDrawer.addEventListener('click', function (e) {
+          if (e.target === mobileNavDrawer) {
+            closeMobileDrawer();
+          }
+        });
+      }
+
       var mobileLinks = document.querySelectorAll('.mobile-nav-link');
       mobileLinks.forEach(function (link) {
         link.addEventListener('click', function () {
-          if (mobileNavDrawer) mobileNavDrawer.classList.add('hidden');
+          closeMobileDrawer();
         });
       });
 
@@ -262,6 +304,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var readSections = {};
       var totalSections = 8;
       var readProgressCount = document.getElementById('readProgressCount');
+      var mobileReadProgressCount = document.getElementById('mobileReadProgressCount');
       var unmarkedByUser = {};
 
       try {
@@ -275,6 +318,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var count = Object.keys(readSections).filter(function (k) { return readSections[k]; }).length;
         if (readProgressCount) {
           readProgressCount.textContent = count + '/' + totalSections;
+        }
+        if (mobileReadProgressCount) {
+          mobileReadProgressCount.textContent = count + ' / ' + totalSections + ' Completed';
         }
 
         try {
@@ -815,9 +861,9 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
           currentDepMode = btn.getAttribute('data-dep-mode');
           document.querySelectorAll('.dep-mode-btn').forEach(function (b) {
-            b.className = 'dep-mode-btn py-1 px-1.5 rounded-lg text-[11px] font-mono font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition-all';
+            b.className = 'dep-mode-btn py-2 px-2 rounded-lg text-[11px] font-mono font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition-all min-h-[38px] flex items-center justify-center';
           });
-          btn.className = 'dep-mode-btn py-1 px-1.5 rounded-lg text-[11px] font-mono font-bold bg-sky-600 text-white transition-all';
+          btn.className = 'dep-mode-btn py-2 px-2 rounded-lg text-[11px] font-mono font-bold bg-sky-600 text-white transition-all min-h-[38px] flex items-center justify-center';
 
           if (currentDepMode === 'smart') {
             if (depModeBadge) depModeBadge.textContent = '[userId] (Smart)';
@@ -836,9 +882,9 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
           var nextId = btn.getAttribute('data-userid');
           document.querySelectorAll('.userid-btn').forEach(function (b) {
-            b.className = 'userid-btn py-1.5 px-2 rounded-lg text-xs font-mono font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300';
+            b.className = 'userid-btn py-2 px-2.5 rounded-lg text-xs font-mono font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 min-h-[40px]';
           });
-          btn.className = 'userid-btn py-1.5 px-2 rounded-lg text-xs font-mono font-semibold bg-sky-600 text-white';
+          btn.className = 'userid-btn py-2 px-2.5 rounded-lg text-xs font-mono font-semibold bg-sky-600 text-white min-h-[40px]';
 
           if (currentDepMode === 'mount') {
             // Mode [] ignores prop changes!
@@ -943,7 +989,7 @@ document.addEventListener('DOMContentLoaded', function () {
           timerMountBadge.textContent = 'Mounted';
           timerMountBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
           toggleTimerMountBtn.textContent = 'Unmount <Timer /> (Run Cleanup)';
-          toggleTimerMountBtn.className = 'flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-all';
+          toggleTimerMountBtn.className = 'w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-all min-h-[44px]';
           startTimerEffect();
         } else {
           stopTimerCleanup();
@@ -951,7 +997,7 @@ document.addEventListener('DOMContentLoaded', function () {
           timerMountBadge.textContent = 'Unmounted';
           timerMountBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400';
           toggleTimerMountBtn.textContent = 'Mount <Timer /> Again';
-          toggleTimerMountBtn.className = 'flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all';
+          toggleTimerMountBtn.className = 'w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all min-h-[44px]';
         }
       });
 
@@ -1071,7 +1117,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentQuizIndex >= total) {
           var pct = Math.round((correctCount / total) * 100);
           var summaryCard = document.createElement('div');
-          summaryCard.className = 'p-6 sm:p-8 rounded-2xl bg-slate-800/90 border border-slate-700 shadow-xl text-center space-y-6 animate-in fade-in duration-200';
+          summaryCard.className = 'p-5 sm:p-8 rounded-2xl bg-slate-800/90 border border-slate-700 shadow-xl text-center space-y-6 animate-in fade-in duration-200';
 
           var badgeColor = pct >= 80 ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' :
                            pct >= 50 ? 'text-amber-400 border-amber-500/30 bg-amber-500/10' :
@@ -1095,10 +1141,10 @@ document.addEventListener('DOMContentLoaded', function () {
               '<p class="text-sm text-slate-300 max-w-md mx-auto">' + msg + '</p>' +
             '</div>' +
             '<div class="flex flex-wrap items-center justify-center gap-3 pt-2">' +
-              '<button type="button" id="reviewQuizBtn" class="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold transition-colors">' +
+              '<button type="button" id="reviewQuizBtn" class="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold transition-colors min-h-[44px]">' +
                 'Review Questions' +
               '</button>' +
-              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white text-xs font-bold transition-all shadow-md border border-yellow-400/40">' +
+              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white text-xs font-bold transition-all shadow-md border border-yellow-400/40 min-h-[44px]">' +
                 'Retake Quiz' +
               '</button>' +
             '</div>';
@@ -1131,7 +1177,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var isAnswered = typeof userChoice === 'number';
 
         var card = document.createElement('div');
-        card.className = 'p-6 sm:p-8 rounded-2xl bg-slate-800/90 border border-slate-700 shadow-xl space-y-6 animate-in fade-in duration-150';
+        card.className = 'p-4 sm:p-8 rounded-2xl bg-slate-800/90 border border-slate-700 shadow-xl space-y-5 sm:space-y-6 animate-in fade-in duration-150';
 
         // Step Dots Navigation Bar
         var dotsHtml = '<div class="flex items-center gap-1.5 flex-wrap">';
@@ -1141,7 +1187,7 @@ document.addEventListener('DOMContentLoaded', function () {
           var hasAns = typeof ans === 'number';
           var isCor = hasAns && ans === quest.correct;
 
-          var dotClass = 'w-7 h-7 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition-all ';
+          var dotClass = 'w-8 h-8 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition-all touch-manipulation ';
           if (isCur) {
             dotClass += 'ring-2 ring-yellow-400 bg-blue-600 text-white shadow-md shadow-blue-500/30';
           } else if (hasAns && isCor) {
@@ -1158,7 +1204,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Header: Topic + Indicator + Step Tabs
         var headerHtml =
-          '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-700/80 pb-4">' +
+          '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-700/80 pb-4">' +
             '<div class="space-y-0.5">' +
               '<span class="text-xs font-mono text-yellow-400 font-bold uppercase tracking-wider">' + q.topic + '</span>' +
               '<div class="text-xs text-slate-400 font-mono">Question ' + (currentQuizIndex + 1) + ' of ' + total + '</div>' +
@@ -1172,7 +1218,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Options List
         var optionsHtml = '<div class="space-y-2.5">';
         q.options.forEach(function (opt, optIdx) {
-          var btnCls = 'w-full text-left px-4 py-3 rounded-xl text-xs sm:text-sm font-medium border transition-all flex items-start gap-3 ';
+          var btnCls = 'w-full text-left px-4 py-3 rounded-xl text-xs sm:text-sm font-medium border transition-all flex items-start gap-3 min-h-[44px] touch-manipulation ';
           var optLetter = String.fromCharCode(65 + optIdx);
 
           if (!isAnswered) {
@@ -1223,13 +1269,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var navHtml =
           '<div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-700/80">' +
-            '<button type="button" id="prevQuizBtn" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border transition-colors ' +
+            '<button type="button" id="prevQuizBtn" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors min-h-[44px] ' +
               (isFirst ? 'bg-slate-900/40 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200') + '" ' +
               (isFirst ? 'disabled' : '') + '>' +
               '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>' +
               '<span>Previous</span>' +
             '</button>' +
-            '<button type="button" id="nextQuizBtn" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all ' +
+            '<button type="button" id="nextQuizBtn" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] ' +
               (isAnswered ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white shadow-md border border-yellow-400/40' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700') + '">' +
               '<span>' + nextBtnLabel + '</span>' +
               '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>' +
@@ -2512,11 +2558,47 @@ document.addEventListener('DOMContentLoaded', function () {
         });
       }
 
+      // Mobile touch swipe gestures for Confession Room presentation
+      var touchStartX = 0;
+      var touchStartY = 0;
+      if (presentModal) {
+        presentModal.addEventListener('touchstart', function (e) {
+          if (e.touches && e.touches[0]) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+          }
+        }, { passive: true });
+
+        presentModal.addEventListener('touchend', function (e) {
+          if (e.changedTouches && e.changedTouches[0]) {
+            var diffX = e.changedTouches[0].clientX - touchStartX;
+            var diffY = e.changedTouches[0].clientY - touchStartY;
+            // Only trigger if horizontal swipe is intentional and distinct
+            if (Math.abs(diffX) > 48 && Math.abs(diffX) > Math.abs(diffY) * 1.3) {
+              if (diffX < 0) {
+                // Swipe Left -> Next Section
+                renderSlide(currentSlide + 1);
+              } else {
+                // Swipe Right -> Prev Section
+                renderSlide(currentSlide - 1);
+              }
+            }
+          }
+        }, { passive: true });
+      }
+
       // Keyboard navigation
       document.addEventListener('keydown', function (e) {
         if (splashActive) {
           dismissPbbSplash();
           return;
+        }
+
+        if (mobileNavDrawer && !mobileNavDrawer.classList.contains('hidden')) {
+          if (e.key === 'Escape') {
+            closeMobileDrawer();
+            return;
+          }
         }
 
         if (enlargeCodeModal && !enlargeCodeModal.classList.contains('hidden')) {
