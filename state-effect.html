@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>React State &amp; Effect — Interactive Visual Guide</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            react: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              200: '#a5f3fc',
+              300: '#67e8f9',
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+              700: '#0e7490',
+              800: '#155e75',
+              900: '#164e63',
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    code, pre {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .code-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .code-scroll::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.4);
+    }
+    .code-scroll::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.35);
+      border-radius: 9999px;
+    }
+    @keyframes pulseRing {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      50% { transform: scale(1.03); opacity: 1; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .render-flash {
+      animation: pulseRing 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased selection:bg-cyan-500 selection:text-white transition-colors duration-200">
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 pointer-events-none flex flex-col gap-2"></div>
+
+  <!-- Top Navigation Header -->
+  <header class="sticky top-0 z-40 backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <!-- Brand -->
+      <div class="flex items-center gap-3 min-w-0">
+        <button id="mobileMenuBtn" type="button" class="lg:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 focus:outline-none" aria-label="Toggle navigation">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        <a href="#top" class="flex items-center gap-2.5 group truncate">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-md shadow-cyan-500/20 group-hover:rotate-12 transition-transform shrink-0">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="2.2" fill="currentColor"/>
+              <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(30 12 12)"/>
+              <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(90 12 12)"/>
+              <ellipse cx="12" cy="12" rx="10" ry="4.2" transform="rotate(150 12 12)"/>
+            </svg>
+          </div>
+          <div class="truncate">
+            <span class="font-bold text-base sm:text-lg tracking-tight bg-gradient-to-r from-slate-900 via-cyan-700 to-blue-600 dark:from-white dark:via-cyan-300 dark:to-blue-400 bg-clip-text text-transparent">React State &amp; Effect</span>
+            <span class="hidden sm:inline-block ml-2 text-xs font-medium px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-600 dark:text-cyan-300 border border-cyan-500/20">Interactive Handbook</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Quick Topic Jump Pills (Desktop) -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-200/70 dark:border-slate-700/60 text-xs font-medium">
+        <a href="#topic-1" data-nav-pill="topic-1" class="nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-300">1. Intro to State</a>
+        <a href="#topic-2" data-nav-pill="topic-2" class="nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-300">2. More on State</a>
+        <a href="#topic-3" data-nav-pill="topic-3" class="nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-300">3. Side Effects</a>
+        <a href="#quiz-section" data-nav-pill="quiz-section" class="nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-cyan-600 dark:hover:text-cyan-300">Practice Quiz</a>
+      </nav>
+
+      <!-- Search & Theme Controls -->
+      <div class="flex items-center gap-2">
+        <div class="relative hidden sm:block">
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z"></path>
+          </svg>
+          <input id="topicSearchInput" type="text" placeholder="Filter concepts..." class="w-44 lg:w-56 pl-9 pr-7 py-1.5 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all" />
+          <button id="clearSearchBtn" type="button" class="hidden absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" aria-label="Clear search">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Progress Badge -->
+        <div class="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs">
+          <span class="text-slate-500 dark:text-slate-400">Read:</span>
+          <span id="readProgressCount" class="font-bold text-cyan-600 dark:text-cyan-400">0/8</span>
+        </div>
+
+        <!-- Theme Toggle -->
+        <button id="themeToggleBtn" type="button" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-cyan-500/50 transition-colors" aria-label="Toggle color theme">
+          <svg id="sunIcon" class="w-4 h-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+          <svg id="moonIcon" class="w-4 h-4 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileNavDrawer" class="hidden lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-4 space-y-3">
+      <div class="relative sm:hidden">
+        <input id="mobileSearchInput" type="text" placeholder="Filter concepts..." class="w-full pl-3 pr-3 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200" />
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5 text-xs">
+        <a href="#sec-1-1" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1.1 Understanding State in React</a>
+        <a href="#sec-1-2" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1.2 Using the useState Hook</a>
+        <a href="#sec-1-3" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">1.3 Handling User Events</a>
+        <a href="#sec-2-1" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">2.1 Updating State</a>
+        <a href="#sec-2-2" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">2.2 How State Triggers Re-rendering</a>
+        <a href="#sec-3-1" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3.1 Intro to useEffect Hook</a>
+        <a href="#sec-3-2" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3.2 The Dependency Array</a>
+        <a href="#sec-3-3" class="mobile-nav-link px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">3.3 Effects &amp; Cleanup Function</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section id="top" class="relative overflow-hidden border-b border-slate-200 dark:border-slate-800/80 bg-gradient-to-b from-white via-cyan-50/30 to-slate-50 dark:from-slate-900 dark:via-slate-900/90 dark:to-slate-950">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7 space-y-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-700 dark:text-cyan-300 text-xs font-semibold">
+            <span class="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></span>
+            Core React Architecture • State &amp; Side Effects
+          </div>
+          <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+            Mastering <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-blue-600">State</span> &amp; <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">Effect</span> in React
+          </h1>
+          <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
+            Explore how React components remember data over time with <code class="px-1.5 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800 text-cyan-700 dark:text-cyan-300 text-sm">useState</code>, respond to user events, schedule smart UI re-renders, and synchronize with external systems using <code class="px-1.5 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800 text-indigo-600 dark:text-indigo-300 text-sm">useEffect</code>.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a href="#topic-1" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold text-sm shadow-lg shadow-cyan-500/20 transition-all">
+              Start Learning
+            </a>
+            <a href="#comparison-matrix" class="px-4 py-2.5 rounded-xl bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold text-sm transition-all">
+              Quick Cheat Sheet
+            </a>
+            <a href="#quiz-section" class="px-4 py-2.5 rounded-xl bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-600 dark:text-indigo-300 border border-indigo-500/20 font-semibold text-sm transition-all">
+              Take the 6-Question Quiz
+            </a>
+          </div>
+        </div>
+
+        <!-- Interactive Mental Model Card -->
+        <div class="lg:col-span-5">
+          <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-5 space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                <span class="ml-1 text-xs font-mono text-slate-500 dark:text-slate-400">ReactComponentLifecycle.jsx</span>
+              </div>
+              <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Interactive Lifecycle</span>
+            </div>
+
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Click each stage below to inspect how State, Re-rendering, and Effects work together:
+            </p>
+
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <button type="button" data-cycle-step="state" class="cycle-step-btn p-3 rounded-xl border-2 border-cyan-500 bg-cyan-500/10 text-left transition-all">
+                <div class="text-xs font-bold text-cyan-600 dark:text-cyan-300">1. State Change</div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Event calls setter</div>
+              </button>
+              <button type="button" data-cycle-step="render" class="cycle-step-btn p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-blue-400 text-left transition-all">
+                <div class="text-xs font-bold text-blue-600 dark:text-blue-300">2. Re-render UI</div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Object.is &amp; DOM diff</div>
+              </button>
+              <button type="button" data-cycle-step="effect" class="cycle-step-btn p-3 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-purple-400 text-left transition-all">
+                <div class="text-xs font-bold text-purple-600 dark:text-purple-300">3. Side Effect</div>
+                <div class="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">After screen paint</div>
+              </button>
+            </div>
+
+            <div id="cycleStepDetail" class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/80 dark:border-slate-800 text-xs leading-relaxed text-slate-700 dark:text-slate-300">
+              <strong class="text-cyan-600 dark:text-cyan-400 block mb-1">Stage 1: State Setter Triggered (`setCount(prev => prev + 1)`)</strong>
+              A user interaction (like <code class="text-cyan-600 dark:text-cyan-300">onClick</code>), network response, or timer calls the state updater function from <code class="text-cyan-600 dark:text-cyan-300">useState</code>. React stores the updated value in component memory.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- Left Sticky Sidebar Navigation -->
+      <aside class="hidden lg:block lg:col-span-3 sticky top-24 space-y-6">
+        <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">Curriculum Outline</h2>
+            <button id="markAllReadBtn" type="button" class="text-[11px] font-medium text-cyan-600 dark:text-cyan-400 hover:underline">Mark all read</button>
+          </div>
+
+          <!-- Topic 1 Nav -->
+          <div class="space-y-1">
+            <a href="#topic-1" class="block text-xs font-bold text-cyan-600 dark:text-cyan-400 px-2 py-1">Topic 1: Introduction to State</a>
+            <a href="#sec-1-1" data-spy="sec-1-1" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <span class="truncate">1.1 Understanding State</span>
+              <span data-check-badge="sec-1-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
+            </a>
+            <a href="#sec-1-2" data-spy="sec-1-2" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <span class="truncate">1.2 Using useState Hook</span>
+              <span data-check-badge="sec-1-2" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
+            </a>
+            <a href="#sec-1-3" data-spy="sec-1-3" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <span class="truncate">1.3 Handling User Events</span>
+              <span data-check-badge="sec-1-3" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
+            </a>
+          </div>
+
+          <!-- Topic 2 Nav -->
+          <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <a href="#topic-2" class="block text-xs font-bold text-blue-600 dark:text-blue-400 px-2 py-1">Topic 2: More on State</a>
+            <a href="#sec-2-1" data-spy="sec-2-1" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <span class="truncate">2.1 Updating State</span>
+              <span data-check-badge="sec-2-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
+            </a>
+            <a href="#sec-2-2" data-spy="sec-2-2" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <span class="truncate">2.2 State &amp; Re-rendering</span>
+              <span data-check-badge="sec-2-2" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
+            </a>
+          </div>
+
+          <!-- Topic 3 Nav -->
+          <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <a href="#topic-3" class="block text-xs font-bold text-purple-600 dark:text-purple-400 px-2 py-1">Topic 3: Side Effects</a>
+            <a href="#sec-3-1" data-spy="sec-3-1" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <span class="truncate">3.1 Intro to useEffect</span>
+              <span data-check-badge="sec-3-1" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
+            </a>
+            <a href="#sec-3-2" data-spy="sec-3-2" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <span class="truncate">3.2 Dependency Array</span>
+              <span data-check-badge="sec-3-2" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
+            </a>
+            <a href="#sec-3-3" data-spy="sec-3-3" class="sidebar-link flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+              <span class="truncate">3.3 Cleanup Function</span>
+              <span data-check-badge="sec-3-3" class="w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]"></span>
+            </a>
+          </div>
+
+          <!-- Extras -->
+          <div class="space-y-1 pt-2 border-t border-slate-100 dark:border-slate-800">
+            <a href="#comparison-matrix" class="block px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">⚡ Summary Cheat Sheet</a>
+            <a href="#quiz-section" class="block px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">🎯 Interactive Quiz</a>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Column -->
+      <main class="lg:col-span-9 space-y-14">
+
+        <!-- Search Filter Empty Banner -->
+        <div id="noSearchResults" class="hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-8 text-center space-y-3">
+          <div class="text-2xl">🔍</div>
+          <h3 class="text-base font-bold text-slate-800 dark:text-slate-200">No matching subtopics found</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Try searching for keywords like <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">useState</code>, <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">Object.is</code>, <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">dependency</code>, or <code class="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800">cleanup</code>.</p>
+          <button id="resetSearchEmptyBtn" type="button" class="px-4 py-2 rounded-xl bg-cyan-500 text-white text-xs font-semibold">Show All Topics</button>
+        </div>
+
+        <!-- ========================================================== -->
+        <!-- TOPIC 1: INTRODUCTION TO STATE                             -->
+        <!-- ========================================================== -->
+        <section id="topic-1" class="topic-group space-y-8 scroll-mt-20">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div class="space-y-1">
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
+                <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                Topic 1
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">Introduction to State</h2>
+            </div>
+            <span class="self-start sm:self-auto text-xs font-medium px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-700 dark:text-cyan-300 border border-cyan-500/20">
+              3 Core Concepts • Interactive Demos
+            </span>
+          </div>
+
+          <!-- 1.1 Understanding State in React -->
+          <article id="sec-1-1" data-searchable="understanding state in react built-in react object memory re-render normal variable" class="concept-card scroll-mt-24 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400">Section 1.1</span>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Understanding State in React</h3>
+                </div>
+                <button type="button" data-mark-read="sec-1-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-cyan-500 transition-colors">
+                  Mark Read
+                </button>
+              </div>
+
+              <!-- Definition & Explanation Grid -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-cyan-50/70 dark:bg-cyan-950/30 border border-cyan-200/70 dark:border-cyan-800/50 space-y-2">
+                  <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Definition
+                  </div>
+                  <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                    <strong>State</strong> is a built-in React object that stores data or information about a component. It represents the parts of an application that can change over time based on user action, network responses, or timers.
+                  </p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+                    <svg class="w-4 h-4 text-cyan-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    Explanation
+                  </div>
+                  <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    In standard JavaScript, if you update a normal variable, the user interface does not automatically update to reflect that change. React needs a way to know when data changes so it can redraw (re-render) the screen. State acts as the <strong>memory of a component</strong>. When state is updated, React knows it must re-render the component to keep the UI in sync with the data.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Interactive Lab 1.1: Plain JS Variable vs React State -->
+              <div class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-950/60 p-5 space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-500"></span>
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Interactive Comparison: Normal JS Variable vs. React State</h4>
+                  </div>
+                  <button id="resetDemo11Btn" type="button" class="text-xs text-slate-500 hover:text-cyan-600 dark:hover:text-cyan-400 font-medium">Reset Demo</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Normal Variable Card -->
+                  <div class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-rose-200 dark:border-rose-900/50 space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold text-rose-600 dark:text-rose-400">❌ Normal JS Variable (`let count = 0`)</span>
+                      <span class="text-[11px] px-2 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400">No Re-render</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-center py-2">
+                      <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400">Memory Value</div>
+                        <div id="plainVarMemory" class="text-lg font-mono font-bold text-slate-800 dark:text-slate-200">0</div>
+                      </div>
+                      <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400">Screen UI Text</div>
+                        <div id="plainVarUI" class="text-lg font-mono font-bold text-rose-600 dark:text-rose-400">0</div>
+                      </div>
+                    </div>
+                    <button id="incPlainVarBtn" type="button" class="w-full py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-colors">
+                      Run `count = count + 1`
+                    </button>
+                    <p id="plainVarStatus" class="text-[11px] text-slate-500 dark:text-slate-400">
+                      Click the button: memory increments, but React never knows to redraw the UI!
+                    </p>
+                  </div>
+
+                  <!-- React State Card -->
+                  <div id="reactStateCard11" class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-900/50 space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400">✅ React State (`useState(0)`)</span>
+                      <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Auto Re-renders</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-center py-2">
+                      <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400">State Memory</div>
+                        <div id="reactStateMemory" class="text-lg font-mono font-bold text-emerald-600 dark:text-emerald-400">0</div>
+                      </div>
+                      <div class="p-2.5 rounded-lg bg-slate-100 dark:bg-slate-800">
+                        <div class="text-[11px] text-slate-500 dark:text-slate-400">Screen UI Text</div>
+                        <div id="reactStateUI" class="text-lg font-mono font-bold text-emerald-600 dark:text-emerald-400">0</div>
+                      </div>
+                    </div>
+                    <button id="incReactStateBtn" type="button" class="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors">
+                      Run `setCount(count + 1)`
+                    </button>
+                    <p id="reactStateStatus" class="text-[11px] text-slate-500 dark:text-slate-400">
+                      Calling the setter tells React state changed, immediately re-rendering the UI in sync.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 1.2 Using the useState Hook -->
+          <article id="sec-1-2" data-searchable="using the usestate hook array destructuring initial state greeting guest setname" class="concept-card scroll-mt-24 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400">Section 1.2</span>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Using the <code class="text-cyan-600 dark:text-cyan-400">useState</code> Hook</h3>
+                </div>
+                <button type="button" data-mark-read="sec-1-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-cyan-500 transition-colors">
+                  Mark Read
+                </button>
+              </div>
+
+              <!-- Definition & Explanation -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-cyan-50/70 dark:bg-cyan-950/30 border border-cyan-200/70 dark:border-cyan-800/50 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300">Definition</div>
+                  <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                    <code class="font-semibold text-cyan-700 dark:text-cyan-300">useState</code> is a React Hook that allows you to add state variables to functional components.
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Explanation</div>
+                  <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    You call <code class="text-cyan-600 dark:text-cyan-300">useState</code> at the top level of your component. It takes one argument (the <strong>initial state</strong>) and returns an array with two elements: the <strong>current state value</strong> and a <strong>function to update that state</strong>. We typically use array destructuring to assign names to these two elements.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Interactive Syntax Anatomy Bar -->
+              <div class="p-4 rounded-xl bg-slate-900 text-slate-100 border border-slate-800 space-y-3">
+                <div class="text-[11px] font-mono uppercase tracking-wider text-slate-400">Syntax Anatomy — Click any highlighted part to inspect:</div>
+                <div class="font-mono text-xs sm:text-sm flex flex-wrap items-center gap-1.5 py-1">
+                  <span class="text-purple-400">const</span>
+                  <span>[</span>
+                  <button type="button" data-anatomy="stateVal" class="anatomy-btn px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-400/40 hover:bg-cyan-500/30 transition-colors">name</button>
+                  <span>,</span>
+                  <button type="button" data-anatomy="setterFn" class="anatomy-btn px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-400/40 hover:bg-blue-500/30 transition-colors">setName</button>
+                  <span>] =</span>
+                  <button type="button" data-anatomy="hookCall" class="anatomy-btn px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-400/40 hover:bg-purple-500/30 transition-colors">useState</button>
+                  <span>(</span>
+                  <button type="button" data-anatomy="initArg" class="anatomy-btn px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 hover:bg-emerald-500/30 transition-colors">'Guest'</button>
+                  <span>);</span>
+                </div>
+                <div id="anatomyExplainBox" class="text-xs text-slate-300 bg-slate-800/90 px-3.5 py-2.5 rounded-lg border border-slate-700">
+                  <strong class="text-cyan-300">1st Element (`name`):</strong> The current state value stored by React. On the very first render, it equals the initial state (`'Guest'`).
+                </div>
+              </div>
+
+              <!-- Code Example & Interactive Preview Split -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                <!-- Code Block -->
+                <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
+                  <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                    <span class="text-xs font-mono text-slate-400">Greeting.jsx</span>
+                    <button type="button" data-copy-target="code-1-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                  </div>
+                  <pre id="code-1-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
+
+function Greeting() {
+  // name is the state value, setName is the updater function
+  const [name, setName] = useState('Guest');
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Hello, {name}!&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+                </div>
+
+                <!-- Live Component Preview -->
+                <div class="lg:col-span-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between space-y-4">
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Live Component Output</span>
+                      <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-300">&lt;Greeting /&gt;</span>
+                    </div>
+                    <div id="greetingPreviewBox" class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center shadow-sm">
+                      <p class="text-lg font-bold text-slate-800 dark:text-slate-100">Hello, <span id="greetingNameSpan" class="text-cyan-600 dark:text-cyan-400">Guest</span>!</p>
+                    </div>
+                  </div>
+
+                  <div class="space-y-2 pt-2 border-t border-slate-200/70 dark:border-slate-800">
+                    <label for="greetingNameInput" class="block text-xs font-medium text-slate-600 dark:text-slate-400">
+                      Test calling <code class="text-cyan-600 dark:text-cyan-400">setName(...)</code>:
+                    </label>
+                    <div class="flex gap-2">
+                      <input id="greetingNameInput" type="text" value="Guest" maxlength="25" class="flex-1 px-3 py-1.5 text-xs rounded-lg bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                      <button id="resetGreetingBtn" type="button" class="px-3 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300">
+                        Reset
+                      </button>
+                    </div>
+                    <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                      Current state array: <span id="greetingStateArrayReadout" class="text-cyan-600 dark:text-cyan-400">["Guest", ƒ setName()]</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 1.3 Handling User Events -->
+          <article id="sec-1-3" data-searchable="handling user events onclick onchange onsubmit event handler counter handleincrement" class="concept-card scroll-mt-24 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-xs font-mono font-semibold text-cyan-600 dark:text-cyan-400">Section 1.3</span>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Handling User Events</h3>
+                </div>
+                <button type="button" data-mark-read="sec-1-3" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-cyan-500 transition-colors">
+                  Mark Read
+                </button>
+              </div>
+
+              <!-- Definition & Explanation -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-cyan-50/70 dark:bg-cyan-950/30 border border-cyan-200/70 dark:border-cyan-800/50 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-cyan-700 dark:text-cyan-300">Definition</div>
+                  <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                    <strong>Event handling</strong> in React involves capturing user interactions (like clicks, typing, or hovering) and executing a specific function in response, usually to update the state.
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Explanation</div>
+                  <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    React elements have built-in event listener props like <code class="text-cyan-600 dark:text-cyan-300">onClick</code>, <code class="text-cyan-600 dark:text-cyan-300">onChange</code>, and <code class="text-cyan-600 dark:text-cyan-300">onSubmit</code>. You pass a function to these props. When the user interacts with the element, the function fires, triggering the state updater function to modify the UI.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Code Example & Interactive Counter -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                <!-- Code Block -->
+                <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
+                  <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                    <span class="text-xs font-mono text-slate-400">Counter.jsx</span>
+                    <button type="button" data-copy-target="code-1-3" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                  </div>
+                  <pre id="code-1-3" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  // Event handler function
+  const handleIncrement = () => {
+    setCount(count + 1); // Updates state, triggering a UI refresh
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;You clicked {count} times&lt;/p&gt;
+      {/* Passing the handler to the onClick event */}
+      &lt;button onClick={handleIncrement}&gt;Click me&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+                </div>
+
+                <!-- Live Counter Sandbox -->
+                <div class="lg:col-span-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between space-y-4">
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Live Component Output</span>
+                      <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-600 dark:text-cyan-300">&lt;Counter /&gt;</span>
+                    </div>
+
+                    <div id="counterPreviewCard" class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-4 shadow-sm">
+                      <p class="text-base font-semibold text-slate-800 dark:text-slate-100">
+                        You clicked <span id="counterValueSpan" class="font-mono text-xl font-extrabold text-cyan-600 dark:text-cyan-400">0</span> times
+                      </p>
+                      <div class="flex items-center justify-center gap-2">
+                        <button id="counterClickMeBtn" type="button" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 active:scale-95 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 transition-all">
+                          Click me (onClick={handleIncrement})
+                        </button>
+                        <button id="counterResetBtn" type="button" class="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300">
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Event Pipeline Visualizer -->
+                  <div class="space-y-1.5 pt-2 border-t border-slate-200/70 dark:border-slate-800">
+                    <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400">Last Event Trace:</div>
+                    <div id="counterEventLog" class="p-2.5 rounded-lg bg-slate-900 text-slate-300 font-mono text-[11px] leading-relaxed">
+                      Waiting for user click on &lt;button&gt;...
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- ========================================================== -->
+        <!-- TOPIC 2: MORE ON STATE                                     -->
+        <!-- ========================================================== -->
+        <section id="topic-2" class="topic-group space-y-8 scroll-mt-20">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div class="space-y-1">
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                Topic 2
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">More on State</h2>
+            </div>
+            <span class="self-start sm:self-auto text-xs font-medium px-3 py-1 rounded-full bg-blue-500/10 text-blue-700 dark:text-blue-300 border border-blue-500/20">
+              Immutability • Updater Functions • Re-rendering
+            </span>
+          </div>
+
+          <!-- 2.1 Updating State -->
+          <article id="sec-2-1" data-searchable="updating state immutable immutability setter prevscore prevplayer spread operator scoreboard objects arrays" class="concept-card scroll-mt-24 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">Section 2.1</span>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Updating State</h3>
+                </div>
+                <button type="button" data-mark-read="sec-2-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-blue-500 transition-colors">
+                  Mark Read
+                </button>
+              </div>
+
+              <!-- Definition & Explanation -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/70 dark:border-blue-800/50 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300">Definition</div>
+                  <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                    <strong>State updating</strong> is the process of replacing the old state with a new state using the setter function provided by <code class="text-blue-600 dark:text-blue-300">useState</code>. State in React is <strong>immutable</strong>; you must never modify it directly (e.g., <code class="text-rose-600 dark:text-rose-400">count = count + 1</code>), but instead always use the setter.
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Explanation</div>
+                  <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    When dealing with complex state like arrays or objects, you must create a <strong>new copy</strong> of the object or array and pass that to the setter function. Furthermore, if your new state depends on the previous state (like incrementing a number), it is safest to pass an <strong>updater function</strong> to the setter. This ensures you are always calculating the new state based on the most recent version of the state, avoiding bugs during rapid updates.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Code Example & Interactive ScoreBoard -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                <!-- Code Block -->
+                <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
+                  <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                    <span class="text-xs font-mono text-slate-400">ScoreBoard.jsx</span>
+                    <button type="button" data-copy-target="code-2-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                  </div>
+                  <pre id="code-2-1" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
+
+function ScoreBoard() {
+  const [score, setScore] = useState(0);
+  const [player, setPlayer] = useState({ name: 'Alice', level: 1 });
+
+  const increaseScore = () => {
+    // Updater function: guarantees we use the latest state
+    setScore(prevScore =&gt; prevScore + 1); 
+  };
+
+  const levelUp = () => {
+    // Updating an object: spread the old object, then overwrite the specific property
+    setPlayer(prevPlayer =&gt; ({ ...prevPlayer, level: prevPlayer.level + 1 }));
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;{player.name} is Level {player.level} with {score} points.&lt;/p&gt;
+      &lt;button onClick={increaseScore}&gt;Add Point&lt;/button&gt;
+      &lt;button onClick={levelUp}&gt;Level Up&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+                </div>
+
+                <!-- Live ScoreBoard Playground -->
+                <div class="lg:col-span-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between space-y-4">
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Live Component Output</span>
+                      <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-300">&lt;ScoreBoard /&gt;</span>
+                    </div>
+
+                    <div id="scoreboardPreviewBox" class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm">
+                      <p class="text-sm sm:text-base font-semibold text-slate-800 dark:text-slate-100 text-center">
+                        <span id="sbPlayerName" class="text-blue-600 dark:text-blue-400">Alice</span> is Level
+                        <span id="sbPlayerLevel" class="font-mono font-bold text-indigo-600 dark:text-indigo-400">1</span> with
+                        <span id="sbScoreVal" class="font-mono font-bold text-emerald-600 dark:text-emerald-400">0</span> points.
+                      </p>
+
+                      <div class="flex flex-wrap justify-center gap-2">
+                        <button id="sbAddPointBtn" type="button" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all">
+                          Add Point (+1)
+                        </button>
+                        <button id="sbBurstPointBtn" type="button" class="px-3.5 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold transition-all" title="Calls setScore(prev => prev + 1) 3 times in a row">
+                          Rapid +3 (Updater Fn)
+                        </button>
+                        <button id="sbLevelUpBtn" type="button" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition-all">
+                          Level Up
+                        </button>
+                        <button id="sbResetBtn" type="button" class="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                          Reset
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="space-y-1.5 pt-2 border-t border-slate-200/70 dark:border-slate-800">
+                    <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400">Immutable State Snapshot in Memory:</div>
+                    <pre id="sbStateJson" class="p-2.5 rounded-lg bg-slate-900 text-emerald-300 font-mono text-[11px] overflow-x-auto">score: 0
+player: { "name": "Alice", "level": 1 }</pre>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 2.2 Understanding How State Changes Trigger Re-rendering -->
+          <article id="sec-2-2" data-searchable="understanding how state changes trigger re-rendering object.is strict equality renderlogger toggle console.log dom diff" class="concept-card scroll-mt-24 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-xs font-mono font-semibold text-blue-600 dark:text-blue-400">Section 2.2</span>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Understanding How State Changes Trigger Re-rendering</h3>
+                </div>
+                <button type="button" data-mark-read="sec-2-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-blue-500 transition-colors">
+                  Mark Read
+                </button>
+              </div>
+
+              <!-- Definition & Explanation -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/70 dark:border-blue-800/50 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-300">Definition</div>
+                  <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                    A <strong>re-render</strong> is React's process of calling your component function again to generate a new version of the UI based on updated state or props.
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Explanation</div>
+                  <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    When you call a state setter function, React compares the new value to the old value using <code class="text-blue-600 dark:text-blue-300">Object.is</code> (strict equality). If the values are identical, React does nothing. If the values are different, React schedules a re-render. It calls the component function from top to bottom, calculates the new JSX, compares it to the existing DOM, and updates only the HTML elements that actually changed.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Code Example & Interactive RenderLogger -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                <!-- Code Block -->
+                <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
+                  <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                    <span class="text-xs font-mono text-slate-400">RenderLogger.jsx</span>
+                    <button type="button" data-copy-target="code-2-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                  </div>
+                  <pre id="code-2-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState } from 'react';
+
+function RenderLogger() {
+  const [toggle, setToggle] = useState(false);
+
+  // This console.log runs every time the button is clicked 
+  // because the state change forces the function to execute again.
+  console.log('Component is rendering! Toggle is:', toggle);
+
+  return (
+    &lt;button onClick={() =&gt; setToggle(!toggle)}&gt;
+      {toggle ? 'On' : 'Off'}
+    &lt;/button&gt;
+  );
+}</code></pre>
+                </div>
+
+                <!-- Live RenderLogger Simulator -->
+                <div class="lg:col-span-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between space-y-4">
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Live Component &amp; Console</span>
+                      <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-300">Renders: <strong id="renderLoggerCount">1</strong></span>
+                    </div>
+
+                    <div id="renderLoggerBox" class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col items-center gap-3 shadow-sm">
+                      <button id="renderToggleBtn" type="button" class="px-6 py-2.5 rounded-xl font-bold text-sm text-white bg-slate-600 hover:bg-slate-700 transition-all shadow">
+                        Off
+                      </button>
+                      <div class="flex flex-wrap justify-center gap-2">
+                        <button id="renderSameValBtn" type="button" class="px-3 py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/20 text-[11px] font-medium">
+                          Call `setToggle(toggle)` (Same Value)
+                        </button>
+                        <button id="clearRenderConsoleBtn" type="button" class="px-2.5 py-1.5 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-400 text-[11px]">
+                          Clear Logs
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Simulated Browser Console -->
+                  <div class="space-y-1.5">
+                    <div class="flex items-center justify-between text-[11px] font-mono text-slate-500 dark:text-slate-400">
+                      <span>Console Output</span>
+                      <span id="objectIsBadge" class="text-blue-500">Object.is(old, new)</span>
+                    </div>
+                    <div id="renderConsoleOutput" class="h-28 overflow-y-auto p-2.5 rounded-lg bg-slate-900 text-slate-200 font-mono text-[11px] space-y-1 code-scroll">
+                      <div class="text-emerald-400">&gt; Component is rendering! Toggle is: false</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- ========================================================== -->
+        <!-- TOPIC 3: HOW TO DEAL WITH SIDE EFFECTS                     -->
+        <!-- ========================================================== -->
+        <section id="topic-3" class="topic-group space-y-8 scroll-mt-20">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+            <div class="space-y-1">
+              <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-purple-600 dark:text-purple-400">
+                <span class="w-2 h-2 rounded-full bg-purple-500"></span>
+                Topic 3
+              </span>
+              <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white">How to Deal With Side Effects</h2>
+            </div>
+            <span class="self-start sm:self-auto text-xs font-medium px-3 py-1 rounded-full bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">
+              useEffect • Dependency Array • Cleanup
+            </span>
+          </div>
+
+          <!-- 3.1 Introduction to the useEffect Hook -->
+          <article id="sec-3-1" data-searchable="introduction to the useeffect hook side effects external system document.title titleupdater pure functions" class="concept-card scroll-mt-24 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-xs font-mono font-semibold text-purple-600 dark:text-purple-400">Section 3.1</span>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Introduction to the <code class="text-purple-600 dark:text-purple-400">useEffect</code> Hook</h3>
+                </div>
+                <button type="button" data-mark-read="sec-3-1" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-purple-500 transition-colors">
+                  Mark Read
+                </button>
+              </div>
+
+              <!-- Definition & Explanation -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200/70 dark:border-purple-800/50 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">Definition</div>
+                  <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                    A <strong>side effect</strong> (or "effect") is any operation that interacts with the world outside the component, such as fetching data from an API, manually modifying the DOM, or setting up a subscription. <code class="text-purple-600 dark:text-purple-300 font-semibold">useEffect</code> is the Hook that lets you synchronize a component with an external system.
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Explanation</div>
+                  <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    React components should primarily be pure functions that take props/state and return JSX. Side effects belong inside <code class="text-purple-600 dark:text-purple-300">useEffect</code>. The code inside <code class="text-purple-600 dark:text-purple-300">useEffect</code> runs <strong>after</strong> the component has rendered and the screen has been updated, ensuring that heavy operations or data fetching do not block the UI from appearing.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Code Example & Interactive TitleUpdater -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                <!-- Code Block -->
+                <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
+                  <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                    <span class="text-xs font-mono text-slate-400">TitleUpdater.jsx</span>
+                    <button type="button" data-copy-target="code-3-1" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                  </div>
+                  <pre id="code-3-1" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
+
+function TitleUpdater() {
+  const [clicks, setClicks] = useState(0);
+
+  // This effect reaches outside React to modify the browser tab title
+  useEffect(() =&gt; {
+    document.title = `Clicked ${clicks} times`;
+  });
+
+  return &lt;button onClick={() =&gt; setClicks(clicks + 1)}&gt;Click Me&lt;/button&gt;;
+}</code></pre>
+                </div>
+
+                <!-- Live TitleUpdater Simulator -->
+                <div class="lg:col-span-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between space-y-4">
+                  <div class="space-y-3">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Simulated Browser Tab &amp; Component</span>
+
+                    <!-- Simulated Browser Window -->
+                    <div class="rounded-xl overflow-hidden border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+                      <!-- Browser Tab Bar -->
+                      <div class="bg-slate-200 dark:bg-slate-800 px-3 py-2 flex items-center gap-2 border-b border-slate-300 dark:border-slate-700">
+                        <div class="flex gap-1.5">
+                          <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                        </div>
+                        <div id="simBrowserTab" class="ml-2 px-3 py-1 rounded-t-md bg-white dark:bg-slate-900 text-xs font-mono font-semibold text-purple-600 dark:text-purple-300 border-t border-x border-slate-300 dark:border-slate-700 truncate">
+                          Clicked 0 times
+                        </div>
+                      </div>
+                      <!-- Viewport -->
+                      <div class="p-5 text-center space-y-3">
+                        <button id="titleUpdaterClickBtn" type="button" class="px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 active:scale-95 text-white font-semibold text-xs shadow-md shadow-purple-500/20 transition-all">
+                          Click Me (clicks: <span id="titleClicksCount">0</span>)
+                        </button>
+                        <div>
+                          <button id="resetTitleUpdaterBtn" type="button" class="text-[11px] text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">Reset counter</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="titleEffectTimeline" class="p-3 rounded-lg bg-slate-900 text-slate-300 font-mono text-[11px] leading-relaxed">
+                    1. Render JSX (&lt;button&gt;) → 2. Paint Screen → 3. <span class="text-purple-400">useEffect</span> sets <code class="text-emerald-400">document.title = "Clicked 0 times"</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3.2 Understanding the Dependency Array -->
+          <article id="sec-3-2" data-searchable="understanding the dependency array second argument empty array mount userprofile userid fetch" class="concept-card scroll-mt-24 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-xs font-mono font-semibold text-purple-600 dark:text-purple-400">Section 3.2</span>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Understanding the Dependency Array</h3>
+                </div>
+                <button type="button" data-mark-read="sec-3-2" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-purple-500 transition-colors">
+                  Mark Read
+                </button>
+              </div>
+
+              <!-- Definition & 3 Modes -->
+              <div class="p-4 rounded-xl bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200/70 dark:border-purple-800/50 space-y-2">
+                <div class="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">Definition</div>
+                <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                  The <strong>dependency array</strong> is an optional second argument passed to <code class="text-purple-600 dark:text-purple-300">useEffect</code>. It is an array of state variables or props that the effect depends on, dictating exactly when the effect should re-run.
+                </p>
+              </div>
+
+              <!-- Three Dependency Patterns Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
+                  <span class="inline-block text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400">1. No Array</span>
+                  <pre class="text-xs font-mono text-slate-800 dark:text-slate-200 overflow-x-auto"><code>useEffect(() =&gt; {
+  ...
+});</code></pre>
+                  <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Runs <strong>after every render</strong> (initial mount + every single re-render).
+                  </p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
+                  <span class="inline-block text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">2. Empty Array `[]`</span>
+                  <pre class="text-xs font-mono text-slate-800 dark:text-slate-200 overflow-x-auto"><code>useEffect(() =&gt; {
+  ...
+}, []);</code></pre>
+                  <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Runs <strong>only once</strong> after the initial render (when the component mounts).
+                  </p>
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 space-y-2">
+                  <span class="inline-block text-[11px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-400">3. Array with Values `[x, y]`</span>
+                  <pre class="text-xs font-mono text-slate-800 dark:text-slate-200 overflow-x-auto"><code>useEffect(() =&gt; {
+  ...
+}, [x, y]);</code></pre>
+                  <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Runs on the <strong>first render</strong>, and subsequently <strong>only if `x` or `y` have changed</strong> since the last render.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Code Example & Interactive UserProfile Simulator -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                <!-- Code Block -->
+                <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
+                  <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                    <span class="text-xs font-mono text-slate-400">UserProfile.jsx</span>
+                    <button type="button" data-copy-target="code-3-2" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                  </div>
+                  <pre id="code-3-2" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
+
+function UserProfile({ userId }) {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() =&gt; {
+    // This fetch only happens when the component first mounts, 
+    // AND whenever the 'userId' prop changes.
+    fetch(`https://api.example.com/users/${userId}`)
+      .then(response =&gt; response.json())
+      .then(data =&gt; setUserData(data));
+  }, [userId]); // Dependency array
+
+  if (!userData) return &lt;p&gt;Loading...&lt;/p&gt;;
+  return &lt;div&gt;{userData.name}&lt;/div&gt;;
+}</code></pre>
+                </div>
+
+                <!-- Interactive UserProfile Fetch Simulator -->
+                <div class="lg:col-span-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between space-y-4">
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Live `&lt;UserProfile /&gt;` Simulator</span>
+                      <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-purple-500/10 text-purple-600 dark:text-purple-300">API Calls: <strong id="apiFetchCounter">1</strong></span>
+                    </div>
+
+                    <div class="space-y-2">
+                      <label class="block text-xs font-medium text-slate-600 dark:text-slate-400">Select `userId` prop:</label>
+                      <div class="grid grid-cols-3 gap-2">
+                        <button type="button" data-userid="1" class="userid-btn py-1.5 px-2 rounded-lg text-xs font-mono font-semibold bg-purple-600 text-white">userId = 1</button>
+                        <button type="button" data-userid="2" class="userid-btn py-1.5 px-2 rounded-lg text-xs font-mono font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">userId = 2</button>
+                        <button type="button" data-userid="3" class="userid-btn py-1.5 px-2 rounded-lg text-xs font-mono font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">userId = 3</button>
+                      </div>
+                    </div>
+
+                    <div id="userProfileOutputCard" class="p-4 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-1 shadow-sm">
+                      <div class="text-xs text-slate-400 font-mono">Rendered DOM Output</div>
+                      <div id="userProfileNameDisplay" class="text-base font-bold text-slate-800 dark:text-slate-100">Ada Lovelace (ID #1)</div>
+                      <div id="userProfileRoleDisplay" class="text-xs text-purple-600 dark:text-purple-400">Systems Architect</div>
+                    </div>
+
+                    <button id="unrelatedRenderBtn" type="button" class="w-full py-2 px-3 rounded-lg bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors">
+                      Trigger Unrelated Re-render (`userId` unchanged)
+                    </button>
+                  </div>
+
+                  <div id="depArrayLog" class="p-2.5 rounded-lg bg-slate-900 text-slate-300 font-mono text-[11px] leading-relaxed">
+                    Mounted with <code class="text-purple-400">[userId = 1]</code> → Executed <code class="text-emerald-400">fetch('https://api.example.com/users/1')</code>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- 3.3 Using Effects and Cleanup Function -->
+          <article id="sec-3-3" data-searchable="using effects and cleanup function return clearinterval setinterval timer unmount memory leaks" class="concept-card scroll-mt-24 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="p-6 sm:p-8 space-y-6">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-xs font-mono font-semibold text-purple-600 dark:text-purple-400">Section 3.3</span>
+                  <h3 class="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Using Effects and Cleanup Function</h3>
+                </div>
+                <button type="button" data-mark-read="sec-3-3" class="mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-purple-500 transition-colors">
+                  Mark Read
+                </button>
+              </div>
+
+              <!-- Definition & Explanation -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-xl bg-purple-50/70 dark:bg-purple-950/30 border border-purple-200/70 dark:border-purple-800/50 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-purple-700 dark:text-purple-300">Definition</div>
+                  <p class="text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                    The <strong>cleanup function</strong> is an optional function you can return from inside your <code class="text-purple-600 dark:text-purple-300">useEffect</code>. It tells React how to stop or undo whatever the effect started.
+                  </p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/60 space-y-2">
+                  <div class="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-300">Explanation</div>
+                  <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    When an effect creates a continuous process—like a WebSocket connection, an event listener on the window, or a timer (<code class="text-purple-600 dark:text-purple-300">setInterval</code>)—that process needs to be destroyed before the component is removed from the screen (<strong>unmounted</strong>) or before the effect runs again. Otherwise, you will create memory leaks and duplicate behaviors.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Code Example & Interactive Timer Sandbox -->
+              <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+                <!-- Code Block -->
+                <div class="lg:col-span-7 rounded-xl bg-slate-900 border border-slate-800 overflow-hidden flex flex-col">
+                  <div class="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between">
+                    <span class="text-xs font-mono text-slate-400">Timer.jsx</span>
+                    <button type="button" data-copy-target="code-3-3" class="copy-code-btn text-xs font-mono px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 transition-colors">Copy Code</button>
+                  </div>
+                  <pre id="code-3-3" class="p-4 text-xs sm:text-[13px] leading-relaxed text-slate-200 overflow-x-auto code-scroll flex-1"><code>import { useState, useEffect } from 'react';
+
+function Timer() {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() =&gt; {
+    // 1. Setup the effect (Start the timer)
+    const intervalId = setInterval(() =&gt; {
+      setSeconds(prev =&gt; prev + 1);
+    }, 1000);
+
+    // 2. Return the cleanup function
+    return () =&gt; {
+      // This clears the timer when the component unmounts
+      // or before the effect re-runs.
+      clearInterval(intervalId);
+    };
+  }, []); // Empty array means this sets up once on mount
+
+  return &lt;h1&gt;Time spent: {seconds} seconds&lt;/h1&gt;;
+}</code></pre>
+                </div>
+
+                <!-- Live Mount/Unmount Timer Sandbox -->
+                <div class="lg:col-span-5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 p-5 flex flex-col justify-between space-y-4">
+                  <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Interactive Lifecycle Sandbox</span>
+                      <span id="timerMountBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">Mounted</span>
+                    </div>
+
+                    <div id="timerComponentViewport" class="p-5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center space-y-2 shadow-sm">
+                      <div class="text-xs font-mono text-slate-400">&lt;Timer /&gt;</div>
+                      <h4 id="timerHeadingText" class="text-lg font-extrabold text-slate-900 dark:text-white">
+                        Time spent: <span id="timerSecondsSpan" class="font-mono text-purple-600 dark:text-purple-400">0</span> seconds
+                      </h4>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                      <button id="toggleTimerMountBtn" type="button" class="flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-all">
+                        Unmount &lt;Timer /&gt; (Run Cleanup)
+                      </button>
+                      <button id="resetTimerSandboxBtn" type="button" class="py-2 px-3 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium">
+                        Reset
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="space-y-1.5">
+                    <div class="text-[11px] font-mono text-slate-500 dark:text-slate-400">Effect &amp; Cleanup Log:</div>
+                    <div id="timerLifecycleLog" class="h-24 overflow-y-auto p-2.5 rounded-lg bg-slate-900 text-slate-300 font-mono text-[11px] space-y-1 code-scroll">
+                      <div class="text-emerald-400">[Mount] setInterval started (intervalId #1)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <!-- ========================================================== -->
+        <!-- SUMMARY CHEAT SHEET MATRIX                                 -->
+        <!-- ========================================================== -->
+        <section id="comparison-matrix" class="scroll-mt-20 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm p-6 sm:p-8 space-y-6">
+          <div class="space-y-1">
+            <span class="text-xs font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">Quick Reference</span>
+            <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white">State vs. Effect Cheat Sheet</h2>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400">
+                  <th class="py-3 pr-4 font-semibold">Concept / Hook</th>
+                  <th class="py-3 px-4 font-semibold">Primary Purpose</th>
+                  <th class="py-3 px-4 font-semibold">When It Runs</th>
+                  <th class="py-3 pl-4 font-semibold">Key Rule to Remember</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200/70 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                <tr>
+                  <td class="py-3.5 pr-4 font-mono font-semibold text-cyan-600 dark:text-cyan-400">useState(initial)</td>
+                  <td class="py-3.5 px-4">Stores component memory that changes over time</td>
+                  <td class="py-3.5 px-4">Initialized on mount; setter schedules a re-render</td>
+                  <td class="py-3.5 pl-4">Never mutate state directly; always call the setter function</td>
+                </tr>
+                <tr>
+                  <td class="py-3.5 pr-4 font-mono font-semibold text-blue-600 dark:text-blue-400">setState(prev =&gt; next)</td>
+                  <td class="py-3.5 px-4">Updates state based on previous state value</td>
+                  <td class="py-3.5 px-4">Queued by React; compares old vs. new with <code>Object.is</code></td>
+                  <td class="py-3.5 pl-4">Use updater functions for counters &amp; spread (<code>{...obj}</code>) for objects</td>
+                </tr>
+                <tr>
+                  <td class="py-3.5 pr-4 font-mono font-semibold text-purple-600 dark:text-purple-400">useEffect(fn)</td>
+                  <td class="py-3.5 px-4">Synchronizes component with external systems</td>
+                  <td class="py-3.5 px-4">After every render (when no dependency array is passed)</td>
+                  <td class="py-3.5 pl-4">Runs after screen paint so UI rendering is never blocked</td>
+                </tr>
+                <tr>
+                  <td class="py-3.5 pr-4 font-mono font-semibold text-indigo-600 dark:text-indigo-400">useEffect(fn, [])</td>
+                  <td class="py-3.5 px-4">One-time setup on mount (e.g., timers, listeners)</td>
+                  <td class="py-3.5 px-4">Only once after the initial component mount</td>
+                  <td class="py-3.5 pl-4">Return a cleanup function <code>() =&gt; clearInterval(id)</code> to prevent leaks</td>
+                </tr>
+                <tr>
+                  <td class="py-3.5 pr-4 font-mono font-semibold text-emerald-600 dark:text-emerald-400">useEffect(fn, [dep])</td>
+                  <td class="py-3.5 px-4">Re-sync when specific props or state change</td>
+                  <td class="py-3.5 px-4">On mount + whenever <code>dep</code> changes between renders</td>
+                  <td class="py-3.5 pl-4">Include every reactive state/prop read inside the effect</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ========================================================== -->
+        <!-- INTERACTIVE KNOWLEDGE CHECK QUIZ                           -->
+        <!-- ========================================================== -->
+        <section id="quiz-section" class="scroll-mt-20 rounded-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white border border-slate-800 shadow-xl p-6 sm:p-8 space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-cyan-400">Interactive Knowledge Check</span>
+              <h2 class="text-2xl font-extrabold mt-0.5">Test Your React State &amp; Effect Mastery</h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="text-xs font-mono px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700">
+                Score: <strong id="quizScoreDisplay" class="text-cyan-400">0 / 6</strong>
+              </span>
+              <button id="resetQuizBtn" type="button" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition-colors">
+                Reset Quiz
+              </button>
+            </div>
+          </div>
+
+          <div id="quizContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+      <div>React State &amp; Effect Interactive Guide • Built for clear, hands-on component mastery.</div>
+      <a href="#top" class="font-semibold text-cyan-600 dark:text-cyan-400 hover:underline">↑ Back to top</a>
+    </div>
+  </footer>
+
+  <!-- Interactive Application Script -->
+  <script>
+    (function () {
+      // -----------------------------------------------------------
+      // Helper: Toast Notification
+      // -----------------------------------------------------------
+      function showToast(message) {
+        var container = document.getElementById('toastContainer');
+        if (!container) return;
+        var toast = document.createElement('div');
+        toast.className = 'px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold shadow-lg border border-slate-700 dark:border-slate-200 transition-all duration-300';
+        toast.textContent = message;
+        container.appendChild(toast);
+        setTimeout(function () {
+          toast.style.opacity = '0';
+          setTimeout(function () {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+          }, 300);
+        }, 2200);
+      }
+
+      // -----------------------------------------------------------
+      // Theme Toggle (Dark / Light)
+      // -----------------------------------------------------------
+      var themeToggleBtn = document.getElementById('themeToggleBtn');
+      themeToggleBtn.addEventListener('click', function () {
+        var htmlEl = document.documentElement;
+        htmlEl.classList.toggle('dark');
+        var isDark = htmlEl.classList.contains('dark');
+        try {
+          localStorage.setItem('react_guide_theme', isDark ? 'dark' : 'light');
+        } catch (e) {}
+      });
+
+      // -----------------------------------------------------------
+      // Mobile Drawer Toggle
+      // -----------------------------------------------------------
+      var mobileMenuBtn = document.getElementById('mobileMenuBtn');
+      var mobileNavDrawer = document.getElementById('mobileNavDrawer');
+      mobileMenuBtn.addEventListener('click', function () {
+        mobileNavDrawer.classList.toggle('hidden');
+      });
+      var mobileLinks = document.querySelectorAll('.mobile-nav-link');
+      mobileLinks.forEach(function (link) {
+        link.addEventListener('click', function () {
+          mobileNavDrawer.classList.add('hidden');
+        });
+      });
+
+      // -----------------------------------------------------------
+      // Hero Interactive Lifecycle Switcher
+      // -----------------------------------------------------------
+      var cycleDetails = {
+        state: {
+          title: 'Stage 1: State Setter Triggered (`setCount(prev => prev + 1)`)',
+          color: 'text-cyan-600 dark:text-cyan-400',
+          body: 'A user interaction (like `onClick`), network response, or timer calls the state updater function from `useState`. React stores the updated value in component memory.'
+        },
+        render: {
+          title: 'Stage 2: Object.is Check & Component Re-render',
+          color: 'text-blue-600 dark:text-blue-400',
+          body: 'React compares the new value to the old value using `Object.is`. If different, React calls your component function top-to-bottom, calculates the new JSX, and updates only the changed DOM nodes.'
+        },
+        effect: {
+          title: 'Stage 3: useEffect Synchronizes After Paint',
+          color: 'text-purple-600 dark:text-purple-400',
+          body: 'After the component finishes rendering and the screen updates, React checks the `useEffect` dependency array. If dependencies changed, it runs cleanup (if any) and executes your effect.'
+        }
+      };
+
+      var cycleBtns = document.querySelectorAll('.cycle-step-btn');
+      var cycleStepDetail = document.getElementById('cycleStepDetail');
+      cycleBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var step = btn.getAttribute('data-cycle-step');
+          var info = cycleDetails[step];
+          if (!info) return;
+          cycleBtns.forEach(function (b) {
+            b.className = 'cycle-step-btn p-3 rounded-xl border border-slate-200 dark:border-slate-800 text-left transition-all';
+          });
+          btn.className = 'cycle-step-btn p-3 rounded-xl border-2 border-cyan-500 bg-cyan-500/10 text-left transition-all';
+          cycleStepDetail.innerHTML = '<strong class="' + info.color + ' block mb-1">' + info.title + '</strong>' + info.body;
+        });
+      });
+
+      // -----------------------------------------------------------
+      // Read Progress Tracker
+      // -----------------------------------------------------------
+      var readSections = {};
+      var totalSections = 8;
+      var readProgressCount = document.getElementById('readProgressCount');
+
+      function updateReadUI() {
+        var count = Object.keys(readSections).filter(function (k) { return readSections[k]; }).length;
+        if (readProgressCount) {
+          readProgressCount.textContent = count + '/' + totalSections;
+        }
+        document.querySelectorAll('.mark-read-btn').forEach(function (btn) {
+          var secId = btn.getAttribute('data-mark-read');
+          var isDone = !!readSections[secId];
+          if (isDone) {
+            btn.textContent = '✓ Completed';
+            btn.className = 'mark-read-btn shrink-0 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-600 dark:text-emerald-400 transition-colors';
+          } else {
+            btn.textContent = 'Mark Read';
+            btn.className = 'mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-cyan-500 transition-colors';
+          }
+        });
+        document.querySelectorAll('[data-check-badge]').forEach(function (badge) {
+          var secId = badge.getAttribute('data-check-badge');
+          if (readSections[secId]) {
+            badge.textContent = '✓';
+            badge.className = 'w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold';
+          } else {
+            badge.textContent = '';
+            badge.className = 'w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]';
+          }
+        });
+      }
+
+      document.querySelectorAll('.mark-read-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var secId = btn.getAttribute('data-mark-read');
+          readSections[secId] = !readSections[secId];
+          updateReadUI();
+        });
+      });
+
+      var markAllReadBtn = document.getElementById('markAllReadBtn');
+      if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', function () {
+          ['sec-1-1', 'sec-1-2', 'sec-1-3', 'sec-2-1', 'sec-2-2', 'sec-3-1', 'sec-3-2', 'sec-3-3'].forEach(function (id) {
+            readSections[id] = true;
+          });
+          updateReadUI();
+          showToast('All 8 sections marked as read!');
+        });
+      }
+
+      // -----------------------------------------------------------
+      // Search / Filter Across Subtopics
+      // -----------------------------------------------------------
+      var topicSearchInput = document.getElementById('topicSearchInput');
+      var mobileSearchInput = document.getElementById('mobileSearchInput');
+      var clearSearchBtn = document.getElementById('clearSearchBtn');
+      var noSearchResults = document.getElementById('noSearchResults');
+      var resetSearchEmptyBtn = document.getElementById('resetSearchEmptyBtn');
+
+      function applyFilter(query) {
+        var q = (query || '').trim().toLowerCase();
+        if (clearSearchBtn) {
+          clearSearchBtn.classList.toggle('hidden', q.length === 0);
+        }
+        var cards = document.querySelectorAll('.concept-card');
+        var visibleCount = 0;
+        cards.forEach(function (card) {
+          var hay = (card.getAttribute('data-searchable') || '') + ' ' + card.textContent.toLowerCase();
+          var match = !q || hay.indexOf(q) !== -1;
+          card.classList.toggle('hidden', !match);
+          if (match) visibleCount++;
+        });
+        if (noSearchResults) {
+          noSearchResults.classList.toggle('hidden', visibleCount > 0);
+        }
+      }
+
+      if (topicSearchInput) {
+        topicSearchInput.addEventListener('input', function (e) {
+          applyFilter(e.target.value);
+        });
+      }
+      if (mobileSearchInput) {
+        mobileSearchInput.addEventListener('input', function (e) {
+          applyFilter(e.target.value);
+        });
+      }
+      if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function () {
+          topicSearchInput.value = '';
+          applyFilter('');
+        });
+      }
+      if (resetSearchEmptyBtn) {
+        resetSearchEmptyBtn.addEventListener('click', function () {
+          if (topicSearchInput) topicSearchInput.value = '';
+          if (mobileSearchInput) mobileSearchInput.value = '';
+          applyFilter('');
+        });
+      }
+
+      // -----------------------------------------------------------
+      // Copy Code Buttons (Sandbox-safe fallback included)
+      // -----------------------------------------------------------
+      document.querySelectorAll('.copy-code-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var targetId = btn.getAttribute('data-copy-target');
+          var preEl = document.getElementById(targetId);
+          if (!preEl) return;
+          var codeText = preEl.textContent;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(codeText).then(function () {
+              btn.textContent = 'Copied!';
+              showToast('Code snippet copied to clipboard');
+              setTimeout(function () { btn.textContent = 'Copy Code'; }, 1800);
+            }).catch(function () {
+              fallbackCopy(codeText, btn);
+            });
+          } else {
+            fallbackCopy(codeText, btn);
+          }
+        });
+      });
+
+      function fallbackCopy(text, btn) {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          btn.textContent = 'Copied!';
+          showToast('Code snippet copied to clipboard');
+          setTimeout(function () { btn.textContent = 'Copy Code'; }, 1800);
+        } catch (err) {}
+        document.body.removeChild(ta);
+      }
+
+      // -----------------------------------------------------------
+      // Section 1.1 Interactive Demo: Plain JS Variable vs React State
+      // -----------------------------------------------------------
+      var plainCount = 0;
+      var reactCount11 = 0;
+      var plainVarMemory = document.getElementById('plainVarMemory');
+      var plainVarUI = document.getElementById('plainVarUI');
+      var plainVarStatus = document.getElementById('plainVarStatus');
+      var reactStateMemory = document.getElementById('reactStateMemory');
+      var reactStateUI = document.getElementById('reactStateUI');
+      var reactStateStatus = document.getElementById('reactStateStatus');
+      var reactStateCard11 = document.getElementById('reactStateCard11');
+
+      document.getElementById('incPlainVarBtn').addEventListener('click', function () {
+        plainCount += 1;
+        plainVarMemory.textContent = String(plainCount);
+        plainVarStatus.innerHTML = 'Memory is now <strong>' + plainCount + '</strong>, but the UI still shows <strong>0</strong> because mutating a local variable does not trigger a React re-render!';
+      });
+
+      document.getElementById('incReactStateBtn').addEventListener('click', function () {
+        reactCount11 += 1;
+        reactStateMemory.textContent = String(reactCount11);
+        reactStateUI.textContent = String(reactCount11);
+        reactStateCard11.classList.remove('render-flash');
+        void reactStateCard11.offsetWidth;
+        reactStateCard11.classList.add('render-flash');
+        reactStateStatus.innerHTML = '<code>setCount(' + reactCount11 + ')</code> updated component memory AND triggered a UI re-render!';
+      });
+
+      document.getElementById('resetDemo11Btn').addEventListener('click', function () {
+        plainCount = 0;
+        reactCount11 = 0;
+        plainVarMemory.textContent = '0';
+        plainVarUI.textContent = '0';
+        reactStateMemory.textContent = '0';
+        reactStateUI.textContent = '0';
+        plainVarStatus.textContent = 'Click the button: memory increments, but React never knows to redraw the UI!';
+        reactStateStatus.textContent = 'Calling the setter tells React state changed, immediately re-rendering the UI in sync.';
+      });
+
+      // -----------------------------------------------------------
+      // Section 1.2 Interactive Demo: useState Anatomy & Greeting
+      // -----------------------------------------------------------
+      var anatomyData = {
+        stateVal: '<strong class="text-cyan-300">1st Element (`name`):</strong> The current state value stored by React. On the initial render, it equals `"Guest"`.',
+        setterFn: '<strong class="text-blue-300">2nd Element (`setName`):</strong> The state setter function. Calling `setName(newValue)` updates memory and schedules a component re-render.',
+        hookCall: '<strong class="text-purple-300">Hook Call (`useState`):</strong> Built-in React Hook called at the top level of a functional component to declare a state variable.',
+        initArg: '<strong class="text-emerald-300">Initial State (`\'Guest\'`):</strong> The single argument passed to `useState`. Used only during the component\'s initial render.'
+      };
+      var anatomyExplainBox = document.getElementById('anatomyExplainBox');
+      document.querySelectorAll('.anatomy-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var key = btn.getAttribute('data-anatomy');
+          if (anatomyData[key] && anatomyExplainBox) {
+            anatomyExplainBox.innerHTML = anatomyData[key];
+          }
+        });
+      });
+
+      var greetingNameInput = document.getElementById('greetingNameInput');
+      var greetingNameSpan = document.getElementById('greetingNameSpan');
+      var greetingStateArrayReadout = document.getElementById('greetingStateArrayReadout');
+      var greetingPreviewBox = document.getElementById('greetingPreviewBox');
+
+      function updateGreetingState(val) {
+        var clean = val === '' ? 'Guest' : val;
+        greetingNameSpan.textContent = clean;
+        greetingStateArrayReadout.textContent = '["' + clean + '", ƒ setName()]';
+        greetingPreviewBox.classList.remove('render-flash');
+        void greetingPreviewBox.offsetWidth;
+        greetingPreviewBox.classList.add('render-flash');
+      }
+
+      greetingNameInput.addEventListener('input', function (e) {
+        updateGreetingState(e.target.value);
+      });
+      document.getElementById('resetGreetingBtn').addEventListener('click', function () {
+        greetingNameInput.value = 'Guest';
+        updateGreetingState('Guest');
+      });
+
+      // -----------------------------------------------------------
+      // Section 1.3 Interactive Demo: Counter & Event Handling
+      // -----------------------------------------------------------
+      var counterVal = 0;
+      var counterValueSpan = document.getElementById('counterValueSpan');
+      var counterEventLog = document.getElementById('counterEventLog');
+      var counterPreviewCard = document.getElementById('counterPreviewCard');
+
+      document.getElementById('counterClickMeBtn').addEventListener('click', function () {
+        var prev = counterVal;
+        counterVal = counterVal + 1;
+        counterValueSpan.textContent = String(counterVal);
+        counterPreviewCard.classList.remove('render-flash');
+        void counterPreviewCard.offsetWidth;
+        counterPreviewCard.classList.add('render-flash');
+        counterEventLog.innerHTML = '<span class="text-cyan-400">onClick</span> fired → <span class="text-blue-400">handleIncrement()</span> → <span class="text-emerald-400">setCount(' + prev + ' + 1)</span> → UI re-rendered with <strong>' + counterVal + '</strong>';
+      });
+
+      document.getElementById('counterResetBtn').addEventListener('click', function () {
+        counterVal = 0;
+        counterValueSpan.textContent = '0';
+        counterEventLog.textContent = 'Counter reset to initial state (0).';
+      });
+
+      // -----------------------------------------------------------
+      // Section 2.1 Interactive Demo: ScoreBoard (Updater fn & Object Spread)
+      // -----------------------------------------------------------
+      var sbScore = 0;
+      var sbPlayer = { name: 'Alice', level: 1 };
+      var sbPlayerName = document.getElementById('sbPlayerName');
+      var sbPlayerLevel = document.getElementById('sbPlayerLevel');
+      var sbScoreVal = document.getElementById('sbScoreVal');
+      var sbStateJson = document.getElementById('sbStateJson');
+      var scoreboardPreviewBox = document.getElementById('scoreboardPreviewBox');
+
+      function renderScoreBoard() {
+        sbPlayerName.textContent = sbPlayer.name;
+        sbPlayerLevel.textContent = String(sbPlayer.level);
+        sbScoreVal.textContent = String(sbScore);
+        sbStateJson.textContent = 'score: ' + sbScore + '\nplayer: ' + JSON.stringify(sbPlayer);
+        scoreboardPreviewBox.classList.remove('render-flash');
+        void scoreboardPreviewBox.offsetWidth;
+        scoreboardPreviewBox.classList.add('render-flash');
+      }
+
+      document.getElementById('sbAddPointBtn').addEventListener('click', function () {
+        sbScore = sbScore + 1;
+        renderScoreBoard();
+      });
+
+      document.getElementById('sbBurstPointBtn').addEventListener('click', function () {
+        sbScore = sbScore + 3;
+        renderScoreBoard();
+        showToast('3 updater calls (prevScore => prevScore + 1) safely added +3!');
+      });
+
+      document.getElementById('sbLevelUpBtn').addEventListener('click', function () {
+        sbPlayer = { name: sbPlayer.name, level: sbPlayer.level + 1 };
+        renderScoreBoard();
+      });
+
+      document.getElementById('sbResetBtn').addEventListener('click', function () {
+        sbScore = 0;
+        sbPlayer = { name: 'Alice', level: 1 };
+        renderScoreBoard();
+      });
+
+      // -----------------------------------------------------------
+      // Section 2.2 Interactive Demo: RenderLogger & Object.is
+      // -----------------------------------------------------------
+      var toggleState = false;
+      var renderCount = 1;
+      var renderToggleBtn = document.getElementById('renderToggleBtn');
+      var renderLoggerCount = document.getElementById('renderLoggerCount');
+      var renderConsoleOutput = document.getElementById('renderConsoleOutput');
+      var objectIsBadge = document.getElementById('objectIsBadge');
+      var renderLoggerBox = document.getElementById('renderLoggerBox');
+
+      function appendConsoleLine(text, colorClass) {
+        var line = document.createElement('div');
+        line.className = colorClass || 'text-emerald-400';
+        line.textContent = text;
+        renderConsoleOutput.appendChild(line);
+        renderConsoleOutput.scrollTop = renderConsoleOutput.scrollHeight;
+      }
+
+      renderToggleBtn.addEventListener('click', function () {
+        var oldVal = toggleState;
+        toggleState = !toggleState;
+        renderCount += 1;
+        renderLoggerCount.textContent = String(renderCount);
+        renderToggleBtn.textContent = toggleState ? 'On' : 'Off';
+        renderToggleBtn.className = toggleState
+          ? 'px-6 py-2.5 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow'
+          : 'px-6 py-2.5 rounded-xl font-bold text-sm text-white bg-slate-600 hover:bg-slate-700 transition-all shadow';
+        objectIsBadge.textContent = 'Object.is(' + oldVal + ', ' + toggleState + ') === false → Re-render!';
+        renderLoggerBox.classList.remove('render-flash');
+        void renderLoggerBox.offsetWidth;
+        renderLoggerBox.classList.add('render-flash');
+        appendConsoleLine('> Component is rendering! Toggle is: ' + toggleState, 'text-emerald-400');
+      });
+
+      document.getElementById('renderSameValBtn').addEventListener('click', function () {
+        objectIsBadge.textContent = 'Object.is(' + toggleState + ', ' + toggleState + ') === true → Bail out!';
+        appendConsoleLine('// Called setToggle(' + toggleState + '): Object.is is true, React skipped re-render.', 'text-amber-400');
+      });
+
+      document.getElementById('clearRenderConsoleBtn').addEventListener('click', function () {
+        renderConsoleOutput.innerHTML = '';
+        appendConsoleLine('// Console cleared. Current toggle state: ' + toggleState, 'text-slate-400');
+      });
+
+      // -----------------------------------------------------------
+      // Section 3.1 Interactive Demo: TitleUpdater (useEffect)
+      // -----------------------------------------------------------
+      var titleClicks = 0;
+      var simBrowserTab = document.getElementById('simBrowserTab');
+      var titleClicksCount = document.getElementById('titleClicksCount');
+      var titleEffectTimeline = document.getElementById('titleEffectTimeline');
+
+      function updateTitleDemo() {
+        var newTitle = 'Clicked ' + titleClicks + ' times';
+        simBrowserTab.textContent = newTitle;
+        titleClicksCount.textContent = String(titleClicks);
+        document.title = newTitle + ' — React State & Effect';
+        titleEffectTimeline.innerHTML = '1. Render JSX (clicks = ' + titleClicks + ') → 2. Screen Painted → 3. <span class="text-purple-400">useEffect</span> updated <code class="text-emerald-400">document.title = "' + newTitle + '"</code>';
+      }
+
+      document.getElementById('titleUpdaterClickBtn').addEventListener('click', function () {
+        titleClicks += 1;
+        updateTitleDemo();
+      });
+
+      document.getElementById('resetTitleUpdaterBtn').addEventListener('click', function () {
+        titleClicks = 0;
+        updateTitleDemo();
+      });
+
+      // -----------------------------------------------------------
+      // Section 3.2 Interactive Demo: Dependency Array & UserProfile
+      // -----------------------------------------------------------
+      var mockUsers = {
+        '1': { name: 'Ada Lovelace (ID #1)', role: 'Systems Architect' },
+        '2': { name: 'Alan Turing (ID #2)', role: 'Principal Cryptographer' },
+        '3': { name: 'Grace Hopper (ID #3)', role: 'Compiler Pioneer' }
+      };
+      var currentUserId = '1';
+      var apiCalls = 1;
+      var apiFetchCounter = document.getElementById('apiFetchCounter');
+      var userProfileNameDisplay = document.getElementById('userProfileNameDisplay');
+      var userProfileRoleDisplay = document.getElementById('userProfileRoleDisplay');
+      var depArrayLog = document.getElementById('depArrayLog');
+      var userProfileOutputCard = document.getElementById('userProfileOutputCard');
+
+      document.querySelectorAll('.userid-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var nextId = btn.getAttribute('data-userid');
+          document.querySelectorAll('.userid-btn').forEach(function (b) {
+            b.className = 'userid-btn py-1.5 px-2 rounded-lg text-xs font-mono font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300';
+          });
+          btn.className = 'userid-btn py-1.5 px-2 rounded-lg text-xs font-mono font-semibold bg-purple-600 text-white';
+
+          if (nextId === currentUserId) {
+            depArrayLog.innerHTML = 'Re-render: <code class="text-amber-400">userId</code> is still <strong>' + nextId + '</strong> → Dependency <code class="text-purple-400">[userId]</code> unchanged → <strong>Skipped fetch!</strong>';
+            return;
+          }
+
+          var prevId = currentUserId;
+          currentUserId = nextId;
+          apiCalls += 1;
+          apiFetchCounter.textContent = String(apiCalls);
+          userProfileNameDisplay.textContent = 'Loading...';
+          userProfileRoleDisplay.textContent = 'Fetching https://api.example.com/users/' + nextId;
+
+          setTimeout(function () {
+            var u = mockUsers[nextId];
+            userProfileNameDisplay.textContent = u.name;
+            userProfileRoleDisplay.textContent = u.role;
+            userProfileOutputCard.classList.remove('render-flash');
+            void userProfileOutputCard.offsetWidth;
+            userProfileOutputCard.classList.add('render-flash');
+            depArrayLog.innerHTML = 'Dependency changed (<code class="text-purple-400">' + prevId + ' → ' + nextId + '</code>) → Effect ran <code class="text-emerald-400">fetch("https://api.example.com/users/' + nextId + '")</code>';
+          }, 220);
+        });
+      });
+
+      document.getElementById('unrelatedRenderBtn').addEventListener('click', function () {
+        depArrayLog.innerHTML = 'Component re-rendered, but <code class="text-purple-400">[userId = ' + currentUserId + ']</code> did not change → <strong class="text-emerald-400">useEffect skipped fetch!</strong>';
+      });
+
+      // -----------------------------------------------------------
+      // Section 3.3 Interactive Demo: Timer & Cleanup Function
+      // -----------------------------------------------------------
+      var timerSeconds = 0;
+      var timerMounted = true;
+      var timerIntervalId = null;
+      var intervalSeq = 1;
+      var timerSecondsSpan = document.getElementById('timerSecondsSpan');
+      var timerMountBadge = document.getElementById('timerMountBadge');
+      var timerComponentViewport = document.getElementById('timerComponentViewport');
+      var toggleTimerMountBtn = document.getElementById('toggleTimerMountBtn');
+      var timerLifecycleLog = document.getElementById('timerLifecycleLog');
+
+      function logTimerEvent(msg, cls) {
+        var div = document.createElement('div');
+        div.className = cls || 'text-slate-300';
+        div.textContent = msg;
+        timerLifecycleLog.appendChild(div);
+        timerLifecycleLog.scrollTop = timerLifecycleLog.scrollHeight;
+      }
+
+      function startTimerEffect() {
+        if (timerIntervalId !== null) {
+          clearInterval(timerIntervalId);
+        }
+        var currentSeq = intervalSeq;
+        timerIntervalId = setInterval(function () {
+          timerSeconds += 1;
+          if (timerSecondsSpan) {
+            timerSecondsSpan.textContent = String(timerSeconds);
+          }
+        }, 1000);
+        logTimerEvent('[Mount] setInterval started (intervalId #' + currentSeq + ')', 'text-emerald-400');
+      }
+
+      function stopTimerCleanup() {
+        if (timerIntervalId !== null) {
+          clearInterval(timerIntervalId);
+          timerIntervalId = null;
+        }
+        logTimerEvent('[Cleanup] clearInterval(intervalId #' + intervalSeq + ') ran — timer stopped cleanly!', 'text-rose-400');
+        intervalSeq += 1;
+      }
+
+      startTimerEffect();
+
+      toggleTimerMountBtn.addEventListener('click', function () {
+        timerMounted = !timerMounted;
+        if (timerMounted) {
+          timerSeconds = 0;
+          timerComponentViewport.innerHTML = '<div class="text-xs font-mono text-slate-400">&lt;Timer /&gt;</div><h4 class="text-lg font-extrabold text-slate-900 dark:text-white">Time spent: <span id="timerSecondsSpan" class="font-mono text-purple-600 dark:text-purple-400">0</span> seconds</h4>';
+          timerSecondsSpan = document.getElementById('timerSecondsSpan');
+          timerMountBadge.textContent = 'Mounted';
+          timerMountBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
+          toggleTimerMountBtn.textContent = 'Unmount <Timer /> (Run Cleanup)';
+          toggleTimerMountBtn.className = 'flex-1 py-2 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-all';
+          startTimerEffect();
+        } else {
+          stopTimerCleanup();
+          timerComponentViewport.innerHTML = '<div class="py-3 text-xs font-mono text-slate-400 italic">&lt;Timer /&gt; is unmounted from the DOM (Cleanup executed).</div>';
+          timerMountBadge.textContent = 'Unmounted';
+          timerMountBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400';
+          toggleTimerMountBtn.textContent = 'Mount <Timer /> Again';
+          toggleTimerMountBtn.className = 'flex-1 py-2 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all';
+        }
+      });
+
+      document.getElementById('resetTimerSandboxBtn').addEventListener('click', function () {
+        timerSeconds = 0;
+        if (!timerMounted) {
+          toggleTimerMountBtn.click();
+        } else if (timerSecondsSpan) {
+          timerSecondsSpan.textContent = '0';
+          logTimerEvent('[Reset] Timer seconds reset to 0', 'text-cyan-400');
+        }
+      });
+
+      // -----------------------------------------------------------
+      // Interactive 6-Question Knowledge Check Quiz
+      // -----------------------------------------------------------
+      var quizQuestions = [
+        {
+          id: 'q1',
+          topic: 'Topic 1.1 • State Fundamentals',
+          question: 'Why does updating a standard JavaScript variable (like `let count = 0`) fail to update the React UI?',
+          options: [
+            'Standard variables cannot store numbers inside JSX functions.',
+            'React does not know when a plain variable changes, so it never triggers a re-render.',
+            'JavaScript blocks variable mutations inside functional components.'
+          ],
+          correct: 1,
+          explanation: 'React relies on state setters to know when data has changed so it can re-render the component and keep the screen in sync.'
+        },
+        {
+          id: 'q2',
+          topic: 'Topic 1.2 • useState Hook',
+          question: 'What does `useState(initialValue)` return when called at the top level of a component?',
+          options: [
+            'An object containing `{ state, setState }`.',
+            'An array with two elements: `[currentStateValue, stateSetterFunction]`.',
+            'A single mutable state reference.'
+          ],
+          correct: 1,
+          explanation: '`useState` returns a 2-element array `[state, setState]`, which we typically unpack using array destructuring.'
+        },
+        {
+          id: 'q3',
+          topic: 'Topic 2.1 • Updating State',
+          question: 'How should you safely update a state object like `const [player, setPlayer] = useState({ name: "Alice", level: 1 })`?',
+          options: [
+            'Mutate `player.level = 2` directly.',
+            'Pass a new copied object using spread syntax: `setPlayer(prev => ({ ...prev, level: prev.level + 1 }))`.',
+            'Call `useState({ level: 2 })` inside the click handler.'
+          ],
+          correct: 1,
+          explanation: 'State in React is immutable. Always create a new copy of objects/arrays (e.g., with `...prevPlayer`) and pass it to the setter.'
+        },
+        {
+          id: 'q4',
+          topic: 'Topic 2.2 • Re-rendering',
+          question: 'How does React decide whether calling a state setter should schedule a re-render?',
+          options: [
+            'It compares the old state and new state using `Object.is` (strict equality).',
+            'It always re-renders every component on the page unconditionally.',
+            'It waits 5 seconds and checks if the HTML changed.'
+          ],
+          correct: 0,
+          explanation: 'React uses `Object.is` to compare the new value to the old value. If they are identical, React bails out without re-rendering.'
+        },
+        {
+          id: 'q5',
+          topic: 'Topic 3.2 • Dependency Array',
+          question: 'When does `useEffect(() => { ... }, [userId])` execute its effect function?',
+          options: [
+            'Only when the component unmounts.',
+            'After every single render regardless of what changed.',
+            'On the initial mount, and subsequently only when `userId` changes between renders.'
+          ],
+          correct: 2,
+          explanation: 'Passing `[userId]` tells React to run the effect on mount and re-run it only when `userId` has changed since the last render.'
+        },
+        {
+          id: 'q6',
+          topic: 'Topic 3.3 • Cleanup Function',
+          question: 'Why should an effect that starts a `setInterval` return a cleanup function `() => clearInterval(intervalId)`?',
+          options: [
+            'To destroy the continuous timer before the component unmounts or before the effect re-runs, preventing memory leaks.',
+            'To convert `useEffect` into `useState`.',
+            'Because React requires every `useEffect` to return a number.'
+          ],
+          correct: 0,
+          explanation: 'Cleanup functions stop continuous processes (timers, subscriptions, event listeners) on unmount or before re-running the effect.'
+        }
+      ];
+
+      var quizAnswers = {};
+      var quizContainer = document.getElementById('quizContainer');
+      var quizScoreDisplay = document.getElementById('quizScoreDisplay');
+
+      function renderQuiz() {
+        quizContainer.innerHTML = '';
+        var correctCount = 0;
+        quizQuestions.forEach(function (q, idx) {
+          var userChoice = quizAnswers[q.id];
+          var isAnswered = typeof userChoice === 'number';
+          if (isAnswered && userChoice === q.correct) {
+            correctCount += 1;
+          }
+
+          var card = document.createElement('div');
+          card.className = 'p-5 rounded-xl bg-slate-800/90 border border-slate-700/80 flex flex-col justify-between space-y-4';
+
+          var headerHtml = '<div class="space-y-1.5">' +
+            '<div class="text-[11px] font-mono text-cyan-400">' + q.topic + '</div>' +
+            '<h3 class="text-sm font-bold text-white leading-snug">' + (idx + 1) + '. ' + q.question + '</h3>' +
+            '</div>';
+
+          var optionsHtml = '<div class="space-y-2">';
+          q.options.forEach(function (opt, optIdx) {
+            var btnCls = 'w-full text-left px-3.5 py-2.5 rounded-lg text-xs font-medium border transition-all ';
+            if (!isAnswered) {
+              btnCls += 'bg-slate-900/70 hover:bg-slate-700/70 border-slate-700 text-slate-200';
+            } else if (optIdx === q.correct) {
+              btnCls += 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-semibold';
+            } else if (optIdx === userChoice) {
+              btnCls += 'bg-rose-500/20 border-rose-400 text-rose-200';
+            } else {
+              btnCls += 'bg-slate-900/40 border-slate-800 text-slate-400 opacity-70';
+            }
+            optionsHtml += '<button type="button" data-qid="' + q.id + '" data-opt="' + optIdx + '" class="quiz-opt-btn ' + btnCls + '">' + opt + '</button>';
+          });
+          optionsHtml += '</div>';
+
+          var feedbackHtml = '';
+          if (isAnswered) {
+            var isRight = userChoice === q.correct;
+            feedbackHtml = '<div class="p-3 rounded-lg text-xs ' + (isRight ? 'bg-emerald-950/80 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/80 border border-rose-700/60 text-rose-200') + '">' +
+              '<strong>' + (isRight ? '✓ Correct! ' : '✕ Not quite. ') + '</strong>' + q.explanation +
+              '</div>';
+          }
+
+          card.innerHTML = headerHtml + optionsHtml + feedbackHtml;
+          quizContainer.appendChild(card);
+        });
+
+        quizScoreDisplay.textContent = correctCount + ' / ' + quizQuestions.length;
+
+        quizContainer.querySelectorAll('.quiz-opt-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var qid = btn.getAttribute('data-qid');
+            var opt = parseInt(btn.getAttribute('data-opt'), 10);
+            quizAnswers[qid] = opt;
+            renderQuiz();
+          });
+        });
+      }
+
+      document.getElementById('resetQuizBtn').addEventListener('click', function () {
+        quizAnswers = {};
+        renderQuiz();
+        showToast('Quiz reset!');
+      });
+
+      renderQuiz();
+    })();
+  </script>
+</body>
+</html>
