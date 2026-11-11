@@ -1219,18 +1219,20 @@ document.addEventListener('DOMContentLoaded', function () {
         // Bottom Navigation Controls
         var isFirst = currentQuizIndex === 0;
         var isLast = currentQuizIndex === total - 1;
-        var nextBtnText = isLast ? 'Finish Quiz →' : 'Next Question →';
+        var nextBtnLabel = isLast ? 'Finish Quiz' : 'Next Question';
 
         var navHtml =
           '<div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-700/80">' +
-            '<button type="button" id="prevQuizBtn" class="px-4 py-2 rounded-xl text-xs font-semibold border transition-colors ' +
+            '<button type="button" id="prevQuizBtn" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border transition-colors ' +
               (isFirst ? 'bg-slate-900/40 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200') + '" ' +
               (isFirst ? 'disabled' : '') + '>' +
-              '← Previous' +
+              '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>' +
+              '<span>Previous</span>' +
             '</button>' +
-            '<button type="button" id="nextQuizBtn" class="px-4 py-2 rounded-xl text-xs font-bold transition-all ' +
+            '<button type="button" id="nextQuizBtn" class="flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all ' +
               (isAnswered ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white shadow-md border border-yellow-400/40' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700') + '">' +
-              nextBtnText +
+              '<span>' + nextBtnLabel + '</span>' +
+              '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>' +
             '</button>' +
           '</div>';
 
@@ -1662,11 +1664,17 @@ document.addEventListener('DOMContentLoaded', function () {
             '</div>' +
             '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
               '<button type="button" id="demo22BadBtn" class="p-3 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 text-left font-mono transition-all">' +
-                '<div class="text-xs font-bold text-rose-300">❌ Bad Update (Mutate Same Reference)</div>' +
+                '<div class="text-xs font-bold text-rose-300 flex items-center gap-1.5">' +
+                  '<svg class="w-3.5 h-3.5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>' +
+                  '<span>Bad Update (Mutate Same Reference)</span>' +
+                '</div>' +
                 '<div class="text-[11px] text-slate-400 mt-1">user.name = \'Charlie\'; setUser(user)</div>' +
               '</button>' +
               '<button type="button" id="demo22GoodBtn" class="p-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-left font-mono transition-all">' +
-                '<div class="text-xs font-bold text-emerald-300">✅ Good Update (New Object Reference)</div>' +
+                '<div class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">' +
+                  '<svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>' +
+                  '<span>Good Update (New Object Reference)</span>' +
+                '</div>' +
                 '<div class="text-[11px] text-slate-400 mt-1">setUser({ ...user, name: \'Charlie\' })</div>' +
               '</button>' +
             '</div>' +
@@ -1735,7 +1743,10 @@ document.addEventListener('DOMContentLoaded', function () {
             '<div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">' +
               '<div class="flex items-center justify-between text-xs font-mono">' +
                 '<span class="text-slate-400">API Response Data:</span>' +
-                '<span id="demo32StatusBadge" class="text-emerald-400 font-bold">● Synchronized</span>' +
+                '<span id="demo32StatusBadge" class="text-emerald-400 font-bold flex items-center gap-1.5">' +
+                  '<svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>' +
+                  '<span>Synchronized</span>' +
+                '</span>' +
               '</div>' +
               '<div id="demo32UserData" class="p-3 rounded-lg bg-slate-950 font-mono text-xs text-slate-200 space-y-1">' +
                 '<div>Name: <span class="text-amber-400 font-bold">Fyang Smith</span></div>' +
@@ -1801,7 +1812,8 @@ document.addEventListener('DOMContentLoaded', function () {
               normalCount++;
               if (normalRam) normalRam.textContent = normalCount;
               if (normalFeedback) {
-                normalFeedback.innerHTML = '<span class="text-rose-400 font-bold">⚠️ Mutated in RAM (count = ' + normalCount + ')</span>, but React was never notified! UI display stays <strong>0</strong>.';
+                var alertSvg = '<svg class="w-3.5 h-3.5 text-rose-400 shrink-0 inline-block mr-1 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>';
+                normalFeedback.innerHTML = '<span class="text-rose-400 font-bold inline-flex items-center gap-1">' + alertSvg + 'Mutated in RAM (count = ' + normalCount + ')</span>, but React was never notified! UI display stays <strong>0</strong>.';
               }
             };
           }
@@ -1818,7 +1830,8 @@ document.addEventListener('DOMContentLoaded', function () {
               }
               if (stateMem) stateMem.textContent = stateCount;
               if (stateFeedback) {
-                stateFeedback.innerHTML = '<span class="text-emerald-400 font-bold">✅ setCount(' + stateCount + ') called!</span> React scheduled a re-render and updated the UI.';
+                var checkSvg = '<svg class="w-3.5 h-3.5 text-emerald-400 shrink-0 inline-block mr-1 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>';
+                stateFeedback.innerHTML = '<span class="text-emerald-400 font-bold inline-flex items-center gap-1">' + checkSvg + 'setCount(' + stateCount + ') called!</span> React scheduled a re-render and updated the UI.';
               }
             };
           }
@@ -1921,7 +1934,8 @@ document.addEventListener('DOMContentLoaded', function () {
               player = Object.assign({}, player, { level: player.level + 1 });
               syncPlayerUi();
               if (feedbackEl) {
-                feedbackEl.innerHTML = '<span class="text-blue-400 font-bold">✅ Spread copy ({ ...prev, level: ' + player.level + ' })</span> created a fresh object reference! React detected change.';
+                var checkSvg = '<svg class="w-3.5 h-3.5 text-blue-400 shrink-0 inline-block mr-1 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>';
+                feedbackEl.innerHTML = '<span class="text-blue-400 font-bold inline-flex items-center gap-1">' + checkSvg + 'Spread copy ({ ...prev, level: ' + player.level + ' })</span> created a fresh object reference! React detected change.';
               }
             };
           }
@@ -1932,7 +1946,8 @@ document.addEventListener('DOMContentLoaded', function () {
               player = Object.assign({}, player, { score: newScore });
               syncPlayerUi();
               if (feedbackEl) {
-                feedbackEl.innerHTML = '<span class="text-emerald-400 font-bold">✅ Functional updater (prev =&gt; prev + 1 x2)</span> safely incremented score by +2 (Current: ' + newScore + ').';
+                var checkSvg = '<svg class="w-3.5 h-3.5 text-emerald-400 shrink-0 inline-block mr-1 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>';
+                feedbackEl.innerHTML = '<span class="text-emerald-400 font-bold inline-flex items-center gap-1">' + checkSvg + 'Functional updater (prev =&gt; prev + 1 x2)</span> safely incremented score by +2 (Current: ' + newScore + ').';
               }
             };
           }
@@ -1941,7 +1956,8 @@ document.addEventListener('DOMContentLoaded', function () {
             mutateBtn.onclick = function () {
               player.level = 99;
               if (feedbackEl) {
-                feedbackEl.innerHTML = '<span class="text-rose-400 font-bold">❌ DIRECT MUTATION TRAP!</span> <code>player.level = 99</code> mutated the object in-place. React\'s <code>Object.is</code> equality check would see the same reference and BAIL OUT without re-rendering!';
+                var crossSvg = '<svg class="w-3.5 h-3.5 text-rose-400 shrink-0 inline-block mr-1 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>';
+                feedbackEl.innerHTML = '<span class="text-rose-400 font-bold inline-flex items-center gap-1">' + crossSvg + 'DIRECT MUTATION TRAP!</span> <code>player.level = 99</code> mutated the object in-place. React\'s <code>Object.is</code> equality check would see the same reference and BAIL OUT without re-rendering!';
               }
             };
           }
@@ -1966,7 +1982,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 equalityBadge.className = 'px-2 py-0.5 rounded font-mono font-bold text-xs bg-rose-500/20 text-rose-300 border border-rose-500/30';
               }
               if (engineStatus) {
-                engineStatus.innerHTML = '<div class="space-y-1"><span class="text-rose-400 font-bold">🛑 BAILOUT DETECTED:</span> <span>Same object reference passed. React skips render execution. <strong>Render count stays ' + renderCount + '.</strong></span></div>';
+                var stopSvg = '<svg class="w-3.5 h-3.5 text-rose-400 shrink-0 inline-block mr-1 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07" stroke-width="2"></line></svg>';
+                engineStatus.innerHTML = '<div class="space-y-1"><span class="text-rose-400 font-bold inline-flex items-center gap-1">' + stopSvg + 'BAILOUT DETECTED:</span> <span>Same object reference passed. React skips render execution. <strong>Render count stays ' + renderCount + '.</strong></span></div>';
               }
             };
           }
@@ -1983,7 +2000,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 equalityBadge.className = 'px-2 py-0.5 rounded font-mono font-bold text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
               }
               if (engineStatus) {
-                engineStatus.innerHTML = '<div class="space-y-1"><span class="text-emerald-400 font-bold">⚡ RE-RENDER TRIGGERED:</span> <span>New object reference created. React re-executed the component function. <strong>Render count: ' + renderCount + '.</strong></span></div>';
+                var zapSvg = '<svg class="w-3.5 h-3.5 text-emerald-400 shrink-0 inline-block mr-1 align-text-bottom" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>';
+                engineStatus.innerHTML = '<div class="space-y-1"><span class="text-emerald-400 font-bold inline-flex items-center gap-1">' + zapSvg + 'RE-RENDER TRIGGERED:</span> <span>New object reference created. React re-executed the component function. <strong>Render count: ' + renderCount + '.</strong></span></div>';
               }
             };
           }
@@ -2047,7 +2065,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
               if (uid === currentUid) {
                 if (statusBadge) {
-                  statusBadge.textContent = '● Skipped (No change)';
+                  statusBadge.innerHTML = '<span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>Skipped (No change)</span></span>';
                   statusBadge.className = 'text-amber-400 font-bold';
                 }
                 if (logEl) {
@@ -2056,8 +2074,8 @@ document.addEventListener('DOMContentLoaded', function () {
               } else {
                 currentUid = uid;
                 if (statusBadge) {
-                  statusBadge.textContent = '● Fetching (Effect fired)...';
-                  statusBadge.className = 'text-sky-400 font-bold animate-pulse';
+                  statusBadge.innerHTML = '<span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-sky-400 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg><span>Fetching (Effect fired)...</span></span>';
+                  statusBadge.className = 'text-sky-400 font-bold';
                 }
                 if (userDataEl) {
                   userDataEl.innerHTML = '<div class="text-slate-400 animate-pulse">Loading Housemate #' + uid + ' from external API...</div>';
@@ -2071,7 +2089,7 @@ document.addEventListener('DOMContentLoaded', function () {
                       '<div>Origin: <span class="text-slate-300">' + u.origin + '</span></div>';
                   }
                   if (statusBadge) {
-                    statusBadge.textContent = '● Synchronized';
+                    statusBadge.innerHTML = '<span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg><span>Synchronized</span></span>';
                     statusBadge.className = 'text-emerald-400 font-bold';
                   }
                   if (logEl) {
@@ -2337,7 +2355,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     '</div>' +
                     '<div class="px-5 py-2.5 bg-slate-950 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">' +
                       '<div class="flex items-center gap-2">' +
-                        '<span class="text-emerald-400 font-semibold">● React 18+ Live Syntax</span>' +
+                        '<span class="text-emerald-400 font-semibold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 inline-block shrink-0"></span><span>React 18+ Live Syntax</span></span>' +
                         '<span class="text-slate-600">|</span>' +
                         '<span>Sub-section ' + s.secNum + '</span>' +
                       '</div>' +
@@ -2352,7 +2370,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     '</div>' +
                     '<div class="px-5 py-2.5 bg-slate-950 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">' +
                       '<div class="flex items-center gap-2">' +
-                        '<span class="text-amber-400 font-semibold">⚡ Simulated Live Component</span>' +
+                        '<span class="text-amber-400 font-semibold flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg><span>Simulated Live Component</span></span>' +
                         '<span class="text-slate-600">|</span>' +
                         '<span>Pure Client-Side React Runtime</span>' +
                       '</div>' +
