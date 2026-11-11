@@ -1144,7 +1144,7 @@ document.addEventListener('DOMContentLoaded', function () {
               '<button type="button" id="reviewQuizBtn" class="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold transition-colors min-h-[44px]">' +
                 'Review Questions' +
               '</button>' +
-              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white text-xs font-bold transition-all shadow-md border border-yellow-400/40 min-h-[44px]">' +
+              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md border border-blue-400/40 min-h-[44px]">' +
                 'Retake Quiz' +
               '</button>' +
             '</div>';
@@ -1276,7 +1276,7 @@ document.addEventListener('DOMContentLoaded', function () {
               '<span>Previous</span>' +
             '</button>' +
             '<button type="button" id="nextQuizBtn" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] ' +
-              (isAnswered ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white shadow-md border border-yellow-400/40' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700') + '">' +
+              (isAnswered ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md border border-blue-400/40' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700') + '">' +
               '<span>' + nextBtnLabel + '</span>' +
               '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>' +
             '</button>' +
@@ -1623,7 +1623,7 @@ document.addEventListener('DOMContentLoaded', function () {
             '<div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-4 shadow-lg">' +
               '<div class="text-xs font-mono text-slate-400 uppercase tracking-wider">&lt;Counter /&gt; JSX Button Element:</div>' +
               '<div>' +
-                '<button type="button" id="demo13ClickBtn" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white font-mono text-base sm:text-lg font-black shadow-lg shadow-blue-950/50 hover:scale-[1.02] active:scale-95 transition-all">' +
+                '<button type="button" id="demo13ClickBtn" class="px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-mono text-base sm:text-lg font-black shadow-lg shadow-blue-950/50 hover:scale-[1.02] active:scale-95 transition-all">' +
                   'Clicked <span id="demo13CountNum">0</span> times' +
                 '</button>' +
               '</div>' +
@@ -2244,7 +2244,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             pill.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono font-bold whitespace-nowrap transition-all border ' +
               (isActive
-                ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-lg shadow-blue-950/50 border-yellow-400 scale-105'
+                ? 'bg-blue-600 text-white shadow-lg shadow-blue-950/50 border-blue-400 scale-105'
                 : topicBorder + ' bg-slate-900/60');
             pill.textContent = sec.secNum;
             pill.title = 'Sub-section ' + sec.secNum + ': ' + sec.title;
@@ -2265,11 +2265,11 @@ document.addEventListener('DOMContentLoaded', function () {
           return '<li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200 leading-relaxed"><span class="w-2 h-2 rounded-full bg-yellow-400 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span><span>' + b + '</span></li>';
         }).join('');
 
-        var topicBadgeGradient = s.topicNum === 1
-          ? 'bg-gradient-to-r from-blue-600 to-blue-500 text-white border-blue-400/40'
+        var topicBadgeSolid = s.topicNum === 1
+          ? 'bg-blue-600 text-white border-blue-400/40'
           : (s.topicNum === 2
-            ? 'bg-gradient-to-r from-red-600 to-red-500 text-white border-red-400/40'
-            : 'bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-black border-yellow-300/40');
+            ? 'bg-red-600 text-white border-red-400/40'
+            : 'bg-amber-500 text-slate-950 font-black border-yellow-300/40');
 
         // Focused Section Markup (2-Column Presentation: Left = Explanations & Rules, Right = LIVE CODE & OUTPUT TOGGLE)
         slideViewport.innerHTML =
@@ -2277,7 +2277,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Section Header Bar with Prominent Sub-section Indicator
             '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">' +
               '<div class="flex items-center gap-3.5">' +
-                '<span class="px-3.5 py-1.5 rounded-xl ' + topicBadgeGradient + ' font-mono text-sm sm:text-base font-black tracking-wide shadow-md shadow-blue-950/40 border">SUB-SECTION ' + s.secNum + '</span>' +
+                '<span class="px-3.5 py-1.5 rounded-xl ' + topicBadgeSolid + ' font-mono text-sm sm:text-base font-black tracking-wide shadow-md shadow-blue-950/40 border">SUB-SECTION ' + s.secNum + '</span>' +
                 '<div>' +
                   '<div class="flex items-center gap-2">' +
                     '<span class="text-xs font-mono font-bold uppercase tracking-wider text-yellow-400">' + s.topicBadge + '</span>' +
@@ -2344,14 +2344,14 @@ document.addEventListener('DOMContentLoaded', function () {
                       '<div class="inline-flex items-center p-0.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono">' +
                         '<button type="button" id="slideTabCodeBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ' +
                           (presenterActiveTab === 'code'
-                            ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-sm border border-yellow-400/40'
+                            ? 'bg-blue-600 text-white shadow-sm border border-blue-400/40'
                             : 'text-slate-400 hover:text-white') + '">' +
                           '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>' +
                           '<span>Code</span>' +
                         '</button>' +
                         '<button type="button" id="slideTabOutputBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ' +
                           (presenterActiveTab === 'output'
-                            ? 'bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-sm border border-yellow-400/40'
+                            ? 'bg-blue-600 text-white shadow-sm border border-blue-400/40'
                             : 'text-slate-400 hover:text-white') + '">' +
                           '<svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>' +
                           '<span>Output</span>' +
@@ -2456,7 +2456,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (slideCodeActions) slideCodeActions.className = 'flex items-center gap-2';
             if (slideOutputBadge) slideOutputBadge.className = 'hidden';
             if (slideTabCodeBtn) {
-              slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-sm border border-yellow-400/40';
+              slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-blue-600 text-white shadow-sm border border-blue-400/40';
             }
             if (slideTabOutputBtn) {
               slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all text-slate-400 hover:text-white';
@@ -2470,7 +2470,7 @@ document.addEventListener('DOMContentLoaded', function () {
               slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all text-slate-400 hover:text-white';
             }
             if (slideTabOutputBtn) {
-              slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white shadow-sm border border-yellow-400/40';
+              slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-blue-600 text-white shadow-sm border border-blue-400/40';
             }
             bindSectionOutputListeners(s.id);
           }

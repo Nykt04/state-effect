@@ -228,8 +228,8 @@ html {
 }
 
 /* Official Logo Colors: Blue, Red, Yellow & White Accents */
-.pbb-tricolor-gradient {
-  background: linear-gradient(90deg, #2563eb 0%, #2563eb 32%, #facc15 48%, #facc15 52%, #dc2626 68%, #dc2626 100%);
+.pbb-tricolor-bar {
+  background: #2563eb;
 }
 
 .pbb-tricolor-glow {

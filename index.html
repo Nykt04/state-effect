@@ -15,7 +15,7 @@
 
   <!-- PBB Animated Loading / Splash Screen (Cinematic Logo Assembly) -->
   <div id="pbbSplash" class="fixed inset-0 z-[100] bg-[#050914] flex flex-col items-center justify-center p-6 text-center select-none transition-opacity duration-700 cursor-pointer" title="Click anywhere or press any key to enter">
-    <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-900/30 via-slate-950/80 to-[#03060f] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[#03060f] pointer-events-none"></div>
 
     <!-- Surveillance Camera HUD Markers -->
     <div class="absolute top-6 left-6 flex items-center gap-2 font-mono text-[11px] text-red-500 font-bold tracking-widest uppercase">
@@ -31,7 +31,7 @@
       <!-- 3-Piece Assembling Logo Stage -->
       <div class="relative w-72 sm:w-88 md:w-96 aspect-[16/9] mx-auto pbb-assembly-stage">
         <!-- Ambient Backlight Burst -->
-        <div class="absolute -inset-6 bg-gradient-to-r from-blue-600/40 via-amber-500/25 to-red-600/35 rounded-full blur-3xl opacity-85 pointer-events-none"></div>
+        <div class="absolute -inset-6 bg-blue-600/25 rounded-full blur-3xl opacity-85 pointer-events-none"></div>
 
         <!-- Left Blue Wing (Swoops in from top-left) -->
         <img src="pbb-layer-blue.png" alt="PBB Left Wing" class="pbb-assemble-blue absolute inset-0 w-full h-full object-contain pointer-events-none" />
@@ -144,7 +144,7 @@
       <!-- Section Indicator & Quick Step Dots -->
       <div id="slideDotsContainer" class="flex items-center gap-1 sm:gap-1.5 font-mono text-[11px] sm:text-xs text-amber-400"></div>
 
-      <button id="nextSlideBtn" type="button" class="flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-amber-600 hover:from-blue-500 hover:to-amber-500 text-white text-xs font-bold shadow-lg shadow-blue-950/40 transition-all min-h-[42px]">
+      <button id="nextSlideBtn" type="button" class="flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-950/40 transition-all min-h-[42px]">
         <span class="hidden sm:inline">Next Section</span>
         <span class="sm:hidden">Next</span>
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
@@ -152,9 +152,9 @@
     </div>
   </div>
 
-  <!-- Top Navigation Header with PBB Official Tricolor Ribbon -->
+  <!-- Top Navigation Header with PBB Official Blue Ribbon -->
   <header class="sticky top-0 z-40 backdrop-blur-md bg-white/90 dark:bg-[#060913]/90 border-b border-slate-200 dark:border-slate-800 transition-colors">
-    <div class="h-1 w-full bg-gradient-to-r from-blue-600 via-yellow-400 to-red-600"></div>
+    <div class="h-1 w-full bg-blue-600"></div>
     <div class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
       <!-- Brand -->
       <div class="flex items-center gap-2.5 sm:gap-3.5 min-w-0">
@@ -197,7 +197,7 @@
         </button>
 
         <!-- Confession Room Button -->
-        <button id="presentModeBtn" type="button" class="px-2.5 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white text-xs sm:text-sm font-black shadow-md shadow-blue-950/40 border border-yellow-400/40 flex items-center gap-1.5 sm:gap-2 transition-all min-h-[38px]" title="Enter Confession Room (Presenter Mode)">
+        <button id="presentModeBtn" type="button" class="px-2.5 sm:px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-black shadow-md shadow-blue-950/40 border border-blue-400/40 flex items-center gap-1.5 sm:gap-2 transition-all min-h-[38px]" title="Enter Confession Room (Presenter Mode)">
           <img src="pbb-logo.png" alt="" class="h-3.5 sm:h-4 w-auto drop-shadow" />
           <span class="hidden sm:inline">Confession Room</span>
           <span class="sm:hidden">Confess</span>
@@ -230,7 +230,7 @@
 
       <!-- Quick Actions in Drawer -->
       <div class="px-4 py-3 bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between gap-2">
-        <button id="mobilePresentBtn" type="button" class="flex-1 py-2 px-3 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm min-h-[38px]">
+        <button id="mobilePresentBtn" type="button" class="flex-1 py-2 px-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm min-h-[38px]">
           <img src="pbb-logo.png" alt="" class="h-3.5 w-auto" />
           <span>Confession Room</span>
         </button>
@@ -356,7 +356,7 @@
   </nav>
 
   <!-- Hero Banner -->
-  <section id="top" class="relative overflow-hidden border-b border-slate-200 dark:border-slate-800/80 bg-gradient-to-b from-white via-slate-50/60 to-slate-100/70 dark:from-slate-900 dark:via-[#0e1422] dark:to-[#0b0f19]">
+  <section id="top" class="relative overflow-hidden border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-900">
     <div class="max-w-[1720px] w-full mx-auto px-4 sm:px-8 lg:px-12 pt-6 pb-6 sm:pt-10 sm:pb-8">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
         <div class="lg:col-span-7 space-y-5 sm:space-y-6">
@@ -371,7 +371,7 @@
             Under Kuya's 24/7 surveillance, explore how React components remember housemate data with <code class="px-2 py-0.5 rounded bg-blue-500/10 text-blue-600 dark:text-blue-400 font-mono text-sm sm:text-base border border-blue-500/20">useState</code>, handle nomination updates, schedule screen repaints, and synchronize weekly tasks using <code class="px-2 py-0.5 rounded bg-yellow-400/10 text-yellow-600 dark:text-yellow-400 font-mono text-sm sm:text-base border border-yellow-400/20">useEffect</code>.
           </p>
           <div class="flex flex-wrap items-center gap-2.5 sm:gap-3.5 pt-1">
-            <button id="heroPresentBtn" type="button" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 via-red-600 to-amber-500 hover:from-blue-500 hover:via-red-500 hover:to-amber-400 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-950/40 border border-yellow-400/40 transition-all flex items-center justify-center gap-2.5 min-h-[44px]">
+            <button id="heroPresentBtn" type="button" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-sm sm:text-base shadow-lg shadow-blue-950/40 border border-blue-400/40 transition-all flex items-center justify-center gap-2.5 min-h-[44px]">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
               Enter Confession Room (P)
             </button>
@@ -1620,7 +1620,7 @@ function Timer() {
         <!-- INTERACTIVE KNOWLEDGE CHECK QUIZ                           -->
         <!-- ========================================================== -->
         <section id="quiz-section" class="scroll-mt-20 rounded-2xl bg-slate-900 text-white border border-slate-800 shadow-xl p-4 sm:p-8 space-y-5 sm:space-y-6">
-          <div class="h-1.5 w-full bg-gradient-to-r from-blue-600 via-yellow-400 to-red-600 rounded-full mb-3"></div>
+          <div class="h-1.5 w-full bg-blue-600 rounded-full mb-3"></div>
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-slate-800 pb-4">
             <div>
               <span class="text-xs font-bold uppercase tracking-wider text-yellow-400">Interactive Knowledge Check</span>
