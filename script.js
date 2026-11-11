@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var container = document.getElementById('toastContainer');
         if (!container) return;
         var toast = document.createElement('div');
-        toast.className = 'px-4 py-2.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold shadow-lg border border-slate-700 dark:border-slate-200 transition-all duration-300';
+        toast.className = 'px-4 py-2.5 rounded-md bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 text-xs font-semibold  border border-zinc-700 dark:border-zinc-200 transition-all ';
         toast.textContent = message;
         container.appendChild(toast);
         setTimeout(function () {
@@ -62,62 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (toast.parentNode) toast.parentNode.removeChild(toast);
           }, 300);
         }, 2200);
-      }
-
-      // -----------------------------------------------------------
-      // Pinoy Big Brother (PBB) Assembling Intro Splash Controller
-      // -----------------------------------------------------------
-      var pbbSplash = document.getElementById('pbbSplash');
-      var replayPbbIntroBtn = document.getElementById('replayPbbIntroBtn');
-
-      var splashActive = true;
-      var splashTimer = null;
-
-      function resetAssembleAnimation() {
-        var stage = document.querySelector('.pbb-assembly-stage');
-        if (!stage) return;
-        var animElements = stage.querySelectorAll('.pbb-assemble-blue, .pbb-assemble-red, .pbb-assemble-sun, .pbb-assemble-flash');
-        animElements.forEach(function (el) {
-          el.style.animation = 'none';
-          void el.offsetWidth;
-          el.style.animation = '';
-        });
-      }
-
-      function dismissPbbSplash() {
-        if (!pbbSplash || !splashActive) return;
-        splashActive = false;
-        if (splashTimer) clearTimeout(splashTimer);
-        pbbSplash.classList.add('opacity-0', 'pointer-events-none');
-        setTimeout(function () {
-          pbbSplash.classList.add('hidden');
-        }, 700);
-      }
-
-      function startPbbSplashAnimation() {
-        if (!pbbSplash) return;
-        splashActive = true;
-        pbbSplash.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
-        resetAssembleAnimation();
-
-        splashTimer = setTimeout(function () {
-          dismissPbbSplash();
-        }, 2500);
-      }
-
-      // Auto-start splash on load
-      startPbbSplashAnimation();
-
-      if (pbbSplash) {
-        pbbSplash.addEventListener('click', function () {
-          dismissPbbSplash();
-        });
-      }
-
-      if (replayPbbIntroBtn) {
-        replayPbbIntroBtn.addEventListener('click', function () {
-          startPbbSplashAnimation();
-        });
       }
 
       // -----------------------------------------------------------
@@ -173,9 +117,9 @@ document.addEventListener('DOMContentLoaded', function () {
               spyLinks.forEach(function (link) {
                 var target = link.getAttribute('data-spy');
                 if (target === id) {
-                  link.classList.add('bg-sky-500/10', 'text-sky-600', 'dark:text-sky-400', 'font-semibold', 'border-l-2', 'border-sky-500');
+                  link.classList.add('bg-zinc-100', 'dark:bg-zinc-800/80', 'text-zinc-900', 'dark:text-zinc-100', 'font-medium');
                 } else if (id.indexOf('sec-') !== -1) {
-                  link.classList.remove('bg-sky-500/10', 'text-sky-600', 'dark:text-sky-400', 'font-semibold', 'border-l-2', 'border-sky-500');
+                  link.classList.remove('bg-zinc-100', 'dark:bg-zinc-800/80', 'text-zinc-900', 'dark:text-zinc-100', 'font-medium');
                 }
               });
 
@@ -189,9 +133,9 @@ document.addEventListener('DOMContentLoaded', function () {
               if (activeTopic) {
                 navPills.forEach(function (pill) {
                   if (pill.getAttribute('data-nav-pill') === activeTopic) {
-                    pill.className = 'nav-pill px-3 py-1.5 rounded-lg transition-all bg-sky-600 text-white font-semibold shadow-sm';
+                    pill.className = 'nav-pill px-3 py-1.5 rounded-md transition-all bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold ';
                   } else {
-                    pill.className = 'nav-pill px-3 py-1.5 rounded-lg transition-all text-slate-700 dark:text-slate-300 hover:text-sky-600 dark:hover:text-sky-300';
+                    pill.className = 'nav-pill px-3 py-1.5 rounded-md transition-all text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-300';
                   }
                 });
               }
@@ -263,17 +207,17 @@ document.addEventListener('DOMContentLoaded', function () {
       var cycleDetails = {
         state: {
           title: 'Stage 1: State Setter Triggered (`setCount(prev => prev + 1)`)',
-          color: 'text-blue-500 dark:text-blue-400',
+          color: 'text-zinc-900 dark:text-zinc-100',
           body: 'A user interaction (like `onClick`), network response, or timer calls the state updater function from `useState`. React stores the updated value in component memory.'
         },
         render: {
           title: 'Stage 2: Object.is Check & Component Re-render',
-          color: 'text-red-500 dark:text-red-400',
+          color: 'text-zinc-900 dark:text-zinc-100',
           body: 'React compares the new value to the old value using `Object.is`. If different, React calls your component function top-to-bottom, calculates the new JSX, and updates only the changed DOM nodes.'
         },
         effect: {
           title: 'Stage 3: useEffect Synchronizes After Paint',
-          color: 'text-yellow-500 dark:text-yellow-400',
+          color: 'text-zinc-900 dark:text-zinc-100',
           body: 'After the component finishes rendering and the screen updates, React checks the `useEffect` dependency array. If dependencies changed, it runs cleanup (if any) and executes your effect.'
         }
       };
@@ -286,14 +230,9 @@ document.addEventListener('DOMContentLoaded', function () {
           var info = cycleDetails[step];
           if (!info) return;
           cycleBtns.forEach(function (b) {
-            b.className = 'cycle-step-btn p-3.5 rounded-xl border border-slate-200 dark:border-slate-800 text-left transition-all';
+            b.className = 'cycle-step-btn p-3 rounded-md border border-zinc-200 dark:border-zinc-800 hover:border-zinc-400 dark:hover:border-zinc-700 text-left transition-colors';
           });
-          var activeBorder = step === 'state'
-            ? 'border-2 border-blue-500 bg-blue-500/10'
-            : (step === 'render'
-              ? 'border-2 border-red-500 bg-red-500/10'
-              : 'border-2 border-yellow-400 bg-yellow-400/10');
-          btn.className = 'cycle-step-btn p-3.5 rounded-xl ' + activeBorder + ' text-left transition-all';
+          btn.className = 'cycle-step-btn p-3 rounded-md border border-zinc-900 dark:border-zinc-200 bg-zinc-100/70 dark:bg-zinc-900 text-left transition-colors';
           cycleStepDetail.innerHTML = '<strong class="' + info.color + ' block mb-1">' + info.title + '</strong>' + info.body;
         });
       });
@@ -332,20 +271,20 @@ document.addEventListener('DOMContentLoaded', function () {
           var isDone = !!readSections[secId];
           if (isDone) {
             btn.innerHTML = '<span class="inline-flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span>Completed</span></span>';
-            btn.className = 'mark-read-btn shrink-0 px-3 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-600 dark:text-emerald-400 transition-colors';
+            btn.className = 'mark-read-btn shrink-0 px-3 py-1.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-xs font-semibold text-emerald-600 dark:text-emerald-400 transition-colors';
           } else {
             btn.textContent = 'Mark Read';
-            btn.className = 'mark-read-btn shrink-0 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-medium text-slate-600 dark:text-slate-300 hover:border-sky-500 transition-colors';
+            btn.className = 'mark-read-btn shrink-0 px-3 py-1.5 rounded-md border border-zinc-200 dark:border-zinc-700 text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:border-zinc-500 transition-colors';
           }
         });
         document.querySelectorAll('[data-check-badge]').forEach(function (badge) {
           var secId = badge.getAttribute('data-check-badge');
           if (readSections[secId]) {
             badge.innerHTML = '<svg class="w-2.5 h-2.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
-            badge.className = 'w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold shadow-sm';
+            badge.className = 'w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px] font-bold ';
           } else {
             badge.textContent = '';
-            badge.className = 'w-4 h-4 rounded-full border border-slate-300 dark:border-slate-700 flex items-center justify-center text-[10px]';
+            badge.className = 'w-4 h-4 rounded-full border border-zinc-300 dark:border-zinc-700 flex items-center justify-center text-[10px]';
           }
         });
       }
@@ -636,9 +575,9 @@ document.addEventListener('DOMContentLoaded', function () {
       // Section 1.2 Interactive Demo: useState Anatomy & Greeting
       // -----------------------------------------------------------
       var anatomyData = {
-        stateVal: '<strong class="text-sky-300">1st Element (`name`):</strong> The current state value stored by React. On the initial render, it equals `"Guest"`.',
-        setterFn: '<strong class="text-blue-300">2nd Element (`setName`):</strong> The state setter function. Calling `setName(newValue)` updates memory and schedules a component re-render.',
-        hookCall: '<strong class="text-sky-300">Hook Call (`useState`):</strong> Built-in React Hook called at the top level of a functional component to declare a state variable.',
+        stateVal: '<strong class="text-zinc-300">1st Element (`name`):</strong> The current state value stored by React. On the initial render, it equals `"Guest"`.',
+        setterFn: '<strong class="text-zinc-300">2nd Element (`setName`):</strong> The state setter function. Calling `setName(newValue)` updates memory and schedules a component re-render.',
+        hookCall: '<strong class="text-zinc-300">Hook Call (`useState`):</strong> Built-in React Hook called at the top level of a functional component to declare a state variable.',
         initArg: '<strong class="text-emerald-300">Initial State (`\'Guest\'`):</strong> The single argument passed to `useState`. Used only during the component\'s initial render.'
       };
       var anatomyExplainBox = document.getElementById('anatomyExplainBox');
@@ -688,7 +627,7 @@ document.addEventListener('DOMContentLoaded', function () {
         counterPreviewCard.classList.remove('render-flash');
         void counterPreviewCard.offsetWidth;
         counterPreviewCard.classList.add('render-flash');
-        counterEventLog.innerHTML = '<span class="text-sky-400">onClick</span> fired → <span class="text-blue-400">handleIncrement()</span> → <span class="text-emerald-400">setCount(' + prev + ' + 1)</span> → UI re-rendered with <strong>' + counterVal + '</strong>';
+        counterEventLog.innerHTML = '<span class="text-zinc-300">onClick</span> fired → <span class="text-zinc-300">handleIncrement()</span> → <span class="text-emerald-400">setCount(' + prev + ' + 1)</span> → UI re-rendered with <strong>' + counterVal + '</strong>';
       });
 
       document.getElementById('counterResetBtn').addEventListener('click', function () {
@@ -763,7 +702,7 @@ document.addEventListener('DOMContentLoaded', function () {
         sbPlayer = { name: 'Alice', level: 1 };
         renderScoreBoard();
         if (staleClosureExplain) {
-          staleClosureExplain.innerHTML = '<svg class="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Click both buttons to see the difference between stale snapshot closures and pending updater functions.</span>';
+          staleClosureExplain.innerHTML = '<svg class="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Click both buttons to see the difference between stale snapshot closures and pending updater functions.</span>';
         }
       });
 
@@ -793,8 +732,8 @@ document.addEventListener('DOMContentLoaded', function () {
         renderLoggerCount.textContent = String(renderCount);
         renderToggleBtn.textContent = toggleState ? 'On' : 'Off';
         renderToggleBtn.className = toggleState
-          ? 'px-6 py-2.5 rounded-xl font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow'
-          : 'px-6 py-2.5 rounded-xl font-bold text-sm text-white bg-slate-600 hover:bg-slate-700 transition-all shadow';
+          ? 'px-6 py-2.5 rounded-md font-bold text-sm text-white bg-emerald-600 hover:bg-emerald-700 transition-all '
+          : 'px-6 py-2.5 rounded-md font-bold text-sm text-white bg-zinc-600 hover:bg-zinc-700 transition-all ';
         objectIsBadge.textContent = 'Object.is(' + oldVal + ', ' + toggleState + ') === false → Re-render!';
         renderLoggerBox.classList.remove('render-flash');
         void renderLoggerBox.offsetWidth;
@@ -804,12 +743,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
       document.getElementById('renderSameValBtn').addEventListener('click', function () {
         objectIsBadge.textContent = 'Object.is(' + toggleState + ', ' + toggleState + ') === true → Bail out!';
-        appendConsoleLine('// Called setToggle(' + toggleState + '): Object.is is true, React skipped re-render.', 'text-amber-400');
+        appendConsoleLine('// Called setToggle(' + toggleState + '): Object.is is true, React skipped re-render.', 'text-zinc-300');
       });
 
       document.getElementById('clearRenderConsoleBtn').addEventListener('click', function () {
         renderConsoleOutput.innerHTML = '';
-        appendConsoleLine('// Console cleared. Current toggle state: ' + toggleState, 'text-slate-400');
+        appendConsoleLine('// Console cleared. Current toggle state: ' + toggleState, 'text-zinc-400');
       });
 
       // -----------------------------------------------------------
@@ -825,7 +764,7 @@ document.addEventListener('DOMContentLoaded', function () {
         simBrowserTab.textContent = newTitle;
         titleClicksCount.textContent = String(titleClicks);
         document.title = newTitle + ' — React State & Effect';
-        titleEffectTimeline.innerHTML = '1. Render JSX (clicks = ' + titleClicks + ') → 2. Screen Painted → 3. <span class="text-sky-400">useEffect</span> updated <code class="text-emerald-400">document.title = "' + newTitle + '"</code>';
+        titleEffectTimeline.innerHTML = '1. Render JSX (clicks = ' + titleClicks + ') → 2. Screen Painted → 3. <span class="text-zinc-300">useEffect</span> updated <code class="text-emerald-400">document.title = "' + newTitle + '"</code>';
       }
 
       document.getElementById('titleUpdaterClickBtn').addEventListener('click', function () {
@@ -861,16 +800,16 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
           currentDepMode = btn.getAttribute('data-dep-mode');
           document.querySelectorAll('.dep-mode-btn').forEach(function (b) {
-            b.className = 'dep-mode-btn py-2 px-2 rounded-lg text-[11px] font-mono font-medium bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 transition-all min-h-[38px] flex items-center justify-center';
+            b.className = 'dep-mode-btn py-2 px-2 rounded-md text-[11px] font-mono font-medium bg-zinc-200 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 transition-all min-h-[38px] flex items-center justify-center';
           });
-          btn.className = 'dep-mode-btn py-2 px-2 rounded-lg text-[11px] font-mono font-bold bg-sky-600 text-white transition-all min-h-[38px] flex items-center justify-center';
+          btn.className = 'dep-mode-btn py-2 px-2 rounded-md text-[11px] font-mono font-bold bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 transition-all min-h-[38px] flex items-center justify-center';
 
           if (currentDepMode === 'smart') {
             if (depModeBadge) depModeBadge.textContent = '[userId] (Smart)';
-            depArrayLog.innerHTML = '<span class="text-sky-400 font-semibold">Mode: [userId]</span>. Effect only runs on mount and whenever <code>userId</code> changes.';
+            depArrayLog.innerHTML = '<span class="text-zinc-300 font-semibold">Mode: [userId]</span>. Effect only runs on mount and whenever <code>userId</code> changes.';
           } else if (currentDepMode === 'mount') {
             if (depModeBadge) depModeBadge.textContent = '[] (Mount only)';
-            depArrayLog.innerHTML = '<span class="text-amber-400 font-semibold">Mode: []</span>. Effect runs ONCE on initial mount; subsequent <code>userId</code> changes will be completely ignored!';
+            depArrayLog.innerHTML = '<span class="text-zinc-300 font-semibold">Mode: []</span>. Effect runs ONCE on initial mount; subsequent <code>userId</code> changes will be completely ignored!';
           } else if (currentDepMode === 'none') {
             if (depModeBadge) depModeBadge.textContent = 'No Array (Every Render)';
             depArrayLog.innerHTML = '<span class="text-rose-400 font-semibold">Mode: No Array</span>. Warning: Effect executes after EVERY single render!';
@@ -882,9 +821,9 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () {
           var nextId = btn.getAttribute('data-userid');
           document.querySelectorAll('.userid-btn').forEach(function (b) {
-            b.className = 'userid-btn py-2 px-2.5 rounded-lg text-xs font-mono font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 min-h-[40px]';
+            b.className = 'userid-btn py-2 px-2.5 rounded-md text-xs font-mono font-semibold bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 min-h-[40px]';
           });
-          btn.className = 'userid-btn py-2 px-2.5 rounded-lg text-xs font-mono font-semibold bg-sky-600 text-white min-h-[40px]';
+          btn.className = 'userid-btn py-2 px-2.5 rounded-md text-xs font-mono font-semibold bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 min-h-[40px]';
 
           if (currentDepMode === 'mount') {
             // Mode [] ignores prop changes!
@@ -899,7 +838,7 @@ document.addEventListener('DOMContentLoaded', function () {
               apiFetchCounter.textContent = String(apiCalls);
               depArrayLog.innerHTML = '<span class="inline-flex items-center gap-1 text-rose-400 font-bold"><svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Inefficient:</span> Mode has <strong>No Array</strong>. Even though `userId` stayed <strong>' + nextId + '</strong>, fetch fired again!';
             } else {
-              depArrayLog.innerHTML = 'Re-render: <code class="text-amber-400">userId</code> is still <strong>' + nextId + '</strong> → Dependency <code class="text-sky-400">[userId]</code> unchanged → <strong>Skipped fetch!</strong>';
+              depArrayLog.innerHTML = 'Re-render: <code class="text-zinc-300">userId</code> is still <strong>' + nextId + '</strong> → Dependency <code class="text-zinc-300">[userId]</code> unchanged → <strong>Skipped fetch!</strong>';
             }
             return;
           }
@@ -918,7 +857,7 @@ document.addEventListener('DOMContentLoaded', function () {
             userProfileOutputCard.classList.remove('render-flash');
             void userProfileOutputCard.offsetWidth;
             userProfileOutputCard.classList.add('render-flash');
-            depArrayLog.innerHTML = 'Dependency changed (<code class="text-sky-400">' + prevId + ' → ' + nextId + '</code>) → Effect ran <code class="text-emerald-400">fetch("https://api.example.com/users/' + nextId + '")</code>';
+            depArrayLog.innerHTML = 'Dependency changed (<code class="text-zinc-300">' + prevId + ' → ' + nextId + '</code>) → Effect ran <code class="text-emerald-400">fetch("https://api.example.com/users/' + nextId + '")</code>';
           }, 200);
         });
       });
@@ -949,7 +888,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       function logTimerEvent(msg, cls) {
         var div = document.createElement('div');
-        div.className = cls || 'text-slate-300';
+        div.className = cls || 'text-zinc-300';
         div.textContent = msg;
         timerLifecycleLog.appendChild(div);
         timerLifecycleLog.scrollTop = timerLifecycleLog.scrollHeight;
@@ -984,20 +923,20 @@ document.addEventListener('DOMContentLoaded', function () {
         timerMounted = !timerMounted;
         if (timerMounted) {
           timerSeconds = 0;
-          timerComponentViewport.innerHTML = '<div class="text-xs font-mono text-slate-400">&lt;Timer /&gt;</div><h4 class="text-lg font-extrabold text-slate-900 dark:text-white">Time spent: <span id="timerSecondsSpan" class="font-mono text-sky-600 dark:text-sky-400">0</span> seconds</h4>';
+          timerComponentViewport.innerHTML = '<div class="text-xs font-mono text-zinc-400">&lt;Timer /&gt;</div><h4 class="text-lg font-extrabold text-zinc-900 dark:text-white">Time spent: <span id="timerSecondsSpan" class="font-mono text-zinc-900 dark:text-zinc-100">0</span> seconds</h4>';
           timerSecondsSpan = document.getElementById('timerSecondsSpan');
           timerMountBadge.textContent = 'Mounted';
           timerMountBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
           toggleTimerMountBtn.textContent = 'Unmount <Timer /> (Run Cleanup)';
-          toggleTimerMountBtn.className = 'w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-all min-h-[44px]';
+          toggleTimerMountBtn.className = 'w-full sm:flex-1 py-2.5 px-3 rounded-md bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-all min-h-[44px]';
           startTimerEffect();
         } else {
           stopTimerCleanup();
-          timerComponentViewport.innerHTML = '<div class="py-3 text-xs font-mono text-slate-400 italic">&lt;Timer /&gt; is unmounted from the DOM (Cleanup executed).</div>';
+          timerComponentViewport.innerHTML = '<div class="py-3 text-xs font-mono text-zinc-400 italic">&lt;Timer /&gt; is unmounted from the DOM (Cleanup executed).</div>';
           timerMountBadge.textContent = 'Unmounted';
           timerMountBadge.className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-rose-500/10 text-rose-600 dark:text-rose-400';
           toggleTimerMountBtn.textContent = 'Mount <Timer /> Again';
-          toggleTimerMountBtn.className = 'w-full sm:flex-1 py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all min-h-[44px]';
+          toggleTimerMountBtn.className = 'w-full sm:flex-1 py-2.5 px-3 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-all min-h-[44px]';
         }
       });
 
@@ -1007,7 +946,7 @@ document.addEventListener('DOMContentLoaded', function () {
           toggleTimerMountBtn.click();
         } else if (timerSecondsSpan) {
           timerSecondsSpan.textContent = '0';
-          logTimerEvent('[Reset] Timer seconds reset to 0', 'text-sky-400');
+          logTimerEvent('[Reset] Timer seconds reset to 0', 'text-zinc-300');
         }
       });
 
@@ -1117,10 +1056,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (currentQuizIndex >= total) {
           var pct = Math.round((correctCount / total) * 100);
           var summaryCard = document.createElement('div');
-          summaryCard.className = 'p-5 sm:p-8 rounded-2xl bg-slate-800/90 border border-slate-700 shadow-xl text-center space-y-6 animate-in fade-in duration-200';
+          summaryCard.className = 'p-5 sm:p-8 rounded-md bg-zinc-800/90 border border-zinc-700  text-center space-y-6   ';
 
           var badgeColor = pct >= 80 ? 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10' :
-                           pct >= 50 ? 'text-amber-400 border-amber-500/30 bg-amber-500/10' :
+                           pct >= 50 ? 'text-zinc-300 border-zinc-500/30 bg-zinc-500/10' :
                            'text-rose-400 border-rose-500/30 bg-rose-500/10';
 
           var msg = pct === 100 ? 'Flawless Victory! You have completely mastered React State and Side Effects.' :
@@ -1133,18 +1072,18 @@ document.addEventListener('DOMContentLoaded', function () {
               '<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border text-xs font-mono font-bold ' + badgeColor + '">' +
                 '<span>QUIZ COMPLETED</span>' +
               '</div>' +
-              '<h3 class="text-2xl font-black text-white">Your Final Score</h3>' +
-              '<div class="text-4xl sm:text-5xl font-black font-mono text-yellow-400 py-2">' +
-                correctCount + ' <span class="text-slate-500 text-2xl">/ ' + total + '</span>' +
-                '<span class="text-lg text-slate-300 font-semibold ml-2">(' + pct + '%)</span>' +
+              '<h3 class="text-2xl font-bold text-white">Your Final Score</h3>' +
+              '<div class="text-4xl sm:text-5xl font-bold font-mono text-zinc-300 py-2">' +
+                correctCount + ' <span class="text-zinc-500 text-2xl">/ ' + total + '</span>' +
+                '<span class="text-lg text-zinc-300 font-semibold ml-2">(' + pct + '%)</span>' +
               '</div>' +
-              '<p class="text-sm text-slate-300 max-w-md mx-auto">' + msg + '</p>' +
+              '<p class="text-sm text-zinc-300 max-w-md mx-auto">' + msg + '</p>' +
             '</div>' +
             '<div class="flex flex-wrap items-center justify-center gap-3 pt-2">' +
-              '<button type="button" id="reviewQuizBtn" class="px-5 py-2.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold transition-colors min-h-[44px]">' +
+              '<button type="button" id="reviewQuizBtn" class="px-5 py-2.5 rounded-md bg-zinc-700 hover:bg-zinc-600 text-white text-xs font-bold transition-colors min-h-[44px]">' +
                 'Review Questions' +
               '</button>' +
-              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md border border-blue-400/40 min-h-[44px]">' +
+              '<button type="button" id="retakeQuizBtn" class="px-5 py-2.5 rounded-md bg-zinc-100 hover:bg-white text-zinc-900 text-xs font-bold transition-all border border-zinc-700 min-h-[44px]">' +
                 'Retake Quiz' +
               '</button>' +
             '</div>';
@@ -1177,7 +1116,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var isAnswered = typeof userChoice === 'number';
 
         var card = document.createElement('div');
-        card.className = 'p-4 sm:p-8 rounded-2xl bg-slate-800/90 border border-slate-700 shadow-xl space-y-5 sm:space-y-6 animate-in fade-in duration-150';
+        card.className = 'p-4 sm:p-8 rounded-md bg-zinc-800/90 border border-zinc-700  space-y-5 sm:space-y-6   ';
 
         // Step Dots Navigation Bar
         var dotsHtml = '<div class="flex items-center gap-1.5 flex-wrap">';
@@ -1187,15 +1126,15 @@ document.addEventListener('DOMContentLoaded', function () {
           var hasAns = typeof ans === 'number';
           var isCor = hasAns && ans === quest.correct;
 
-          var dotClass = 'w-8 h-8 rounded-lg text-xs font-mono font-bold flex items-center justify-center transition-all touch-manipulation ';
+          var dotClass = 'w-8 h-8 rounded-md text-xs font-mono font-bold flex items-center justify-center transition-all touch-manipulation ';
           if (isCur) {
-            dotClass += 'ring-2 ring-yellow-400 bg-blue-600 text-white shadow-md shadow-blue-500/30';
+            dotClass += 'ring-2 ring-zinc-400 bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900  ';
           } else if (hasAns && isCor) {
             dotClass += 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30';
           } else if (hasAns && !isCor) {
             dotClass += 'bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30';
           } else {
-            dotClass += 'bg-slate-900/60 text-slate-400 border border-slate-700 hover:bg-slate-700 hover:text-slate-200';
+            dotClass += 'bg-zinc-900/60 text-zinc-400 border border-zinc-700 hover:bg-zinc-700 hover:text-zinc-200';
           }
 
           dotsHtml += '<button type="button" data-jump-q="' + idx + '" class="quiz-step-btn ' + dotClass + '" title="Jump to Question ' + (idx + 1) + '">' + (idx + 1) + '</button>';
@@ -1204,10 +1143,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Header: Topic + Indicator + Step Tabs
         var headerHtml =
-          '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-700/80 pb-4">' +
+          '<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-700/80 pb-4">' +
             '<div class="space-y-0.5">' +
-              '<span class="text-xs font-mono text-yellow-400 font-bold uppercase tracking-wider">' + q.topic + '</span>' +
-              '<div class="text-xs text-slate-400 font-mono">Question ' + (currentQuizIndex + 1) + ' of ' + total + '</div>' +
+              '<span class="text-xs font-mono text-zinc-300 font-bold">' + q.topic + '</span>' +
+              '<div class="text-xs text-zinc-400 font-mono">Question ' + (currentQuizIndex + 1) + ' of ' + total + '</div>' +
             '</div>' +
             dotsHtml +
           '</div>' +
@@ -1218,24 +1157,21 @@ document.addEventListener('DOMContentLoaded', function () {
         // Options List
         var optionsHtml = '<div class="space-y-2.5">';
         q.options.forEach(function (opt, optIdx) {
-          var btnCls = 'w-full text-left px-4 py-3 rounded-xl text-xs sm:text-sm font-medium border transition-all flex items-start gap-3 min-h-[44px] touch-manipulation ';
+          var btnCls = 'w-full text-left px-4 py-3 rounded-md text-xs sm:text-sm font-medium border transition-all flex items-start gap-3 min-h-[44px] touch-manipulation ';
           var optLetter = String.fromCharCode(65 + optIdx);
 
           if (!isAnswered) {
-            btnCls += 'bg-slate-900/70 hover:bg-slate-700/70 hover:border-yellow-400/50 border-slate-700 text-slate-200';
+            btnCls += 'bg-zinc-900/70 hover:bg-zinc-700/70 hover:border-zinc-700 border-zinc-700 text-zinc-200';
           } else if (optIdx === q.correct) {
             btnCls += 'bg-emerald-500/20 border-emerald-400 text-emerald-200 font-semibold ring-1 ring-emerald-400/40';
           } else if (optIdx === userChoice) {
             btnCls += 'bg-rose-500/20 border-rose-400 text-rose-200 ring-1 ring-rose-400/40';
           } else {
-            btnCls += 'bg-slate-900/40 border-slate-800 text-slate-500 opacity-60';
+            btnCls += 'bg-zinc-900/40 border-zinc-800 text-zinc-500 opacity-60';
           }
 
           var indicatorHtml =
-            '<span class="w-5 h-5 rounded-md font-mono text-xs font-bold flex items-center justify-center shrink-0 ' +
-              (!isAnswered ? 'bg-slate-800 text-slate-300' :
-               optIdx === q.correct ? 'bg-emerald-500 text-slate-950' :
-               optIdx === userChoice ? 'bg-rose-500 text-white' : 'bg-slate-800 text-slate-600') + '">' +
+            '<span class="w-5 h-5 rounded-md font-mono text-xs font-bold flex items-center justify-center shrink-0 ' + (!isAnswered ? 'bg-zinc-800 text-zinc-300' : optIdx === q.correct ? 'bg-emerald-500 text-zinc-950' : optIdx === userChoice ? 'bg-rose-500 text-white' : 'bg-zinc-800 text-zinc-600') + '">' +
               optLetter +
             '</span>';
 
@@ -1251,14 +1187,13 @@ document.addEventListener('DOMContentLoaded', function () {
         if (isAnswered) {
           var isRight = userChoice === q.correct;
           feedbackHtml =
-            '<div class="p-4 rounded-xl text-xs sm:text-sm leading-relaxed animate-in fade-in duration-150 ' +
-              (isRight ? 'bg-emerald-950/80 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/80 border border-rose-700/60 text-rose-200') + '">' +
+            '<div class="p-4 rounded-md text-xs sm:text-sm leading-relaxed ' + (isRight ? 'bg-emerald-950/80 border border-emerald-700/60 text-emerald-200' : 'bg-rose-950/80 border border-rose-700/60 text-rose-200') + '">' +
               '<div class="font-bold flex items-center gap-1.5 mb-1.5">' +
                 (isRight ?
                   '<svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="text-emerald-400">Correct!</span>' :
                   '<svg class="w-4 h-4 text-rose-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg><span class="text-rose-400">Incorrect</span>') +
               '</div>' +
-              '<div class="text-slate-300">' + q.explanation + '</div>' +
+              '<div class="text-zinc-300">' + q.explanation + '</div>' +
             '</div>';
         }
 
@@ -1268,15 +1203,13 @@ document.addEventListener('DOMContentLoaded', function () {
         var nextBtnLabel = isLast ? 'Finish Quiz' : 'Next Question';
 
         var navHtml =
-          '<div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-700/80">' +
-            '<button type="button" id="prevQuizBtn" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold border transition-colors min-h-[44px] ' +
-              (isFirst ? 'bg-slate-900/40 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-slate-800 hover:bg-slate-700 border-slate-700 text-slate-200') + '" ' +
+          '<div class="flex items-center justify-between gap-3 pt-3 border-t border-zinc-700/80">' +
+            '<button type="button" id="prevQuizBtn" class="flex items-center gap-1.5 px-4 py-2.5 rounded-md text-xs font-semibold border transition-colors min-h-[44px] ' + (isFirst ? 'bg-zinc-900/40 border-zinc-800 text-zinc-600 cursor-not-allowed' : 'bg-zinc-800 hover:bg-zinc-700 border-zinc-700 text-zinc-200') + '" ' +
               (isFirst ? 'disabled' : '') + '>' +
               '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>' +
               '<span>Previous</span>' +
             '</button>' +
-            '<button type="button" id="nextQuizBtn" class="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition-all min-h-[44px] ' +
-              (isAnswered ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md border border-blue-400/40' : 'bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700') + '">' +
+            '<button type="button" id="nextQuizBtn" class="flex items-center gap-1.5 px-4 py-2.5 rounded-md text-xs font-bold transition-all min-h-[44px] ' + (isAnswered ? 'bg-zinc-100 hover:bg-white text-zinc-900 border border-zinc-700' : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-300 border border-zinc-700') + '">' +
               '<span>' + nextBtnLabel + '</span>' +
               '<svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>' +
             '</button>' +
@@ -1346,25 +1279,25 @@ document.addEventListener('DOMContentLoaded', function () {
           // Mask strings
           pass = pass.replace(/('(?:[^'\\\n]|\\.)*'|`[\s\S]*?`)/g, '___STR___$1___ENDSTR___');
           // JS Keywords
-          pass = pass.replace(/\b(import|from|export|default|function|return|const|let|var|if|else)\b/g, '<span class="text-sky-400 font-semibold">$1</span>');
+          pass = pass.replace(/\b(import|from|export|default|function|return|const|let|var|if|else)\b/g, '<span class="text-zinc-300 font-semibold">$1</span>');
           // React Hooks
-          pass = pass.replace(/\b(useState|useEffect)\b/g, '<span class="text-sky-400 font-bold">$1</span>');
+          pass = pass.replace(/\b(useState|useEffect)\b/g, '<span class="text-zinc-300 font-bold">$1</span>');
           // JSX Tag opening and closing
-          pass = pass.replace(/(&lt;\/?[a-zA-Z0-9]+)/g, '<span class="text-blue-400 font-semibold">$1</span>');
-          pass = pass.replace(/(&gt;)/g, '<span class="text-indigo-300 font-semibold">&gt;</span>');
+          pass = pass.replace(/(&lt;\/?[a-zA-Z0-9]+)/g, '<span class="text-zinc-300 font-semibold">$1</span>');
+          pass = pass.replace(/(&gt;)/g, '<span class="text-zinc-300 font-semibold">&gt;</span>');
           // React Event handler props
-          pass = pass.replace(/\b(onClick|onChange|onSubmit)\b/g, '<span class="text-amber-300 font-medium">$1</span>');
+          pass = pass.replace(/\b(onClick|onChange|onSubmit)\b/g, '<span class="text-zinc-300 font-medium">$1</span>');
           // Restore strings
           pass = pass.replace(/___STR___([\s\S]*?)___ENDSTR___/g, '<span class="text-emerald-300 font-mono">$1</span>');
           // Restore comments
-          pass = pass.replace(/___COMMENT___([\s\S]*?)___ENDCOMMENT___/g, '<span class="text-slate-500 italic">$1</span>');
+          pass = pass.replace(/___COMMENT___([\s\S]*?)___ENDCOMMENT___/g, '<span class="text-zinc-500 italic">$1</span>');
           block.innerHTML = pass;
         });
       }
       highlightAllCodeBlocks();
 
       // -----------------------------------------------------------
-      // Kuya's Confession Room (Focused Handbook Section Mode)
+      // Presenter mode (Focused Handbook Section Mode)
       // -----------------------------------------------------------
       var currentSlide = 0;
       var confessionSections = [
@@ -1394,10 +1327,10 @@ document.addEventListener('DOMContentLoaded', function () {
           title: 'Using the useState Hook',
           subtitle: 'Array Destructuring, Syntax Anatomy & Initial State Rules',
           anchor: '#sec-1-2',
-          definition: '<code class="font-semibold text-sky-400">useState</code> is a React Hook that allows you to add state variables and persistent memory to functional components.',
-          explanation: 'You call <code class="text-sky-400">useState</code> at the top level of your component. It takes one argument (the initial state) and returns a 2-element tuple: the <strong>current state value</strong> and a <strong>setter function</strong>. We unpack this with array destructuring: <code>const [name, setName] = useState(\'Guest\')</code>.',
+          definition: '<code class="font-semibold text-zinc-300">useState</code> is a React Hook that allows you to add state variables and persistent memory to functional components.',
+          explanation: 'You call <code class="text-zinc-300">useState</code> at the top level of your component. It takes one argument (the initial state) and returns a 2-element tuple: the <strong>current state value</strong> and a <strong>setter function</strong>. We unpack this with array destructuring: <code>const [name, setName] = useState(\'Guest\')</code>.',
           codeTitle: 'Greeting.jsx',
-          code: 'import { useState } from \'react\';\n\nfunction Greeting() {\n  // name: current state value | setName: updater function\n  const [name, setName] = useState(\'Guest\');\n\n  return (\n    <div>\n      <p>Hello, {name}!</p>\n      <button onClick={() => setName(\'Kuya\')}>Change Name</button>\n    </div>\n  );\n}',
+          code: 'import { useState } from \'react\';\n\nfunction Greeting() {\n  // name: current state value | setName: updater function\n  const [name, setName] = useState(\'Guest\');\n\n  return (\n    <div>\n      <p>Hello, {name}!</p>\n      <button onClick={() => setName(\'Ada\')}>Change Name</button>\n    </div>\n  );\n}',
           takeaways: [
             '<strong>Top-Level Only:</strong> Never call <code>useState</code> inside loops, conditions, or nested functions.',
             '<strong>Tuple Return:</strong> Returns <code>[state, setState]</code> — convention is <code>[value, setValue]</code>.',
@@ -1413,7 +1346,7 @@ document.addEventListener('DOMContentLoaded', function () {
           subtitle: 'Connecting User Gestures to State Updates with Synthetic Events',
           anchor: '#sec-1-3',
           definition: '<strong>Event handling</strong> in React involves capturing user interactions (like clicks, keypresses, or form submissions) and executing an event handler function to update state.',
-          explanation: 'React uses camelCase props like <code class="text-sky-400">onClick</code>, <code class="text-sky-400">onChange</code>, and <code class="text-sky-400">onSubmit</code>. Always pass a function reference (<code>onClick={handleClick}</code>) rather than calling the function immediately (<code>onClick={handleClick()}</code>). When clicked, the handler fires, calls the setter, and schedules a repaint.',
+          explanation: 'React uses camelCase props like <code class="text-zinc-300">onClick</code>, <code class="text-zinc-300">onChange</code>, and <code class="text-zinc-300">onSubmit</code>. Always pass a function reference (<code>onClick={handleClick}</code>) rather than calling the function immediately (<code>onClick={handleClick()}</code>). When clicked, the handler fires, calls the setter, and schedules a repaint.',
           codeTitle: 'Counter.jsx',
           code: 'function Counter() {\n  const [count, setCount] = useState(0);\n\n  // Event handler references the setter\n  const handleIncrement = () => {\n    setCount(count + 1);\n  };\n\n  return <button onClick={handleIncrement}>Clicked {count} times</button>;\n}',
           takeaways: [
@@ -1449,7 +1382,7 @@ document.addEventListener('DOMContentLoaded', function () {
           subtitle: 'How React Detects State Changes Using Object.is Equality',
           anchor: '#sec-2-2',
           definition: 'A <strong>re-render</strong> is React\'s process of executing your component function again to compute new JSX and diff the virtual DOM against the real DOM.',
-          explanation: 'When a setter is called, React compares the new value to the previous value using <code class="text-sky-400">Object.is</code>. If they are identical (like mutating an object in-place and passing the same reference), React skips the re-render. If the reference or primitive differs, React recalculates the component and updates only changed DOM nodes.',
+          explanation: 'When a setter is called, React compares the new value to the previous value using <code class="text-zinc-300">Object.is</code>. If they are identical (like mutating an object in-place and passing the same reference), React skips the re-render. If the reference or primitive differs, React recalculates the component and updates only changed DOM nodes.',
           codeTitle: 'RenderLogger.jsx',
           code: 'function RenderLogger() {\n  const [user, setUser] = useState({ name: \'Bob\' });\n\n  // [Trap] Same object reference: Object.is is TRUE -> NO RE-RENDER!\n  const badUpdate = () => {\n    user.name = \'Charlie\';\n    setUser(user); \n  };\n\n  // [Correct] New object reference: Object.is is FALSE -> RE-RENDERS!\n  const goodUpdate = () => {\n    setUser({ ...user, name: \'Charlie\' });\n  };\n}',
           takeaways: [
@@ -1466,8 +1399,8 @@ document.addEventListener('DOMContentLoaded', function () {
           title: 'Introduction to useEffect',
           subtitle: 'Synchronizing Components with External Systems Beyond React',
           anchor: '#sec-3-1',
-          definition: 'A <strong>side effect</strong> is any operation that interacts with the world outside the component: data fetching, document title modifications, timers, or subscriptions. <code class="text-sky-400">useEffect</code> is the Hook designed for this.',
-          explanation: 'React components should be pure functions that take props/state and return JSX. Side effects belong inside <code class="text-sky-400">useEffect</code>. The effect function runs <strong>after</strong> the component renders and the screen paints, ensuring that heavy external tasks never block initial UI rendering.',
+          definition: 'A <strong>side effect</strong> is any operation that interacts with the world outside the component: data fetching, document title modifications, timers, or subscriptions. <code class="text-zinc-300">useEffect</code> is the Hook designed for this.',
+          explanation: 'React components should be pure functions that take props/state and return JSX. Side effects belong inside <code class="text-zinc-300">useEffect</code>. The effect function runs <strong>after</strong> the component renders and the screen paints, ensuring that heavy external tasks never block initial UI rendering.',
           codeTitle: 'TitleUpdater.jsx',
           code: 'import { useState, useEffect } from \'react\';\n\nfunction TitleUpdater() {\n  const [count, setCount] = useState(0);\n\n  // Side effect: reaches outside React to touch browser window\n  useEffect(() => {\n    document.title = `Clicked ${count} times`;\n  }, [count]);\n\n  return <button onClick={() => setCount(count + 1)}>Click {count}</button>;\n}',
           takeaways: [
@@ -1484,7 +1417,7 @@ document.addEventListener('DOMContentLoaded', function () {
           title: 'The Dependency Array',
           subtitle: 'Controlling Exactly When Your Effect Re-runs',
           anchor: '#sec-3-2',
-          definition: 'The <strong>dependency array</strong> is the optional second argument passed to <code class="text-sky-400">useEffect</code>. It controls whether React re-runs or skips the effect on subsequent renders.',
+          definition: 'The <strong>dependency array</strong> is the optional second argument passed to <code class="text-zinc-300">useEffect</code>. It controls whether React re-runs or skips the effect on subsequent renders.',
           explanation: 'Passing <strong>no array</strong> runs the effect after every single render. Passing an <strong>empty array <code>[]</code></strong> runs the effect only once when the component mounts. Passing <strong>dependencies <code>[userId]</code></strong> runs the effect on mount and whenever <code>userId</code> changes between renders.',
           codeTitle: 'UserProfile.jsx',
           code: 'function UserProfile({ userId }) {\n  const [user, setUser] = useState(null);\n\n  // [userId] dependency: re-runs ONLY when userId changes\n  useEffect(() => {\n    fetchUserFromAPI(userId).then(data => setUser(data));\n  }, [userId]);\n\n  return <div>{user ? user.name : \'Loading...\'}</div>;\n}',
@@ -1502,7 +1435,7 @@ document.addEventListener('DOMContentLoaded', function () {
           title: 'Using Effects & Cleanup Functions',
           subtitle: 'Preventing Memory Leaks, Ghost Timers & Stale Subscriptions',
           anchor: '#sec-3-3',
-          definition: 'A <strong>cleanup function</strong> is a function returned by your <code class="text-sky-400">useEffect</code> callback. React executes it when the component unmounts or right before re-running the effect.',
+          definition: 'A <strong>cleanup function</strong> is a function returned by your <code class="text-zinc-300">useEffect</code> callback. React executes it when the component unmounts or right before re-running the effect.',
           explanation: 'Continuous operations like <code>setInterval</code>, WebSockets, or global event listeners keep running in memory even after a component is removed from the DOM unless stopped. Returning a cleanup function (<code>return () => clearInterval(id)</code>) guarantees that old subscriptions are destroyed before new ones start.',
           codeTitle: 'Timer.jsx',
           code: 'function Timer() {\n  const [seconds, setSeconds] = useState(0);\n\n  useEffect(() => {\n    const id = setInterval(() => {\n      setSeconds(prev => prev + 1);\n    }, 1000);\n\n    // Cleanup function: runs on unmount or before effect re-runs\n    return () => {\n      clearInterval(id);\n    };\n  }, []);\n\n  return <div>Seconds elapsed: {seconds}</div>;\n}',
@@ -1540,302 +1473,195 @@ document.addEventListener('DOMContentLoaded', function () {
 
       function getSectionOutputHtml(s) {
         if (s.id === 'sec-1-1') {
-          return '<div class="space-y-4">' +
-            '<div class="p-3 rounded-xl bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300">' +
-              '<span class="text-amber-400 font-bold">Goal:</span> See why standard JS variables fail to update the UI while React State triggers a screen redraw.' +
-            '</div>' +
-            '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">' +
-              '<div class="p-4 rounded-xl bg-slate-900/90 border border-rose-500/30 space-y-3">' +
-                '<div class="flex items-center justify-between">' +
-                  '<span class="text-xs font-mono font-bold text-rose-400 uppercase">1. Normal JS Variable</span>' +
-                  '<span class="text-xs font-mono text-slate-400">let count = 0;</span>' +
+          return '<div class="space-y-6">' +
+            '<div class="grid grid-cols-1 md:grid-cols-2 border border-zinc-800 rounded-md divide-y md:divide-y-0 md:divide-x divide-zinc-800">' +
+              '<div class="p-5 space-y-4">' +
+                '<div class="flex items-center justify-between text-xs font-mono">' +
+                  '<span class="text-zinc-300 font-medium">Plain Variable</span>' +
+                  '<code class="text-zinc-500">let count = 0</code>' +
                 '</div>' +
-                '<div class="p-3 rounded-lg bg-slate-950 font-mono text-center space-y-1">' +
-                  '<div class="text-xs text-slate-400">UI Screen Display:</div>' +
-                  '<div id="demo11NormalUi" class="text-2xl font-black text-slate-200">0</div>' +
-                  '<div class="text-[11px] text-slate-500">Internal RAM: <span id="demo11NormalRam" class="text-amber-400 font-bold">0</span></div>' +
+                '<div class="grid grid-cols-2 gap-4 py-3 border-y border-zinc-800/80 font-mono">' +
+                  '<div>' +
+                    '<div class="text-[11px] text-zinc-500">Screen UI</div>' +
+                    '<div id="demo11NormalUi" class="text-2xl font-semibold text-zinc-100 mt-0.5">0</div>' +
+                  '</div>' +
+                  '<div>' +
+                    '<div class="text-[11px] text-zinc-500">Memory (RAM)</div>' +
+                    '<div id="demo11NormalRam" class="text-2xl font-semibold text-zinc-400 mt-0.5">0</div>' +
+                  '</div>' +
                 '</div>' +
-                '<button type="button" id="demo11MutateBtn" class="w-full py-2 px-3 rounded-lg bg-rose-600/20 hover:bg-rose-600/30 text-rose-200 border border-rose-500/40 text-xs font-mono font-semibold transition-colors">' +
-                  'Mutate (count = count + 1)' +
+                '<button type="button" id="demo11MutateBtn" class="w-full py-2 px-3 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 text-xs font-mono transition-colors">' +
+                  'count = count + 1' +
                 '</button>' +
-                '<div id="demo11NormalFeedback" class="text-xs text-slate-400 italic min-h-[36px] flex items-center">Click to mutate the variable silently in RAM...</div>' +
+                '<div id="demo11NormalFeedback" class="text-xs text-zinc-500 min-h-[32px]">Mutates RAM without scheduling a re-render.</div>' +
               '</div>' +
-              '<div class="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30 space-y-3">' +
-                '<div class="flex items-center justify-between">' +
-                  '<span class="text-xs font-mono font-bold text-emerald-400 uppercase">2. React useState()</span>' +
-                  '<span class="text-xs font-mono text-slate-400">[count, setCount]</span>' +
+              '<div class="p-5 space-y-4">' +
+                '<div class="flex items-center justify-between text-xs font-mono">' +
+                  '<span class="text-zinc-100 font-medium">React State</span>' +
+                  '<code class="text-zinc-500">useState(0)</code>' +
                 '</div>' +
-                '<div class="p-3 rounded-lg bg-slate-950 font-mono text-center space-y-1">' +
-                  '<div class="text-xs text-slate-400">UI Screen Display:</div>' +
-                  '<div id="demo11StateUi" class="text-2xl font-black text-emerald-400 transition-transform">0</div>' +
-                  '<div class="text-[11px] text-slate-500">State Memory: <span id="demo11StateMem" class="text-emerald-300 font-bold">0</span></div>' +
+                '<div class="grid grid-cols-2 gap-4 py-3 border-y border-zinc-800/80 font-mono">' +
+                  '<div>' +
+                    '<div class="text-[11px] text-zinc-500">Screen UI</div>' +
+                    '<div id="demo11StateUi" class="text-2xl font-semibold text-emerald-400 mt-0.5">0</div>' +
+                  '</div>' +
+                  '<div>' +
+                    '<div class="text-[11px] text-zinc-500">State Memory</div>' +
+                    '<div id="demo11StateMem" class="text-2xl font-semibold text-zinc-100 mt-0.5">0</div>' +
+                  '</div>' +
                 '</div>' +
-                '<button type="button" id="demo11StateBtn" class="w-full py-2 px-3 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-200 border border-emerald-500/40 text-xs font-mono font-semibold transition-colors">' +
-                  'Call setCount(count + 1)' +
+                '<button type="button" id="demo11StateBtn" class="w-full py-2 px-3 rounded-md bg-zinc-100 hover:bg-white text-zinc-900 text-xs font-mono font-medium transition-colors">' +
+                  'setCount(count + 1)' +
                 '</button>' +
-                '<div id="demo11StateFeedback" class="text-xs text-slate-400 italic min-h-[36px] flex items-center">Click to invoke the state setter...</div>' +
+                '<div id="demo11StateFeedback" class="text-xs text-zinc-500 min-h-[32px]">Updates state and triggers a UI re-render.</div>' +
               '</div>' +
             '</div>' +
-            '<div class="flex justify-end pt-1">' +
-              '<button type="button" id="demo11ResetBtn" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 border border-slate-700 transition-colors">Reset Demo</button>' +
+            '<div class="flex justify-end">' +
+              '<button type="button" id="demo11ResetBtn" class="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors">Reset</button>' +
             '</div>' +
           '</div>';
         }
 
         if (s.id === 'sec-1-2') {
-          return '<div class="space-y-4">' +
-            '<div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-3 shadow-lg">' +
-              '<div class="text-xs font-mono text-slate-400 uppercase tracking-wider">&lt;Greeting /&gt; Live Rendered Output:</div>' +
-              '<div class="text-2xl sm:text-3xl lg:text-4xl font-black text-white py-2">' +
-                'Hello, <span id="demo12NameDisplay" class="text-amber-400 underline decoration-amber-400/50 decoration-2">Guest</span>!' +
+          return '<div class="space-y-6">' +
+            '<div class="py-6 border-b border-zinc-800 flex items-baseline justify-between gap-4">' +
+              '<div class="text-2xl sm:text-3xl font-semibold text-white tracking-tight">' +
+                'Hello, <span id="demo12NameDisplay" class="underline decoration-zinc-600 underline-offset-4">Guest</span>!' +
               '</div>' +
-              '<div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-950 border border-slate-800 font-mono text-xs text-slate-400">' +
-                '<span>Current Hook State:</span>' +
-                '<code id="demo12StateCode" class="text-sky-400 font-bold">name = "Guest"</code>' +
-              '</div>' +
+              '<code id="demo12StateCode" class="font-mono text-xs text-zinc-400">name = "Guest"</code>' +
             '</div>' +
-            '<div class="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-3">' +
-              '<div class="text-xs font-mono font-bold text-slate-300">Call Setter Function (setName):</div>' +
+            '<div class="space-y-3">' +
               '<div class="flex flex-wrap items-center gap-2">' +
-                '<button type="button" data-name="Kuya" class="demo12SetBtn px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono text-xs font-bold transition-all shadow-md shadow-blue-950/40">' +
-                  'setName(\'Kuya\')' +
-                '</button>' +
-                '<button type="button" data-name="Fyang" class="demo12SetBtn px-3.5 py-2 rounded-xl bg-amber-600 hover:bg-amber-500 text-white font-mono text-xs font-bold transition-all shadow-md shadow-amber-950/40">' +
-                  'setName(\'Fyang\')' +
-                '</button>' +
-                '<button type="button" data-name="JM" class="demo12SetBtn px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-mono text-xs font-bold transition-all shadow-md shadow-purple-950/40">' +
-                  'setName(\'JM\')' +
-                '</button>' +
-                '<button type="button" data-name="Guest" class="demo12SetBtn px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-mono text-xs font-semibold border border-slate-700 transition-colors">' +
-                  'Reset (\'Guest\')' +
-                '</button>' +
+                '<button type="button" data-name="Ada" class="demo12SetBtn px-3 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 font-mono text-xs transition-colors">setName(\'Ada\')</button>' +
+                '<button type="button" data-name="Grace" class="demo12SetBtn px-3 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 font-mono text-xs transition-colors">setName(\'Grace\')</button>' +
+                '<button type="button" data-name="Alan" class="demo12SetBtn px-3 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 font-mono text-xs transition-colors">setName(\'Alan\')</button>' +
+                '<button type="button" data-name="Guest" class="demo12SetBtn px-3 py-1.5 rounded-md text-zinc-400 hover:text-zinc-200 font-mono text-xs transition-colors">Reset</button>' +
               '</div>' +
-              '<div class="pt-2 flex items-center gap-2">' +
-                '<span class="text-xs font-mono text-slate-400 shrink-0">Custom input:</span>' +
-                '<input type="text" id="demo12CustomInput" placeholder="Type custom housemate name..." class="flex-1 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-amber-400" />' +
-              '</div>' +
+              '<input type="text" id="demo12CustomInput" placeholder="Or type a custom value..." class="w-full px-3 py-2 rounded-md bg-zinc-900 border border-zinc-800 text-xs font-mono text-white placeholder-zinc-500 focus:outline-none focus:border-zinc-600" />' +
             '</div>' +
           '</div>';
         }
 
         if (s.id === 'sec-1-3') {
-          return '<div class="space-y-4">' +
-            '<div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-4 shadow-lg">' +
-              '<div class="text-xs font-mono text-slate-400 uppercase tracking-wider">&lt;Counter /&gt; JSX Button Element:</div>' +
-              '<div>' +
-                '<button type="button" id="demo13ClickBtn" class="px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-mono text-base sm:text-lg font-black shadow-lg shadow-blue-950/50 hover:scale-[1.02] active:scale-95 transition-all">' +
-                  'Clicked <span id="demo13CountNum">0</span> times' +
-                '</button>' +
-              '</div>' +
-              '<div class="text-xs font-mono text-slate-500">' +
-                'Rendered markup: <code>&lt;button onClick={handleIncrement}&gt;...&lt;/button&gt;</code>' +
-              '</div>' +
+          return '<div class="space-y-6">' +
+            '<div class="py-6 border-b border-zinc-800 flex items-center justify-between gap-4">' +
+              '<button type="button" id="demo13ClickBtn" class="px-4 py-2 rounded-md bg-zinc-100 hover:bg-white text-zinc-900 font-mono text-sm font-medium transition-colors">' +
+                'Clicked <span id="demo13CountNum">0</span> times' +
+              '</button>' +
+              '<button type="button" id="demo13ResetBtn" class="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors">Reset</button>' +
             '</div>' +
-            '<div class="p-4 rounded-xl bg-slate-950 border border-slate-800/80 space-y-2">' +
-              '<div class="flex items-center justify-between text-xs font-mono">' +
-                '<span class="text-amber-400 font-bold uppercase">React Event Pipeline Log:</span>' +
-                '<button type="button" id="demo13ResetBtn" class="text-slate-400 hover:text-white transition-colors">Reset Counter</button>' +
-              '</div>' +
-              '<div id="demo13Log" class="p-3 rounded-lg bg-black/60 font-mono text-xs space-y-1 max-h-[130px] overflow-y-auto code-scroll text-slate-300">' +
-                '<div class="text-slate-500">• Ready. Click the button above to dispatch SyntheticEvent.</div>' +
+            '<div class="space-y-2">' +
+              '<div class="text-xs font-mono text-zinc-500">Event trace</div>' +
+              '<div id="demo13Log" class="font-mono text-xs space-y-1.5 max-h-[160px] overflow-y-auto code-scroll text-zinc-300">' +
+                '<div class="text-zinc-500">Ready. Click the button above to dispatch SyntheticEvent.</div>' +
               '</div>' +
             '</div>' +
           '</div>';
         }
 
         if (s.id === 'sec-2-1') {
-          return '<div class="space-y-4">' +
-            '<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-center">' +
-              '<div class="p-3 rounded-xl bg-slate-900 border border-slate-800">' +
-                '<div class="text-[11px] font-mono text-slate-400 uppercase">Player</div>' +
-                '<div class="text-lg font-bold text-white font-mono" id="demo21Name">Fyang</div>' +
-              '</div>' +
-              '<div class="p-3 rounded-xl bg-slate-900 border border-slate-800">' +
-                '<div class="text-[11px] font-mono text-slate-400 uppercase">Level</div>' +
-                '<div class="text-lg font-bold text-amber-400 font-mono" id="demo21Level">1</div>' +
-              '</div>' +
-              '<div class="p-3 rounded-xl bg-slate-900 border border-slate-800">' +
-                '<div class="text-[11px] font-mono text-slate-400 uppercase">Score</div>' +
-                '<div class="text-lg font-bold text-emerald-400 font-mono" id="demo21Score">0</div>' +
-              '</div>' +
+          return '<div class="space-y-5">' +
+            '<div class="grid grid-cols-3 gap-4 pb-4 border-b border-zinc-800 font-mono">' +
+              '<div><div class="text-[11px] text-zinc-500">Player</div><div class="text-base font-semibold text-white mt-0.5" id="demo21Name">Alice</div></div>' +
+              '<div><div class="text-[11px] text-zinc-500">Level</div><div class="text-base font-semibold text-zinc-200 mt-0.5" id="demo21Level">1</div></div>' +
+              '<div><div class="text-[11px] text-zinc-500">Score</div><div class="text-base font-semibold text-emerald-400 mt-0.5" id="demo21Score">0</div></div>' +
             '</div>' +
-            '<div class="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs">' +
-              '<div class="text-slate-400 text-[11px] mb-1 font-bold">Current State Object in RAM:</div>' +
-              '<pre id="demo21Json" class="text-sky-300 bg-black/50 p-2.5 rounded-lg overflow-x-auto">{\n  "name": "Fyang",\n  "level": 1,\n  "score": 0\n}</pre>' +
-            '</div>' +
+            '<pre id="demo21Json" class="text-zinc-300 bg-zinc-900/60 border border-zinc-800/80 p-3 rounded-md font-mono text-xs overflow-x-auto">{\n  "name": "Alice",\n  "level": 1,\n  "score": 0\n}</pre>' +
             '<div class="grid grid-cols-1 sm:grid-cols-3 gap-2">' +
-              '<button type="button" id="demo21SpreadBtn" class="p-2.5 rounded-xl bg-blue-600/30 hover:bg-blue-600/40 text-blue-200 border border-blue-500/40 text-xs font-mono font-semibold transition-all text-left">' +
-                '<div class="font-bold text-blue-300">Spread Object</div>' +
-                '<div class="text-[10px] text-slate-400">...prev, level + 1</div>' +
+              '<button type="button" id="demo21SpreadBtn" class="p-2.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-mono text-left transition-colors">' +
+                '<div class="font-medium text-zinc-200">Spread Object</div>' +
+                '<div class="text-[10px] text-zinc-500 mt-0.5">...prev, level + 1</div>' +
               '</button>' +
-              '<button type="button" id="demo21BatchBtn" class="p-2.5 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-200 border border-emerald-500/40 text-xs font-mono font-semibold transition-all text-left">' +
-                '<div class="font-bold text-emerald-300">2x Updater Batch</div>' +
-                '<div class="text-[10px] text-slate-400">prev =&gt; prev + 1 (+2 pts)</div>' +
+              '<button type="button" id="demo21BatchBtn" class="p-2.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-mono text-left transition-colors">' +
+                '<div class="font-medium text-emerald-400">2x Updater Fn</div>' +
+                '<div class="text-[10px] text-zinc-500 mt-0.5">prev =&gt; prev + 1</div>' +
               '</button>' +
-              '<button type="button" id="demo21MutateBtn" class="p-2.5 rounded-xl bg-rose-600/30 hover:bg-rose-600/40 text-rose-200 border border-rose-500/40 text-xs font-mono font-semibold transition-all text-left">' +
-                '<div class="font-bold text-rose-300">Direct Mutation Trap</div>' +
-                '<div class="text-[10px] text-slate-400">player.level = 99 (fails)</div>' +
+              '<button type="button" id="demo21MutateBtn" class="p-2.5 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-mono text-left transition-colors">' +
+                '<div class="font-medium text-rose-400">Direct Mutate</div>' +
+                '<div class="text-[10px] text-zinc-500 mt-0.5">player.level = 99</div>' +
               '</button>' +
             '</div>' +
-            '<div id="demo21Feedback" class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-xs font-mono text-slate-300 min-h-[38px] flex items-center">' +
-              'Select an action above to observe immutable vs direct state updating.' +
-            '</div>' +
+            '<div id="demo21Feedback" class="text-xs font-mono text-zinc-400 min-h-[32px]">Select an action above to compare immutable vs. direct mutation.</div>' +
           '</div>';
         }
 
         if (s.id === 'sec-2-2') {
-          return '<div class="space-y-4">' +
-            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
-              '<div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">' +
-                '<div class="text-xs font-mono text-slate-400 uppercase">Component Status</div>' +
-                '<div class="flex items-center justify-between">' +
-                  '<span class="text-xs font-mono text-slate-300">Render Count:</span>' +
-                  '<span id="demo22RenderCount" class="px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono font-bold text-sm border border-blue-500/30">1</span>' +
-                '</div>' +
-                '<div class="flex items-center justify-between">' +
-                  '<span class="text-xs font-mono text-slate-300">Object.is Equality:</span>' +
-                  '<span id="demo22EqualityBadge" class="px-2 py-0.5 rounded font-mono font-bold text-xs bg-slate-800 text-slate-400">N/A</span>' +
-                '</div>' +
-                '<div class="flex items-center justify-between">' +
-                  '<span class="text-xs font-mono text-slate-300">user.name:</span>' +
-                  '<span id="demo22UserName" class="text-xs font-mono font-bold text-amber-400">"Bob"</span>' +
-                '</div>' +
-              '</div>' +
-              '<div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-2">' +
-                '<div class="text-xs font-mono text-slate-400 uppercase">React Engine Action</div>' +
-                '<div id="demo22EngineStatus" class="p-3 rounded-lg bg-slate-950 font-mono text-xs text-slate-300 min-h-[75px] flex items-center leading-relaxed">' +
-                  'Component mounted (Initial Render). Ready for updates.' +
-                '</div>' +
-              '</div>' +
+          return '<div class="space-y-5">' +
+            '<div class="grid grid-cols-3 gap-4 pb-4 border-b border-zinc-800 font-mono text-xs">' +
+              '<div><div class="text-zinc-500">Renders</div><div id="demo22RenderCount" class="text-lg font-semibold text-white mt-0.5">1</div></div>' +
+              '<div><div class="text-zinc-500">Object.is</div><div id="demo22EqualityBadge" class="text-xs font-semibold text-zinc-400 mt-1">N/A</div></div>' +
+              '<div><div class="text-zinc-500">user.name</div><div id="demo22UserName" class="text-sm font-semibold text-zinc-200 mt-0.5">"Bob"</div></div>' +
             '</div>' +
-            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
-              '<button type="button" id="demo22BadBtn" class="p-3 rounded-xl bg-rose-600/20 hover:bg-rose-600/30 border border-rose-500/40 text-left font-mono transition-all">' +
-                '<div class="text-xs font-bold text-rose-300 flex items-center gap-1.5">' +
-                  '<svg class="w-3.5 h-3.5 text-rose-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>' +
-                  '<span>Bad Update (Mutate Same Reference)</span>' +
-                '</div>' +
-                '<div class="text-[11px] text-slate-400 mt-1">user.name = \'Charlie\'; setUser(user)</div>' +
+            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">' +
+              '<button type="button" id="demo22BadBtn" class="p-3 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-left font-mono transition-colors">' +
+                '<div class="text-xs font-medium text-rose-400">Mutate Same Reference</div>' +
+                '<div class="text-[11px] text-zinc-500 mt-1">user.name = \'Charlie\'; setUser(user)</div>' +
               '</button>' +
-              '<button type="button" id="demo22GoodBtn" class="p-3 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-left font-mono transition-all">' +
-                '<div class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">' +
-                  '<svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>' +
-                  '<span>Good Update (New Object Reference)</span>' +
-                '</div>' +
-                '<div class="text-[11px] text-slate-400 mt-1">setUser({ ...user, name: \'Charlie\' })</div>' +
+              '<button type="button" id="demo22GoodBtn" class="p-3 rounded-md bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-left font-mono transition-colors">' +
+                '<div class="text-xs font-medium text-emerald-400">New Object Reference</div>' +
+                '<div class="text-[11px] text-zinc-500 mt-1">setUser({ ...user, name: \'Charlie\' })</div>' +
               '</button>' +
             '</div>' +
-            '<div class="flex justify-end pt-1">' +
-              '<button type="button" id="demo22ResetBtn" class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-300 border border-slate-700 transition-colors">Reset Engine</button>' +
+            '<div class="flex items-center justify-between gap-4 pt-2 border-t border-zinc-800/80">' +
+              '<div id="demo22EngineStatus" class="font-mono text-xs text-zinc-400">Component mounted. Ready for updates.</div>' +
+              '<button type="button" id="demo22ResetBtn" class="text-xs font-mono text-zinc-500 hover:text-zinc-300 shrink-0">Reset</button>' +
             '</div>' +
           '</div>';
         }
 
         if (s.id === 'sec-3-1') {
-          return '<div class="space-y-4">' +
-            '<div class="rounded-xl bg-slate-900 border border-slate-800 overflow-hidden shadow-lg">' +
-              '<div class="px-4 py-2.5 bg-slate-950 border-b border-slate-800 flex items-center gap-3">' +
-                '<div class="flex items-center gap-1.5">' +
-                  '<span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>' +
-                  '<span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>' +
-                  '<span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>' +
-                '</div>' +
-                '<div class="px-3 py-1 rounded-t-lg bg-slate-900 border-t border-x border-slate-800 text-xs font-mono text-slate-200 flex items-center gap-2 max-w-[320px] truncate">' +
-                  '<svg class="w-3.5 h-3.5 text-blue-400 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>' +
-                  '<span id="demo31TabTitle" class="font-semibold text-amber-400">State &amp; Effect | Clicked 0 times</span>' +
-                '</div>' +
+          return '<div class="space-y-6">' +
+            '<div class="border border-zinc-800 rounded-md overflow-hidden">' +
+              '<div class="px-3.5 py-2 bg-zinc-900 border-b border-zinc-800 flex items-center justify-between text-xs font-mono text-zinc-400">' +
+                '<span>document.title</span>' +
+                '<span id="demo31TabTitle" class="text-zinc-200">State &amp; Effect | Clicked 0 times</span>' +
               '</div>' +
-              '<div class="p-6 text-center space-y-3">' +
-                '<div class="text-xs font-mono text-slate-400">In-Page Component:</div>' +
-                '<button type="button" id="demo31ClickBtn" class="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-mono font-bold text-sm shadow-md transition-all">' +
-                  'Click Me (Count: <span id="demo31CountNum">0</span>)' +
+              '<div class="p-5 flex items-center justify-between">' +
+                '<span class="text-xs font-mono text-zinc-500">&lt;TitleUpdater /&gt;</span>' +
+                '<button type="button" id="demo31ClickBtn" class="px-4 py-2 rounded-md bg-zinc-100 hover:bg-white text-zinc-900 font-mono font-medium text-xs transition-colors">' +
+                  'Click Me (<span id="demo31CountNum">0</span>)' +
                 '</button>' +
               '</div>' +
             '</div>' +
-            '<div class="p-3 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs space-y-1.5">' +
-              '<div class="text-amber-400 font-bold uppercase text-[11px]">Lifecycle Execution Order:</div>' +
-              '<div class="flex items-center gap-2 text-slate-300">' +
-                '<span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-[10px] font-bold">1</span>' +
-                '<span>User clicks button &rarr; <code>setCount</code> called</span>' +
-              '</div>' +
-              '<div class="flex items-center gap-2 text-slate-300">' +
-                '<span class="w-5 h-5 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center text-[10px] font-bold">2</span>' +
-                '<span>React re-renders component &amp; paints screen</span>' +
-              '</div>' +
-              '<div class="flex items-center gap-2 text-emerald-400">' +
-                '<span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-[10px] font-bold">3</span>' +
-                '<span><code>useEffect</code> runs post-paint &rarr; <code>document.title</code> updated!</span>' +
-              '</div>' +
-            '</div>' +
+            '<div class="text-xs font-mono text-zinc-500">1. setCount called &rarr; 2. Component renders &amp; paints &rarr; 3. useEffect updates document.title</div>' +
           '</div>';
         }
 
         if (s.id === 'sec-3-2') {
-          return '<div class="space-y-4">' +
-            '<div class="flex items-center justify-between">' +
-              '<span class="text-xs font-mono font-bold text-slate-300 uppercase">Select Prop (userId):</span>' +
-              '<span class="text-xs font-mono text-amber-400">useEffect(..., [userId])</span>' +
+          return '<div class="space-y-5">' +
+            '<div class="flex items-center gap-2">' +
+              '<button type="button" data-uid="1" class="demo32UserBtn px-3 py-1.5 rounded-md bg-zinc-100 text-zinc-900 font-mono text-xs font-medium border border-zinc-700 transition-colors">userId = 1</button>' +
+              '<button type="button" data-uid="2" class="demo32UserBtn px-3 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-mono text-xs border border-zinc-800 transition-colors">userId = 2</button>' +
+              '<button type="button" data-uid="3" class="demo32UserBtn px-3 py-1.5 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-mono text-xs border border-zinc-800 transition-colors">userId = 3</button>' +
+              '<span id="demo32StatusBadge" class="ml-auto text-xs font-mono text-emerald-400">Synchronized</span>' +
             '</div>' +
-            '<div class="grid grid-cols-3 gap-2">' +
-              '<button type="button" data-uid="1" class="demo32UserBtn p-2.5 rounded-xl bg-blue-600 text-white font-mono text-xs font-bold border border-blue-400/50 shadow transition-all">' +
-                'User #1 (Fyang)' +
-              '</button>' +
-              '<button type="button" data-uid="2" class="demo32UserBtn p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-mono text-xs font-bold border border-slate-800 transition-all">' +
-                'User #2 (JM)' +
-              '</button>' +
-              '<button type="button" data-uid="3" class="demo32UserBtn p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-mono text-xs font-bold border border-slate-800 transition-all">' +
-                'User #3 (Kolette)' +
-              '</button>' +
+            '<div id="demo32UserData" class="p-4 rounded-md bg-zinc-900/60 border border-zinc-800 font-mono text-xs text-zinc-300 space-y-1">' +
+              '<div>Name: <span class="text-white">Ada Lovelace</span></div>' +
+              '<div>Role: <span class="text-zinc-400">Systems Architect</span></div>' +
+              '<div>Origin: <span class="text-zinc-400">London</span></div>' +
             '</div>' +
-            '<div class="p-4 rounded-xl bg-slate-900 border border-slate-800 space-y-3">' +
-              '<div class="flex items-center justify-between text-xs font-mono">' +
-                '<span class="text-slate-400">API Response Data:</span>' +
-                '<span id="demo32StatusBadge" class="text-emerald-400 font-bold flex items-center gap-1.5">' +
-                  '<svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>' +
-                  '<span>Synchronized</span>' +
-                '</span>' +
-              '</div>' +
-              '<div id="demo32UserData" class="p-3 rounded-lg bg-slate-950 font-mono text-xs text-slate-200 space-y-1">' +
-                '<div>Name: <span class="text-amber-400 font-bold">Fyang Smith</span></div>' +
-                '<div>Role: <span class="text-sky-400">Big Winner</span></div>' +
-                '<div>Origin: <span class="text-slate-300">Mandaluyong</span></div>' +
-              '</div>' +
-            '</div>' +
-            '<div id="demo32Log" class="p-2.5 rounded-lg bg-black/60 font-mono text-xs text-slate-300 min-h-[38px] flex items-center">' +
-              'Mounted with userId: 1. API fetch completed.' +
-            '</div>' +
+            '<div id="demo32Log" class="font-mono text-xs text-zinc-500">Mounted with userId = 1. API fetch completed.</div>' +
           '</div>';
         }
 
         if (s.id === 'sec-3-3') {
-          return '<div class="space-y-4">' +
-            '<div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 text-center space-y-3 shadow-lg">' +
-              '<div class="flex items-center justify-center gap-2">' +
-                '<span id="demo33StatusDot" class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>' +
-                '<span id="demo33StatusText" class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider">&lt;Timer /&gt; MOUNTED &amp; RUNNING</span>' +
+          return '<div class="space-y-6">' +
+            '<div class="py-5 border-b border-zinc-800 flex items-baseline justify-between">' +
+              '<div class="flex items-center gap-2">' +
+                '<span id="demo33StatusDot" class="w-2 h-2 rounded-full bg-emerald-400"></span>' +
+                '<span id="demo33StatusText" class="text-xs font-mono text-emerald-400">Mounted</span>' +
               '</div>' +
-              '<div class="text-4xl sm:text-5xl font-black font-mono text-white py-2">' +
-                '<span id="demo33TimerSeconds">0</span><span class="text-amber-400 text-2xl">s</span>' +
-              '</div>' +
-              '<div class="text-xs font-mono text-slate-400">' +
-                'Effect code: <code>const id = setInterval(...)</code>' +
-              '</div>' +
+              '<div class="text-3xl font-semibold font-mono text-white"><span id="demo33TimerSeconds">0</span>s</div>' +
             '</div>' +
-            '<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">' +
-              '<button type="button" id="demo33MountToggleBtn" class="py-2.5 px-4 rounded-xl bg-rose-600/30 hover:bg-rose-600/40 text-rose-200 border border-rose-500/40 font-mono text-xs font-bold transition-all">' +
-                'Unmount Component (Test Cleanup)' +
-              '</button>' +
-              '<button type="button" id="demo33ResetBtn" class="py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono text-xs font-bold transition-all">' +
-                'Reset Timer (0s)' +
-              '</button>' +
+            '<div class="flex items-center gap-2">' +
+              '<button type="button" id="demo33MountToggleBtn" class="px-3.5 py-2 rounded-md bg-zinc-900 hover:bg-zinc-800 text-rose-400 border border-zinc-800 font-mono text-xs transition-colors">Unmount (Run Cleanup)</button>' +
+              '<button type="button" id="demo33ResetBtn" class="px-3.5 py-2 rounded-md bg-zinc-900 hover:bg-zinc-800 text-zinc-400 border border-zinc-800 font-mono text-xs transition-colors">Reset</button>' +
             '</div>' +
-            '<div id="demo33CleanupLog" class="p-3 rounded-xl bg-slate-950 border border-slate-800/80 font-mono text-xs text-slate-300 space-y-1">' +
-              '<div class="text-emerald-400 font-bold uppercase text-[11px]">Cleanup Lifecycle Monitor:</div>' +
-              '<div id="demo33LifecycleMsg" class="text-slate-300">• Timer active. Interval ID running cleanly.</div>' +
-            '</div>' +
+            '<div id="demo33LifecycleMsg" class="font-mono text-xs text-zinc-500">Timer active. Interval running.</div>' +
           '</div>';
         }
 
-        return '<div class="p-4 rounded-xl bg-slate-900 text-slate-400 font-mono text-xs">Live output preview is being loaded...</div>';
+        return '<div class="p-4 rounded-md bg-zinc-900 text-zinc-400 font-mono text-xs">Loading...</div>';
       }
 
       function bindSectionOutputListeners(secId) {
@@ -1869,9 +1695,9 @@ document.addEventListener('DOMContentLoaded', function () {
               stateCount++;
               if (stateUi) {
                 stateUi.textContent = stateCount;
-                stateUi.classList.add('text-amber-300');
+                stateUi.classList.add('text-zinc-300');
                 setTimeout(function () {
-                  if (stateUi) stateUi.classList.remove('text-amber-300');
+                  if (stateUi) stateUi.classList.remove('text-zinc-300');
                 }, 200);
               }
               if (stateMem) stateMem.textContent = stateCount;
@@ -1933,8 +1759,8 @@ document.addEventListener('DOMContentLoaded', function () {
           function appendLog(action) {
             if (!log) return;
             var row = document.createElement('div');
-            row.className = 'text-slate-300';
-            row.innerHTML = '<span class="text-amber-400 font-bold">[' + new Date().toLocaleTimeString().split(' ')[0] + ']</span> ' + action;
+            row.className = 'text-zinc-300';
+            row.innerHTML = '<span class="text-zinc-300 font-bold">[' + new Date().toLocaleTimeString().split(' ')[0] + ']</span> ' + action;
             log.appendChild(row);
             log.scrollTop = log.scrollHeight;
           }
@@ -1951,13 +1777,13 @@ document.addEventListener('DOMContentLoaded', function () {
             resetBtn.onclick = function () {
               count = 0;
               if (countNum) countNum.textContent = '0';
-              if (log) log.innerHTML = '<div class="text-slate-500">• Counter reset to 0. Ready for clicks.</div>';
+              if (log) log.innerHTML = '<div class="text-zinc-500">• Counter reset to 0. Ready for clicks.</div>';
             };
           }
         }
 
         if (secId === 'sec-2-1') {
-          var player = { name: 'Fyang', level: 1, score: 0 };
+          var player = { name: 'Alice', level: 1, score: 0 };
           var nameEl = document.getElementById('demo21Name');
           var levelEl = document.getElementById('demo21Level');
           var scoreEl = document.getElementById('demo21Score');
@@ -1980,8 +1806,8 @@ document.addEventListener('DOMContentLoaded', function () {
               player = Object.assign({}, player, { level: player.level + 1 });
               syncPlayerUi();
               if (feedbackEl) {
-                var checkSvg = '<svg class="w-3.5 h-3.5 text-blue-400 shrink-0 inline-block mr-1 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>';
-                feedbackEl.innerHTML = '<span class="text-blue-400 font-bold inline-flex items-center gap-1">' + checkSvg + 'Spread copy ({ ...prev, level: ' + player.level + ' })</span> created a fresh object reference! React detected change.';
+                var checkSvg = '<svg class="w-3.5 h-3.5 text-zinc-300 shrink-0 inline-block mr-1 align-text-bottom" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>';
+                feedbackEl.innerHTML = '<span class="text-zinc-300 font-bold inline-flex items-center gap-1">' + checkSvg + 'Spread copy ({ ...prev, level: ' + player.level + ' })</span> created a fresh object reference! React detected change.';
               }
             };
           }
@@ -2060,7 +1886,7 @@ document.addEventListener('DOMContentLoaded', function () {
               if (userNameEl) userNameEl.textContent = '"Bob"';
               if (equalityBadge) {
                 equalityBadge.textContent = 'N/A';
-                equalityBadge.className = 'px-2 py-0.5 rounded font-mono font-bold text-xs bg-slate-800 text-slate-400';
+                equalityBadge.className = 'px-2 py-0.5 rounded font-mono font-bold text-xs bg-zinc-800 text-zinc-400';
               }
               if (engineStatus) engineStatus.textContent = 'Component mounted (Initial Render). Ready for updates.';
             };
@@ -2079,9 +1905,9 @@ document.addEventListener('DOMContentLoaded', function () {
               if (countNum) countNum.textContent = clickCount;
               if (tabTitle) {
                 tabTitle.textContent = 'State & Effect | Clicked ' + clickCount + ' times';
-                tabTitle.classList.add('text-amber-300', 'underline');
+                tabTitle.classList.add('text-zinc-300', 'underline');
                 setTimeout(function () {
-                  if (tabTitle) tabTitle.classList.remove('text-amber-300', 'underline');
+                  if (tabTitle) tabTitle.classList.remove('text-zinc-300', 'underline');
                 }, 300);
               }
             };
@@ -2090,9 +1916,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (secId === 'sec-3-2') {
           var users = {
-            '1': { name: 'Fyang Smith', role: 'Big Winner', origin: 'Mandaluyong' },
-            '2': { name: 'JM Ibarra', role: 'Housemate', origin: 'Manila' },
-            '3': { name: 'Kolette Madelo', role: 'Housemate', origin: 'General Santos' }
+            '1': { name: 'Ada Lovelace', role: 'Systems Architect', origin: 'London' },
+            '2': { name: 'Alan Turing', role: 'Engineer', origin: 'Manila' },
+            '3': { name: 'Grace Hopper', role: 'Engineer', origin: 'New York' }
           };
           var currentUid = '1';
           var userButtons = document.querySelectorAll('.demo32UserBtn');
@@ -2105,41 +1931,41 @@ document.addEventListener('DOMContentLoaded', function () {
               var uid = btn.getAttribute('data-uid');
               userButtons.forEach(function (b) {
                 b.className = (b.getAttribute('data-uid') === uid)
-                  ? 'demo32UserBtn p-2.5 rounded-xl bg-blue-600 text-white font-mono text-xs font-bold border border-blue-400/50 shadow transition-all'
-                  : 'demo32UserBtn p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-mono text-xs font-bold border border-slate-800 transition-all';
+                  ? 'demo32UserBtn py-2 px-3 rounded bg-zinc-100 text-zinc-900 font-mono text-xs font-medium transition-colors'
+                  : 'demo32UserBtn py-2 px-3 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-mono text-xs border border-zinc-800 transition-colors';
               });
 
               if (uid === currentUid) {
                 if (statusBadge) {
-                  statusBadge.innerHTML = '<span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span>Skipped (No change)</span></span>';
-                  statusBadge.className = 'text-amber-400 font-bold';
+                  statusBadge.textContent = 'Skipped (unchanged)';
+                  statusBadge.className = 'text-zinc-400';
                 }
                 if (logEl) {
-                  logEl.innerHTML = '<span class="text-amber-400 font-bold">Dependency unchanged (' + uid + ' === ' + currentUid + '):</span> React skipped running the effect callback!';
+                  logEl.textContent = 'Dependency unchanged (' + uid + ' === ' + currentUid + '): skipped effect callback.';
                 }
               } else {
                 currentUid = uid;
                 if (statusBadge) {
-                  statusBadge.innerHTML = '<span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-sky-400 shrink-0 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg><span>Fetching (Effect fired)...</span></span>';
-                  statusBadge.className = 'text-sky-400 font-bold';
+                  statusBadge.textContent = 'Fetching...';
+                  statusBadge.className = 'text-zinc-300';
                 }
                 if (userDataEl) {
-                  userDataEl.innerHTML = '<div class="text-slate-400 animate-pulse">Loading Housemate #' + uid + ' from external API...</div>';
+                  userDataEl.innerHTML = '<div class="text-zinc-500">Loading #' + uid + '...</div>';
                 }
                 setTimeout(function () {
                   var u = users[uid];
                   if (userDataEl && u) {
                     userDataEl.innerHTML =
-                      '<div>Name: <span class="text-amber-400 font-bold">' + u.name + '</span></div>' +
-                      '<div>Role: <span class="text-sky-400">' + u.role + '</span></div>' +
-                      '<div>Origin: <span class="text-slate-300">' + u.origin + '</span></div>';
+                      '<div>Name: <span class="text-zinc-200">' + u.name + '</span></div>' +
+                      '<div>Role: <span class="text-zinc-300">' + u.role + '</span></div>' +
+                      '<div>Origin: <span class="text-zinc-300">' + u.origin + '</span></div>';
                   }
                   if (statusBadge) {
-                    statusBadge.innerHTML = '<span class="flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg><span>Synchronized</span></span>';
-                    statusBadge.className = 'text-emerald-400 font-bold';
+                    statusBadge.textContent = 'Synchronized';
+                    statusBadge.className = 'text-emerald-400';
                   }
                   if (logEl) {
-                    logEl.innerHTML = '<span class="text-emerald-400 font-bold">Dependency changed to ' + uid + ':</span> useEffect callback executed and fetched new profile!';
+                    logEl.textContent = 'Dependency changed to ' + uid + ': useEffect callback executed.';
                   }
                 }, 350);
               }
@@ -2179,27 +2005,27 @@ document.addEventListener('DOMContentLoaded', function () {
               isMounted = !isMounted;
               if (isMounted) {
                 startTimer();
-                if (statusDot) statusDot.className = 'w-3 h-3 rounded-full bg-emerald-400 animate-pulse';
+                if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
                 if (statusText) {
-                  statusText.textContent = '<Timer /> MOUNTED & RUNNING';
-                  statusText.className = 'text-xs font-mono font-bold text-emerald-400 uppercase tracking-wider';
+                  statusText.textContent = 'Mounted';
+                  statusText.className = 'text-xs font-mono text-emerald-400';
                 }
-                mountToggleBtn.textContent = 'Unmount Component (Test Cleanup)';
-                mountToggleBtn.className = 'py-2.5 px-4 rounded-xl bg-rose-600/30 hover:bg-rose-600/40 text-rose-200 border border-rose-500/40 font-mono text-xs font-bold transition-all';
+                mountToggleBtn.textContent = 'Unmount Component';
+                mountToggleBtn.className = 'py-2 px-3 rounded bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-800 font-mono text-xs transition-colors';
                 if (lifecycleMsg) {
-                  lifecycleMsg.innerHTML = '<span class="text-emerald-400 font-bold">useEffect fired:</span> New interval initialized. Timer running safely.';
+                  lifecycleMsg.textContent = 'useEffect fired: interval initialized.';
                 }
               } else {
                 stopTimer();
-                if (statusDot) statusDot.className = 'w-3 h-3 rounded-full bg-rose-500';
+                if (statusDot) statusDot.className = 'w-2 h-2 rounded-full bg-zinc-600';
                 if (statusText) {
-                  statusText.textContent = '<Timer /> UNMOUNTED';
-                  statusText.className = 'text-xs font-mono font-bold text-rose-400 uppercase tracking-wider';
+                  statusText.textContent = 'Unmounted';
+                  statusText.className = 'text-xs font-mono text-zinc-500';
                 }
-                mountToggleBtn.textContent = 'Mount Component (Restart Effect)';
-                mountToggleBtn.className = 'py-2.5 px-4 rounded-xl bg-emerald-600/30 hover:bg-emerald-600/40 text-emerald-200 border border-emerald-500/40 font-mono text-xs font-bold transition-all';
+                mountToggleBtn.textContent = 'Mount Component';
+                mountToggleBtn.className = 'py-2 px-3 rounded bg-zinc-100 hover:bg-white text-zinc-900 font-mono text-xs font-medium transition-colors';
                 if (lifecycleMsg) {
-                  lifecycleMsg.innerHTML = '<span class="text-rose-400 font-bold">Cleanup executed (clearInterval):</span> Timer destroyed on unmount. <strong>Zero memory leak!</strong>';
+                  lifecycleMsg.textContent = 'Cleanup executed (clearInterval): timer destroyed on unmount.';
                 }
               }
             };
@@ -2229,25 +2055,18 @@ document.addEventListener('DOMContentLoaded', function () {
           slideIndicator.textContent = '';
         }
 
-        // Render Quick-Jump Pills in Header
         if (confessionSectionPills) {
           confessionSectionPills.innerHTML = '';
           confessionSections.forEach(function (sec, i) {
             var pill = document.createElement('button');
             pill.type = 'button';
             var isActive = i === index;
-            var topicBorder = sec.topicNum === 1
-              ? 'text-blue-400 hover:text-blue-200 hover:bg-blue-950/40 border-blue-500/30'
-              : (sec.topicNum === 2
-                ? 'text-red-400 hover:text-red-200 hover:bg-red-950/40 border-red-500/30'
-                : 'text-yellow-400 hover:text-yellow-200 hover:bg-yellow-950/40 border-yellow-500/30');
-
-            pill.className = 'px-3 py-1.5 rounded-lg text-xs sm:text-sm font-mono font-bold whitespace-nowrap transition-all border ' +
+            pill.className = 'px-2.5 py-1 rounded text-xs font-mono whitespace-nowrap transition-colors ' +
               (isActive
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-950/50 border-blue-400 scale-105'
-                : topicBorder + ' bg-slate-900/60');
+                ? 'bg-zinc-100 text-zinc-900 font-medium'
+                : 'text-zinc-500 hover:text-zinc-200');
             pill.textContent = sec.secNum;
-            pill.title = 'Sub-section ' + sec.secNum + ': ' + sec.title;
+            pill.title = sec.secNum + ' ' + sec.title;
             pill.addEventListener('click', function () {
               renderSlide(i);
             });
@@ -2255,157 +2074,58 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         }
 
-        // Render Bottom Counter
         if (slideDotsContainer) {
-          slideDotsContainer.innerHTML = '<span class="px-2.5 py-0.5 rounded bg-yellow-400/15 text-yellow-300 font-bold border border-yellow-400/30">Sub-section ' + s.secNum + '</span> <span class="text-white font-medium">' + s.title + '</span>';
+          slideDotsContainer.textContent = (index + 1) + ' / ' + confessionSections.length;
         }
 
-        // Bullets HTML
         var bulletsHtml = s.takeaways.map(function (b) {
-          return '<li class="flex items-start gap-2.5 text-xs sm:text-sm text-slate-200 leading-relaxed"><span class="w-2 h-2 rounded-full bg-yellow-400 mt-1.5 shrink-0 shadow-[0_0_8px_rgba(250,204,21,0.6)]"></span><span>' + b + '</span></li>';
+          return '<li class="text-xs sm:text-sm text-zinc-400 leading-relaxed">' + b + '</li>';
         }).join('');
 
-        var topicBadgeSolid = s.topicNum === 1
-          ? 'bg-blue-600 text-white border-blue-400/40'
-          : (s.topicNum === 2
-            ? 'bg-red-600 text-white border-red-400/40'
-            : 'bg-amber-500 text-slate-950 font-black border-yellow-300/40');
-
-        // Focused Section Markup (2-Column Presentation: Left = Explanations & Rules, Right = LIVE CODE & OUTPUT TOGGLE)
         slideViewport.innerHTML =
-          '<div class="space-y-4 max-w-[1550px] w-full mx-auto animate-in fade-in zoom-in-95 duration-150">' +
-            // Section Header Bar with Prominent Sub-section Indicator
-            '<div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">' +
-              '<div class="flex items-center gap-3.5">' +
-                '<span class="px-3.5 py-1.5 rounded-xl ' + topicBadgeSolid + ' font-mono text-sm sm:text-base font-black tracking-wide shadow-md shadow-blue-950/40 border">SUB-SECTION ' + s.secNum + '</span>' +
-                '<div>' +
-                  '<div class="flex items-center gap-2">' +
-                    '<span class="text-xs font-mono font-bold uppercase tracking-wider text-yellow-400">' + s.topicBadge + '</span>' +
-                    '<span class="text-slate-500">•</span>' +
-                    '<span class="text-xs font-mono text-slate-400">Sub-section ' + (index + 1) + ' of ' + confessionSections.length + '</span>' +
-                  '</div>' +
-                  '<h2 class="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight uppercase">' + s.title + '</h2>' +
-                '</div>' +
+          '<div class="w-full">' +
+            '<div class="flex items-baseline justify-between gap-4 border-b border-zinc-800/80 pb-5 mb-8">' +
+              '<div class="flex items-baseline gap-3">' +
+                '<span class="font-mono text-sm text-zinc-500">' + s.secNum + '</span>' +
+                '<h2 class="text-xl sm:text-2xl font-semibold tracking-tight text-white">' + s.title + '</h2>' +
               '</div>' +
-              '<div class="flex items-center gap-2">' +
-                '<a href="' + s.anchor + '" id="jumpToHandbookBtn" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm font-semibold text-slate-200 border border-slate-700 hover:border-yellow-400/60 flex items-center gap-2 transition-colors">' +
-                  '<span>View in House Handbook</span>' +
-                  '<svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>' +
-                '</a>' +
-              '</div>' +
+              '<a href="' + s.anchor + '" id="jumpToHandbookBtn" class="text-xs font-mono text-zinc-400 hover:text-white transition-colors shrink-0">View in page &rarr;</a>' +
             '</div>' +
 
-            // Main 2-Column Content Grid: Left = Explanations & Rules, Right = CODE & OUTPUT TOGGLE!
-            '<div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">' +
-              // Left Column (lg:col-span-5): Definition (Blue), Explanation (Red), Rules (Yellow)
-              '<div class="lg:col-span-5 space-y-3.5 flex flex-col justify-between">' +
-                // Definition Card (Blue)
-                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-blue-500/30 border-l-4 border-l-blue-500 space-y-2 shadow-lg">' +
-                  '<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-blue-400">' +
-                    '<svg class="w-4 h-4 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>' +
-                    '<span>Sub-Section ' + s.secNum + ' Definition</span>' +
-                  '</div>' +
-                  '<p class="text-sm text-slate-100 leading-relaxed">' + s.definition + '</p>' +
-                '</div>' +
-
-                // Explanation Card (Red)
-                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-red-500/30 border-l-4 border-l-red-500 space-y-2 shadow-lg">' +
-                  '<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-red-400">' +
-                    '<svg class="w-4 h-4 text-red-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>' +
-                    '<span>Explanation &amp; Inner Mechanics</span>' +
-                  '</div>' +
-                  '<p class="text-sm text-slate-200 leading-relaxed">' + s.explanation + '</p>' +
-                '</div>' +
-
-                // Kuya's Key Takeaways Card (Yellow)
-                '<div class="p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-yellow-500/30 border-l-4 border-l-yellow-400 space-y-2.5 shadow-lg">' +
-                  '<div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-yellow-400 font-bold">' +
-                    '<span class="w-2 h-2 rounded-full bg-yellow-400 animate-ping"></span>' +
-                    '<span>Kuya\'s Confession Room Rules:</span>' +
-                  '</div>' +
-                  '<ul class="space-y-2">' + bulletsHtml + '</ul>' +
-                '</div>' +
+            '<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">' +
+              '<div class="lg:col-span-5 space-y-6">' +
+                '<p class="text-sm sm:text-base text-zinc-100 leading-relaxed">' + s.definition + '</p>' +
+                '<p class="text-sm text-zinc-400 leading-relaxed">' + s.explanation + '</p>' +
+                '<ul class="space-y-3 border-t border-zinc-800/80 pt-5">' + bulletsHtml + '</ul>' +
               '</div>' +
 
-              // Right Column (lg:col-span-7): PROMINENT CODE & OUTPUT CARD!
               '<div class="lg:col-span-7 flex flex-col">' +
-                '<div class="rounded-2xl bg-slate-950 border-2 border-slate-800 hover:border-yellow-400/40 transition-colors overflow-hidden shadow-2xl flex flex-col flex-1">' +
-                  // Header Bar with [ Code ] [ Output ] Segmented Toggle
-                  '<div class="px-5 py-3 bg-slate-900/95 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2.5">' +
+                '<div class="rounded-md bg-zinc-950 border border-zinc-800 overflow-hidden flex flex-col">' +
+                  '<div class="px-4 py-2.5 border-b border-zinc-800 flex items-center justify-between gap-2">' +
+                    '<span class="text-zinc-400 font-mono text-xs">' + s.codeTitle + '</span>' +
                     '<div class="flex items-center gap-3">' +
-                      '<span class="w-2.5 h-2.5 rounded-full bg-red-600 rec-dot"></span>' +
-                      '<div class="flex items-center gap-2">' +
-                        '<span class="text-yellow-400 font-mono text-xs font-bold uppercase tracking-wider">Sub-section ' + s.secNum + ':</span>' +
-                        '<span class="text-white font-bold font-mono text-sm sm:text-base">' + s.codeTitle + '</span>' +
+                      '<div id="slideCodeActions" class="' + (presenterActiveTab === 'code' ? 'flex' : 'hidden') + ' items-center gap-3 text-xs font-mono text-zinc-400">' +
+                        '<button type="button" id="slideCopyBtn" class="hover:text-white transition-colors"><span id="slideCopyText">Copy</span></button>' +
+                        '<button type="button" id="slideEnlargeBtn" class="hover:text-white transition-colors">Expand</button>' +
                       '</div>' +
-                    '</div>' +
-                    '<div class="flex items-center gap-2.5">' +
-                      // Toggle Button: Code / Output
-                      '<div class="inline-flex items-center p-0.5 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono">' +
-                        '<button type="button" id="slideTabCodeBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ' +
-                          (presenterActiveTab === 'code'
-                            ? 'bg-blue-600 text-white shadow-sm border border-blue-400/40'
-                            : 'text-slate-400 hover:text-white') + '">' +
-                          '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>' +
-                          '<span>Code</span>' +
-                        '</button>' +
-                        '<button type="button" id="slideTabOutputBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all ' +
-                          (presenterActiveTab === 'output'
-                            ? 'bg-blue-600 text-white shadow-sm border border-blue-400/40'
-                            : 'text-slate-400 hover:text-white') + '">' +
-                          '<svg class="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>' +
-                          '<span>Output</span>' +
-                        '</button>' +
-                      '</div>' +
-                      // Code actions (Copy & Enlarge)
-                      '<div id="slideCodeActions" class="' + (presenterActiveTab === 'code' ? 'flex' : 'hidden') + ' items-center gap-2">' +
-                        '<button type="button" id="slideCopyBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-mono border border-slate-700 transition-colors" title="Copy code snippet">' +
-                          '<svg class="w-3.5 h-3.5 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
-                          '<span id="slideCopyText">Copy</span>' +
-                        '</button>' +
-                        '<button type="button" id="slideEnlargeBtn" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow transition-colors" title="Projector mode / enlarge code">' +
-                          '<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>' +
-                          '<span>Enlarge</span>' +
-                        '</button>' +
-                      '</div>' +
-                      // Output active badge
-                      '<div id="slideOutputBadge" class="' + (presenterActiveTab === 'output' ? 'flex' : 'hidden') + ' items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono">' +
-                        '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>' +
-                        '<span>Live Interactive</span>' +
+                      '<div class="inline-flex items-center p-0.5 rounded bg-zinc-900 border border-zinc-800 text-xs font-mono">' +
+                        '<button type="button" id="slideTabCodeBtn" class="px-2.5 py-1 rounded transition-colors ' + (presenterActiveTab === 'code' ? 'bg-zinc-100 text-zinc-900 font-medium' : 'text-zinc-400 hover:text-white') + '">Code</button>' +
+                        '<button type="button" id="slideTabOutputBtn" class="px-2.5 py-1 rounded transition-colors ' + (presenterActiveTab === 'output' ? 'bg-zinc-100 text-zinc-900 font-medium' : 'text-zinc-400 hover:text-white') + '">Output</button>' +
                       '</div>' +
                     '</div>' +
                   '</div>' +
 
-                  // Code Pre Block (Escaped code text)
                   '<div id="slideCodeView" class="' + (presenterActiveTab === 'code' ? 'flex flex-col flex-1' : 'hidden') + '">' +
-                    '<div class="relative flex-1 p-5 sm:p-6 bg-[#030712] overflow-auto code-scroll min-h-[300px]">' +
-                      '<pre class="text-sm sm:text-base font-mono text-slate-100 leading-relaxed select-text"><code>' + escapeHtml(s.code) + '</code></pre>' +
-                    '</div>' +
-                    '<div class="px-5 py-2.5 bg-slate-950 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">' +
-                      '<div class="flex items-center gap-2">' +
-                        '<span class="text-emerald-400 font-semibold flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 inline-block shrink-0"></span><span>React 18+ Live Syntax</span></span>' +
-                        '<span class="text-slate-600">|</span>' +
-                        '<span>Sub-section ' + s.secNum + '</span>' +
-                      '</div>' +
-                      '<span class="text-amber-400/80 font-medium">Click Enlarge for Projector View</span>' +
+                    '<div class="p-5 overflow-auto code-scroll min-h-[280px]">' +
+                      '<pre class="text-xs sm:text-sm font-mono text-zinc-200 leading-relaxed select-text"><code>' + escapeHtml(s.code) + '</code></pre>' +
                     '</div>' +
                   '</div>' +
 
-                  // Output Live Preview Block
                   '<div id="slideOutputView" class="' + (presenterActiveTab === 'output' ? 'flex flex-col flex-1' : 'hidden') + '">' +
-                    '<div class="relative flex-1 p-5 sm:p-6 bg-[#020617] overflow-auto code-scroll min-h-[300px] flex flex-col justify-between space-y-4">' +
+                    '<div class="p-5 overflow-auto code-scroll min-h-[280px]">' +
                       getSectionOutputHtml(s) +
                     '</div>' +
-                    '<div class="px-5 py-2.5 bg-slate-950 border-t border-slate-800/80 flex items-center justify-between text-xs font-mono text-slate-400">' +
-                      '<div class="flex items-center gap-2">' +
-                        '<span class="text-amber-400 font-semibold flex items-center gap-1.5"><svg class="w-3.5 h-3.5 text-amber-400 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg><span>Simulated Live Component</span></span>' +
-                        '<span class="text-slate-600">|</span>' +
-                        '<span>Pure Client-Side React Runtime</span>' +
-                      '</div>' +
-                      '<span class="text-slate-400">Interact with UI to test behavior</span>' +
-                    '</div>' +
                   '</div>' +
-
                 '</div>' +
               '</div>' +
             '</div>' +
@@ -2424,7 +2144,7 @@ document.addEventListener('DOMContentLoaded', function () {
           slideCopyBtn.addEventListener('click', function () {
             if (navigator.clipboard) {
               navigator.clipboard.writeText(s.code).then(function () {
-                if (slideCopyText) slideCopyText.textContent = 'Copied!';
+                if (slideCopyText) slideCopyText.textContent = 'Copied';
                 setTimeout(function () {
                   if (slideCopyText) slideCopyText.textContent = 'Copy';
                 }, 2000);
@@ -2440,37 +2160,33 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         }
 
-        // Tab Switching Logic
         var slideTabCodeBtn = document.getElementById('slideTabCodeBtn');
         var slideTabOutputBtn = document.getElementById('slideTabOutputBtn');
         var slideCodeView = document.getElementById('slideCodeView');
         var slideOutputView = document.getElementById('slideOutputView');
         var slideCodeActions = document.getElementById('slideCodeActions');
-        var slideOutputBadge = document.getElementById('slideOutputBadge');
 
         function updateTabVisibility(tab) {
           presenterActiveTab = tab;
           if (tab === 'code') {
             if (slideCodeView) slideCodeView.className = 'flex flex-col flex-1';
             if (slideOutputView) slideOutputView.className = 'hidden';
-            if (slideCodeActions) slideCodeActions.className = 'flex items-center gap-2';
-            if (slideOutputBadge) slideOutputBadge.className = 'hidden';
+            if (slideCodeActions) slideCodeActions.className = 'flex items-center gap-3 text-xs font-mono text-zinc-400';
             if (slideTabCodeBtn) {
-              slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-blue-600 text-white shadow-sm border border-blue-400/40';
+              slideTabCodeBtn.className = 'px-2.5 py-1 rounded transition-colors bg-zinc-100 text-zinc-900 font-medium';
             }
             if (slideTabOutputBtn) {
-              slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all text-slate-400 hover:text-white';
+              slideTabOutputBtn.className = 'px-2.5 py-1 rounded transition-colors text-zinc-400 hover:text-white';
             }
           } else {
             if (slideCodeView) slideCodeView.className = 'hidden';
             if (slideOutputView) slideOutputView.className = 'flex flex-col flex-1';
             if (slideCodeActions) slideCodeActions.className = 'hidden';
-            if (slideOutputBadge) slideOutputBadge.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono';
             if (slideTabCodeBtn) {
-              slideTabCodeBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all text-slate-400 hover:text-white';
+              slideTabCodeBtn.className = 'px-2.5 py-1 rounded transition-colors text-zinc-400 hover:text-white';
             }
             if (slideTabOutputBtn) {
-              slideTabOutputBtn.className = 'flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition-all bg-blue-600 text-white shadow-sm border border-blue-400/40';
+              slideTabOutputBtn.className = 'px-2.5 py-1 rounded transition-colors bg-zinc-100 text-zinc-900 font-medium';
             }
             bindSectionOutputListeners(s.id);
           }
@@ -2589,11 +2305,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Keyboard navigation
       document.addEventListener('keydown', function (e) {
-        if (splashActive) {
-          dismissPbbSplash();
-          return;
-        }
-
         if (mobileNavDrawer && !mobileNavDrawer.classList.contains('hidden')) {
           if (e.key === 'Escape') {
             closeMobileDrawer();
